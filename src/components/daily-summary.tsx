@@ -7,7 +7,6 @@ import { getDailySummaryAction } from '@/app/actions';
 import { useToast } from './ui/use-toast';
 import { Loader2, TrendingUp } from 'lucide-react';
 import { Progress } from './ui/progress';
-import { useTranslations } from 'next-intl';
 
 interface DailySummaryProps {
   todayLog: FoodLogItem[];
@@ -24,7 +23,6 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
   const [summary, setSummary] = useState<SummaryData[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const t = useTranslations('DailySummary');
 
   const handleGenerateSummary = async () => {
     setIsLoading(true);
@@ -33,7 +31,7 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
     if (result.error) {
       toast({
         variant: 'destructive',
-        title: t('summaryErrorTitle'),
+        title: 'Summary Error',
         description: result.error,
       });
     } else if (result.data) {
@@ -49,10 +47,10 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-primary"/>
-            {t('title')}
+            Today's Summary
         </CardTitle>
         <CardDescription>
-          {t('description')}
+          An overview of your nutrient intake for today.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -70,7 +68,7 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
             </div>
         ) : (
             <div className="text-center text-muted-foreground py-8">
-                <p>{hasLog ? t('hasLog') : t('noLog')}</p>
+                <p>{hasLog ? "Click the button to generate today's summary." : "Log some food to see your daily summary."}</p>
             </div>
         )}
       </CardContent>
@@ -78,7 +76,7 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
         <CardContent>
             <Button onClick={handleGenerateSummary} disabled={isLoading} className="w-full">
             {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            {t('generateButton')}
+            Generate Summary
             </Button>
         </CardContent>
       )}

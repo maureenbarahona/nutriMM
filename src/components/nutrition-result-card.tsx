@@ -2,7 +2,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useTranslations } from 'next-intl';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,7 +19,6 @@ type LogFoodFormValues = z.infer<typeof logFoodSchema>;
 
 export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
   const { addFoodItem } = useFoodLog();
-  const t = useTranslations('NutritionResultCard');
   
   const form = useForm<LogFoodFormValues>({
     resolver: zodResolver(logFoodSchema),
@@ -41,7 +39,7 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
     <Card className="w-full animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
       <CardHeader>
         <CardTitle className="text-2xl font-headline text-primary">{analysis.foodItem}</CardTitle>
-        <CardDescription>{t('description')}</CardDescription>
+        <CardDescription>Nutritional information per 100g (approx.)</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -69,7 +67,7 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
               name="quantity"
               render={({ field }) => (
                 <FormItem className="flex-grow">
-                  <FormLabel>{t('quantityLabel')}</FormLabel>
+                  <FormLabel>Quantity (grams)</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="e.g., 150" {...field} />
                   </FormControl>
@@ -78,7 +76,7 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
               )}
             />
             <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              {t('logFoodButton')}
+              Log Food
             </Button>
           </form>
         </Form>

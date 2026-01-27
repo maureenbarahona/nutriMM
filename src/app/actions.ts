@@ -5,7 +5,6 @@ import { summarizeDailyNutrientIntake } from "@/ai/flows/summarize-daily-nutrien
 import { parseNutritionString } from '@/lib/utils';
 import type { FoodLogItem, Nutrient } from '@/lib/types';
 import { z } from 'zod';
-import { getTranslations } from 'next-intl/server';
 
 export type AnalysisState = {
   status: 'error' | 'success';
@@ -26,14 +25,13 @@ export async function analyzeImageAction(
   prevState: any,
   formData: FormData
 ): Promise<AnalysisState> {
-  const t = await getTranslations('Actions');
   try {
     const validated = analyzeImageSchema.safeParse({
       image: formData.get('image'),
     });
 
     if (!validated.success) {
-      return { status: 'error', message: t('imageRequired') };
+      return { status: 'error', message: "Image must be a data URI" };
     }
 
     const result = await analyzeFoodImageAndDisplayNutrition({
@@ -43,7 +41,7 @@ export async function analyzeImageAction(
     if (!result.foodItem || !result.nutritionalInformation) {
       return {
         status: 'error',
-        message: t('analysisError'),
+        message: "AI could not analyze the image. Please try another one or enter manually.",
       };
     }
 
@@ -52,15 +50,13 @@ export async function analyzeImageAction(
     if (nutrients.length === 0) {
       return {
         status: 'error',
-        message: t('extractionError', { foodItem: result.foodItem }),
+        message: `Identified as ${result.foodItem}, but could not extract nutritional data. Try a clearer image.`,
       };
     }
 
-    const t_scan = await getTranslations('ScanForm');
-
     return {
       status: 'success',
-      message: t_scan('analysisSuccessTitle'),
+      message: "Analysis successful!",
       data: {
         foodItem: result.foodItem,
         nutrients,
@@ -68,14 +64,13 @@ export async function analyzeImageAction(
     };
   } catch (error) {
     console.error(error);
-    return { status: 'error', message: t('unexpectedError') };
+    return { status: 'error', message: "An unexpected error occurred during analysis." };
   }
 }
 
 export async function getDailySummaryAction(foodItems: FoodLogItem[]) {
-    const t = await getTranslations('Actions');
     if (!foodItems || foodItems.length === 0) {
-        return { error: t('noFoodItems') };
+        return { error: "No food items provided for summary." };
     }
 
     // A simple set of recommended daily values. In a real app, this would be user-specific.
@@ -108,6 +103,6 @@ export async function getDailySummaryAction(foodItems: FoodLogItem[]) {
         return { data: summary.summary };
     } catch(error) {
         console.error("Daily summary error:", error);
-        return { error: t('summaryError') };
+        return { error: "Failed to generate daily summary." };
     }
 }

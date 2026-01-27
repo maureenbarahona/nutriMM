@@ -3,7 +3,6 @@
 import { useFormState, useFormStatus } from 'react-dom';
 import { useEffect, useState, useRef } from 'react';
 import { Camera, Sparkles } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 
 import { analyzeImageAction, type AnalysisState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
@@ -22,18 +21,17 @@ const initialState: AnalysisState = {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  const t = useTranslations('ScanForm');
   return (
     <Button type="submit" disabled={pending} className="w-full">
       {pending ? (
         <>
           <Sparkles className="mr-2 h-4 w-4 animate-spin" />
-          {t('analyzingButton')}
+          Analyzing...
         </>
       ) : (
         <>
           <Camera className="mr-2 h-4 w-4" />
-          {t('analyzeButton')}
+          Analyze Image
         </>
       )}
     </Button>
@@ -47,17 +45,16 @@ export function ScanForm() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
-  const t = useTranslations('ScanForm');
 
   useEffect(() => {
     if (state.status === 'error' && state.message) {
       toast({
         variant: 'destructive',
-        title: t('analysisFailedTitle'),
+        title: 'Analysis Failed',
         description: state.message,
       });
     }
-  }, [state, toast, t]);
+  }, [state, toast]);
 
   const handleFileSelect = async (file: File) => {
     setSelectedFile(file);
@@ -92,7 +89,7 @@ export function ScanForm() {
 
         {state.status === 'error' && state.message && !pending && (
             <Alert variant="destructive" className="mt-6">
-                <AlertTitle>{t('errorTitle')}</AlertTitle>
+                <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{state.message}</AlertDescription>
             </Alert>
         )}
