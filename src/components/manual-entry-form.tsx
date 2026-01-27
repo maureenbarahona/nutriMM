@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next-intl/client';
+import { useRouter } from 'next-intl/navigation';
 import { z } from 'zod';
 import { useFoodLog } from '@/hooks/use-food-log';
 import { Button } from '@/components/ui/button';
