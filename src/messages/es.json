@@ -63,12 +63,6 @@
     "title": "Detalles del Alimento",
     "foodNameLabel": "Nombre del Alimento",
     "foodNamePlaceholder": "p. ej., Manzana",
-    "quantityLabel": "Cantidad (g)",
-    "caloriesLabel": "Calorías (kcal)",
-    "proteinLabel": "Proteína (g)",
-    "carbsLabel": "Carbohidratos (g)",
-    "fatLabel": "Grasa (g)",
-    "addToHistoryButton": "Añadir al Historial",
     "analyzeButton": "Analizar",
     "analyzingButton": "Analizando..."
   },

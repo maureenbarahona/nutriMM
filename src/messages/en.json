@@ -63,12 +63,6 @@
     "title": "Log Food Details",
     "foodNameLabel": "Food Name",
     "foodNamePlaceholder": "e.g., Apple",
-    "quantityLabel": "Quantity (g)",
-    "caloriesLabel": "Calories (kcal)",
-    "proteinLabel": "Protein (g)",
-    "carbsLabel": "Carbohydrates (g)",
-    "fatLabel": "Fat (g)",
-    "addToHistoryButton": "Add to History",
     "analyzeButton": "Analyze",
     "analyzingButton": "Analyzing..."
   },
