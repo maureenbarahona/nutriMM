@@ -1,18 +1,21 @@
 'use client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from 'next-intl/link';
+import { usePathname } from 'next-intl/client';
 import { Home, History, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from './icons';
-
-const navItems = [
-  { href: '/', label: 'Scan', icon: Home },
-  { href: '/history', label: 'History', icon: History },
-  { href: '/add', label: 'Add Manually', icon: PlusCircle },
-];
+import { useTranslations } from 'next-intl';
+import { LanguageSwitcher } from './language-switcher';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const t = useTranslations('Navigation');
+
+  const navItems = [
+    { href: '/', label: t('scan'), icon: Home },
+    { href: '/history', label: t('history'), icon: History },
+    { href: '/add', label: t('addManually'), icon: PlusCircle },
+  ];
 
   return (
     <>
@@ -22,6 +25,26 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
             <Logo className="h-8 w-8 text-primary" />
             <span className="font-headline text-xl font-bold">NutriSnap</span>
           </Link>
+          <div className="flex items-center gap-4">
+            <nav className="hidden md:flex md:items-center md:gap-4">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'text-sm font-medium transition-colors',
+                      isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
       <main className="flex-1">{children}</main>

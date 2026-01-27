@@ -2,13 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next-intl/client';
 import { z } from 'zod';
 import { useFoodLog } from '@/hooks/use-food-log';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTranslations } from 'next-intl';
 
 const manualEntrySchema = z.object({
   name: z.string().min(2, 'Food name must be at least 2 characters.'),
@@ -24,6 +25,7 @@ type ManualEntryValues = z.infer<typeof manualEntrySchema>;
 export function ManualEntryForm() {
   const router = useRouter();
   const { addFoodItem } = useFoodLog();
+  const t = useTranslations('ManualEntryForm');
 
   const form = useForm<ManualEntryValues>({
     resolver: zodResolver(manualEntrySchema),
@@ -54,7 +56,7 @@ export function ManualEntryForm() {
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Log Food Details</CardTitle>
+        <CardTitle>{t('title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -65,9 +67,9 @@ export function ManualEntryForm() {
                 name="name"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
-                    <FormLabel>Food Name</FormLabel>
+                    <FormLabel>{t('foodNameLabel')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Apple" {...field} />
+                      <Input placeholder={t('foodNamePlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -78,7 +80,7 @@ export function ManualEntryForm() {
                 name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quantity (g)</FormLabel>
+                    <FormLabel>{t('quantityLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="100" {...field} />
                     </FormControl>
@@ -91,7 +93,7 @@ export function ManualEntryForm() {
                 name="calories"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Calories (kcal)</FormLabel>
+                    <FormLabel>{t('caloriesLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="52" {...field} />
                     </FormControl>
@@ -104,7 +106,7 @@ export function ManualEntryForm() {
                 name="protein"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Protein (g)</FormLabel>
+                    <FormLabel>{t('proteinLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="0.3" {...field} />
                     </FormControl>
@@ -117,7 +119,7 @@ export function ManualEntryForm() {
                 name="carbs"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Carbohydrates (g)</FormLabel>
+                    <FormLabel>{t('carbsLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="13.8" {...field} />
                     </FormControl>
@@ -130,7 +132,7 @@ export function ManualEntryForm() {
                 name="fat"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fat (g)</FormLabel>
+                    <FormLabel>{t('fatLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="0.2" {...field} />
                     </FormControl>
@@ -140,7 +142,7 @@ export function ManualEntryForm() {
               />
             </div>
             <div className="flex justify-end pt-4">
-              <Button type="submit" className="w-full md:w-auto">Add to History</Button>
+              <Button type="submit" className="w-full md:w-auto">{t('addToHistoryButton')}</Button>
             </div>
           </form>
         </Form>

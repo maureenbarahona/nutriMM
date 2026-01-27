@@ -5,9 +5,11 @@ import { useFoodLog } from "@/hooks/use-food-log";
 import { Skeleton } from "./ui/skeleton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Utensils } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function HistoryClientPage() {
     const { log, removeFoodItem, isLoaded } = useFoodLog();
+    const t = useTranslations('HistoryPage');
 
     if (!isLoaded) {
         return <HistorySkeleton />;
@@ -22,8 +24,8 @@ export function HistoryClientPage() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <CardTitle className="text-2xl">No Food Logged Yet</CardTitle>
-                    <CardDescription className="mt-2">Start by scanning a food item to build your history.</CardDescription>
+                    <CardTitle className="text-2xl">{t('noHistoryTitle')}</CardTitle>
+                    <CardDescription className="mt-2">{t('noHistorySubtitle')}</CardDescription>
                 </CardContent>
             </Card>
         )

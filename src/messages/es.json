@@ -1,0 +1,82 @@
+{
+  "NutriSnap": {
+    "title": "NutriSnap",
+    "description": "Toma una foto de tu comida y obtén su valor nutricional al instante."
+  },
+  "Navigation": {
+    "scan": "Escanear",
+    "history": "Historial",
+    "addManually": "Añadir Manualmente"
+  },
+  "HomePage": {
+    "title": "Captura. Analiza. Prospera.",
+    "subtitle": "Descubre al instante el valor nutricional de tus comidas. Solo toma una foto y deja que NutriSnap haga el resto.",
+    "cardTitle": "Come más inteligentemente, vive mejor.",
+    "cardSubtitle": "Tu viaje hacia una alimentación consciente comienza aquí."
+  },
+  "ScanForm": {
+    "analyzeButton": "Analizar Imagen",
+    "analyzingButton": "Analizando...",
+    "uploaderHint": "Arrastra y suelta una imagen o haz clic para subir",
+    "uploaderFormats": "PNG, JPG, o WEBP",
+    "changeImage": "Haz clic para cambiar la imagen",
+    "analysisFailedTitle": "Análisis Fallido",
+    "errorTitle": "Error",
+    "analysisSuccessTitle": "¡Análisis exitoso!"
+  },
+  "NutritionResultCard": {
+    "description": "Información nutricional por 100g (aprox.)",
+    "quantityLabel": "Cantidad (gramos)",
+    "logFoodButton": "Registrar Comida"
+  },
+  "HistoryPage": {
+    "title": "Historial de Comidas",
+    "subtitle": "Revisa tus comidas registradas y sigue tu progreso diario.",
+    "noHistoryTitle": "Aún no has registrado comidas",
+    "noHistorySubtitle": "Comienza escaneando un alimento para construir tu historial.",
+    "loggedItems": "Alimentos Registrados",
+    "today": "Hoy"
+  },
+  "HistoryList": {
+    "deleteButton": "Eliminar"
+  },
+  "DailySummary": {
+    "title": "Resumen de Hoy",
+    "description": "Un resumen de tu ingesta de nutrientes para hoy.",
+    "generateButton": "Generar Resumen",
+    "hasLog": "Haz clic en el botón para generar el resumen de hoy.",
+    "noLog": "Registra algún alimento para ver tu resumen diario.",
+    "summaryErrorTitle": "Error en el Resumen"
+  },
+  "ManualEntryPage": {
+    "title": "Añadir Comida Manualmente",
+    "subtitle": "¿Conoces la información nutricional? Regístrala directamente aquí. Perfecto para artículos con etiqueta nutricional."
+  },
+  "ManualEntryForm": {
+    "title": "Detalles del Alimento",
+    "foodNameLabel": "Nombre del Alimento",
+    "foodNamePlaceholder": "ej., Manzana",
+    "quantityLabel": "Cantidad (g)",
+    "caloriesLabel": "Calorías (kcal)",
+    "proteinLabel": "Proteína (g)",
+    "carbsLabel": "Carbohidratos (g)",
+    "fatLabel": "Grasa (g)",
+    "addToHistoryButton": "Añadir al Historial"
+  },
+  "FoodLog": {
+    "loadError": "No se pudo cargar tu historial de comidas.",
+    "saveError": "No se pudo guardar tu historial de comidas.",
+    "loggedToastTitle": "¡Comida Registrada!",
+    "loggedToastDescription": "{quantity}g de {name} añadidos a tu historial.",
+    "removedToastTitle": "Elemento Eliminado",
+    "removedToastDescription": "El alimento ha sido eliminado de tu historial."
+  },
+  "Actions": {
+    "imageRequired": "La imagen debe ser un URI de datos",
+    "analysisError": "La IA no pudo analizar la imagen. Por favor, intenta con otra o ingrésala manualmente.",
+    "extractionError": "Identificado como {foodItem}, pero no se pudieron extraer los datos nutricionales. Intenta con una imagen más clara.",
+    "unexpectedError": "Ocurrió un error inesperado durante el análisis.",
+    "noFoodItems": "No se proporcionaron alimentos para el resumen.",
+    "summaryError": "No se pudo generar el resumen diario."
+  }
+}
