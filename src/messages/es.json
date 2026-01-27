@@ -1,6 +1,6 @@
 {
-  "NutriSnap": {
-    "title": "NutriSnap",
+  "NutriMM": {
+    "title": "NutriM&M",
     "description": "Toma una foto de tu comida y obtén su valor nutricional al instante."
   },
   "Navigation": {
@@ -10,7 +10,7 @@
   },
   "HomePage": {
     "title": "Escanea. Analiza. Prospera.",
-    "subtitle": "Descubre al instante el valor nutricional de tus comidas. Solo toma una foto y deja que NutriSnap haga el resto.",
+    "subtitle": "Descubre al instante el valor nutricional de tus comidas. Solo toma una foto y deja que NutriM&M haga el resto.",
     "cardTitle": "Come más inteligentemente, vive mejor.",
     "cardSubtitle": "Tu viaje hacia una alimentación consciente comienza aquí."
   },

@@ -23,7 +23,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
             <Logo className="h-8 w-8 text-primary" />
-            <span className="font-headline text-xl font-bold">{t('NutriSnap.title')}</span>
+            <span className="font-headline text-xl font-bold">{t('NutriMM.title')}</span>
           </Link>
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex md:items-center md:gap-4">

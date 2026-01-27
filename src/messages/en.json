@@ -1,6 +1,6 @@
 {
-  "NutriSnap": {
-    "title": "NutriSnap",
+  "NutriMM": {
+    "title": "NutriM&M",
     "description": "Snap a photo of your food and get its nutritional value instantly."
   },
   "Navigation": {
@@ -10,7 +10,7 @@
   },
   "HomePage": {
     "title": "Snap. Analyze. Thrive.",
-    "subtitle": "Instantly discover the nutritional value of your meals. Just take a picture and let NutriSnap do the rest.",
+    "subtitle": "Instantly discover the nutritional value of your meals. Just take a picture and let NutriM&M do the rest.",
     "cardTitle": "Eat Smarter, Live Better.",
     "cardSubtitle": "Your journey to mindful eating starts here."
   },

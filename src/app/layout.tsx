@@ -6,7 +6,7 @@ import { MainLayout } from '@/components/main-layout';
 import { Providers } from '@/components/providers';
 
 export const metadata: Metadata = {
-  title: 'NutriSnap',
+  title: 'NutriM&M',
   description: 'Snap a photo of your food and get its nutritional value instantly.',
 };
 

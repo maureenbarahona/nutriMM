@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { FoodLogItem, Nutrient } from '@/lib/types';
 import { useToast } from '@/components/ui/use-toast';
 
-const STORAGE_KEY = 'nutrisnap-food-log';
+const STORAGE_KEY = 'nutrimm-food-log';
 
 export function useFoodLog() {
   const [log, setLog] = useState<FoodLogItem[]>([]);
