@@ -67,7 +67,7 @@ export function ScanForm() {
 
   const handleFileSelect = async (file: File) => {
     setSelectedFile(file);
-    const dataUri = await fileToDataUri(file);
+    const dataUri = await fileToDataUri(file, { maxSizeMB: 3 });
     setPreviewUrl(dataUri);
   };
   
