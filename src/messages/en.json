@@ -29,8 +29,11 @@
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
     "macronutrients": "Macronutrients",
-    "micronutrients": "Micronutrients",
-    "water": "Water"
+    "water": "Water",
+    "nutrient": "Nutrient",
+    "amountPer100g": "Amount (per 100g)",
+    "vitamins": "Vitamins",
+    "minerals": "Minerals"
   },
   "HistoryPage": {
     "title": "Food History",

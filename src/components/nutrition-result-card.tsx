@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { FoodAnalysis, Nutrient } from '@/lib/types';
 import { getNutrientIcon } from '@/lib/constants';
 import { useFoodLog } from '@/hooks/use-food-log';
@@ -20,14 +21,27 @@ const logFoodSchema = z.object({
 type LogFoodFormValues = z.infer<typeof logFoodSchema>;
 
 const groupNutrients = (nutrients: Nutrient[]) => {
-  const grouped: { macronutrients: Nutrient[]; micronutrients: Nutrient[]; water: Nutrient[] } = {
+  const grouped: {
+    macronutrients: Nutrient[];
+    minerals: Nutrient[];
+    vitamins: Nutrient[];
+    water: Nutrient[];
+  } = {
     macronutrients: [],
-    micronutrients: [],
+    minerals: [],
+    vitamins: [],
     water: [],
   };
 
   const MACRONUTRIENT_KEYS = ['protein', 'carbohydrate', 'fat', 'fiber', 'proteina', 'carbohidrato', 'grasa', 'fibra', 'calories', 'energia', 'kcal'];
   const WATER_KEYS = ['water', 'agua'];
+  const VITAMIN_KEYS = ['vitamin', 'vitamina'];
+  const MINERAL_KEYS = [
+    'calcium', 'iron', 'potassium', 'sodium', 'magnesium', 'zinc', 'phosphorus', 'manganese', 'copper', 'selenium', 'iodine',
+    'calcio', 'hierro', 'potasio', 'sodio', 'magnesio', 'fosforo', 'manganeso', 'cobre', 'selenio', 'yodo'
+  ];
+
+  const others: Nutrient[] = [];
 
   for (const nutrient of nutrients) {
     const nameLower = nutrient.name.toLowerCase();
@@ -35,9 +49,18 @@ const groupNutrients = (nutrients: Nutrient[]) => {
       grouped.macronutrients.push(nutrient);
     } else if (WATER_KEYS.some(key => nameLower.includes(key))) {
       grouped.water.push(nutrient);
+    } else if (VITAMIN_KEYS.some(key => nameLower.includes(key))) {
+      grouped.vitamins.push(nutrient);
+    } else if (MINERAL_KEYS.some(key => nameLower.includes(key))) {
+      grouped.minerals.push(nutrient);
     } else {
-      grouped.micronutrients.push(nutrient);
+      others.push(nutrient); // Collect others for fallback
     }
+  }
+
+  // Fallback for unidentified nutrients, often they are minerals or other micronutrients
+  if (others.length > 0) {
+    grouped.minerals.push(...others);
   }
 
   // Sort macronutrients to have Calories first
@@ -46,6 +69,8 @@ const groupNutrients = (nutrients: Nutrient[]) => {
     const bName = b.name.toLowerCase();
     if (aName.includes('calories') || aName.includes('energia')) return -1;
     if (bName.includes('calories') || bName.includes('energia')) return 1;
+    if (aName.includes('protein') || aName.includes('proteina')) return -1;
+    if (bName.includes('protein') || bName.includes('proteina')) return 1;
     return 0;
   });
 
@@ -80,31 +105,26 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
     });
   }
 
-  const renderNutrientSection = (title: string, nutrients: Nutrient[]) => {
-    if (nutrients.length === 0) return null;
-
+  const renderNutrientRow = (nutrient: Nutrient) => {
+    const Icon = getNutrientIcon(nutrient.name);
     return (
-        <div className="space-y-4">
-            <h3 className="text-xl font-semibold font-headline text-secondary-foreground">{title}</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {nutrients.map((nutrient) => {
-                    const Icon = getNutrientIcon(nutrient.name);
-                    return (
-                        <div key={nutrient.name} className="flex items-start gap-3 rounded-lg bg-secondary/50 p-3">
-                            <Icon className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
-                            <div>
-                                <p className="font-semibold text-secondary-foreground">{nutrient.name}</p>
-                                <p className="text-lg text-foreground">
-                                    {nutrient.amount.toLocaleString()} {nutrient.unit}
-                                </p>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
+        <TableRow key={nutrient.name}>
+            <TableCell className="font-medium flex items-center gap-2">
+                <Icon className="h-4 w-4 text-muted-foreground" />
+                <span>{nutrient.name}</span>
+            </TableCell>
+            <TableCell className="text-right">
+                {nutrient.amount.toLocaleString()} {nutrient.unit}
+            </TableCell>
+        </TableRow>
     );
   };
+
+  const renderGroupHeader = (title: string) => (
+      <TableRow className="bg-secondary hover:bg-secondary">
+          <TableCell colSpan={2} className="font-semibold text-secondary-foreground">{title}</TableCell>
+      </TableRow>
+  );
 
   return (
     <Card className="w-full animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
@@ -112,10 +132,30 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
         <CardTitle className="text-2xl font-headline text-primary">{analysis.foodItem}</CardTitle>
         <CardDescription>{t('NutritionResultCard.description')}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {renderNutrientSection(t('NutritionResultCard.macronutrients'), groupedNutrients.macronutrients)}
-        {renderNutrientSection(t('NutritionResultCard.micronutrients'), groupedNutrients.micronutrients)}
-        {renderNutrientSection(t('NutritionResultCard.water'), groupedNutrients.water)}
+      <CardContent>
+        <Card>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>{t('NutritionResultCard.nutrient')}</TableHead>
+                        <TableHead className="text-right">{t('NutritionResultCard.amountPer100g')}</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {groupedNutrients.macronutrients.length > 0 && renderGroupHeader(t('NutritionResultCard.macronutrients'))}
+                    {groupedNutrients.macronutrients.map(renderNutrientRow)}
+                    
+                    {groupedNutrients.vitamins.length > 0 && renderGroupHeader(t('NutritionResultCard.vitamins'))}
+                    {groupedNutrients.vitamins.map(renderNutrientRow)}
+
+                    {groupedNutrients.minerals.length > 0 && renderGroupHeader(t('NutritionResultCard.minerals'))}
+                    {groupedNutrients.minerals.map(renderNutrientRow)}
+
+                    {groupedNutrients.water.length > 0 && renderGroupHeader(t('NutritionResultCard.water'))}
+                    {groupedNutrients.water.map(renderNutrientRow)}
+                </TableBody>
+            </Table>
+        </Card>
       </CardContent>
       <CardFooter>
         <Form {...form}>

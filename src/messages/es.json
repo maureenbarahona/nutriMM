@@ -29,8 +29,11 @@
     "quantityLabel": "Cantidad (gramos)",
     "logFoodButton": "Registrar Comida",
     "macronutrients": "Macronutrientes",
-    "micronutrients": "Micronutrientes",
-    "water": "Agua"
+    "water": "Agua",
+    "nutrient": "Nutriente",
+    "amountPer100g": "Cantidad (por 100g)",
+    "vitamins": "Vitaminas",
+    "minerals": "Minerales"
   },
   "HistoryPage": {
     "title": "Historial de Comidas",

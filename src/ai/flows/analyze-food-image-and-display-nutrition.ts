@@ -39,7 +39,14 @@ Analyze the following food item:
 
 Photo: {{media url=photoDataUri}}
 
-Return the food item name and its nutritional information. Focus on key nutrients like calories, protein, carbohydrates, and fats.
+Return the food item name and its nutritional information. Provide a detailed nutritional composition including:
+- Macronutrients (Calories, Proteins, Fats, Carbohydrates, Fiber)
+- Key Minerals (e.g., Calcium, Iron, Potassium, Sodium)
+- Key Vitamins (e.g., Vitamin A, Vitamin C)
+- Water content.
+
+Provide the information in a clear, parsable format, like "Nutrient: Amount Unit".
+For example: "Calories: 52 kcal, Protein: 0.3 g, Vitamin C: 4.6 mg".
 `,
 });
 
