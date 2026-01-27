@@ -1,7 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect, useState, useRef } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useEffect, useState, useRef, useActionState } from 'react';
 import { Camera, Sparkles } from 'lucide-react';
 
 import { analyzeImageAction, type AnalysisState } from '@/app/actions';
@@ -41,7 +41,7 @@ function SubmitButton() {
 }
 
 export function ScanForm() {
-  const [state, formAction] = useFormState(analyzeImageAction, initialState);
+  const [state, formAction] = useActionState(analyzeImageAction, initialState);
   const { pending } = useFormStatus();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
