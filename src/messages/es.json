@@ -27,7 +27,10 @@
   "NutritionResultCard": {
     "description": "Información nutricional por 100g (aprox.)",
     "quantityLabel": "Cantidad (gramos)",
-    "logFoodButton": "Registrar Comida"
+    "logFoodButton": "Registrar Comida",
+    "macronutrients": "Macronutrientes",
+    "micronutrients": "Micronutrientes",
+    "water": "Agua"
   },
   "HistoryPage": {
     "title": "Historial de Comidas",
