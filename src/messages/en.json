@@ -67,7 +67,9 @@
     "proteinLabel": "Protein (g)",
     "carbsLabel": "Carbohydrates (g)",
     "fatLabel": "Fat (g)",
-    "addToHistoryButton": "Add to History"
+    "addToHistoryButton": "Add to History",
+    "analyzeButton": "Analyze",
+    "analyzingButton": "Analyzing..."
   },
   "FoodLog": {
     "loadError": "Could not load your food history.",
@@ -83,7 +85,10 @@
     "extractionError": "Identified as {foodItem}, but could not extract nutritional data. Try a clearer image.",
     "unexpectedError": "An unexpected error occurred during analysis.",
     "noFoodItems": "No food items provided for summary.",
-    "summaryError": "Failed to generate daily summary."
+    "summaryError": "Failed to generate daily summary.",
+    "textAnalysisError": "AI could not analyze the food name. Please try another one or enter manually.",
+    "textAnalysisSuccess": "Nutrients populated for {foodName}.",
+    "foodNameRequired": "Please enter a food name to analyze."
   },
   "LanguageSwitcher": {
     "label": "Language"

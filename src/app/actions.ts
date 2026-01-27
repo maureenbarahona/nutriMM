@@ -1,6 +1,7 @@
 'use server';
 
 import { analyzeFoodImageAndDisplayNutrition } from '@/ai/flows/analyze-food-image-and-display-nutrition';
+import { analyzeFoodTextAndDisplayNutrition } from '@/ai/flows/analyze-food-text-and-display-nutrition';
 import { summarizeDailyNutrientIntake } from "@/ai/flows/summarize-daily-nutrient-intake";
 import { parseNutritionString } from '@/lib/utils';
 import type { FoodLogItem, Nutrient } from '@/lib/types';
@@ -69,6 +70,47 @@ export async function analyzeImageAction(
     console.error(error);
     return { status: 'error', message: "Actions.unexpectedError" };
   }
+}
+
+export async function analyzeTextAction(foodName: string): Promise<AnalysisState> {
+    if (!foodName) {
+        return { status: 'error', message: 'Actions.foodNameRequired' };
+    }
+
+    try {
+        const result = await analyzeFoodTextAndDisplayNutrition({ foodName });
+
+        if (!result.foodItem || !result.nutritionalInformation) {
+            return {
+                status: 'error',
+                message: "Actions.textAnalysisError",
+            };
+        }
+
+        const nutrients = parseNutritionString(result.nutritionalInformation);
+
+        if (nutrients.length === 0) {
+            return {
+                status: 'error',
+                message: "Actions.extractionError",
+                messageValues: { foodItem: result.foodItem },
+                data: { foodItem: result.foodItem, nutrients: [] }
+            };
+        }
+
+        return {
+            status: 'success',
+            message: "Actions.textAnalysisSuccess",
+            messageValues: { foodItem: result.foodItem },
+            data: {
+                foodItem: result.foodItem,
+                nutrients,
+            },
+        };
+    } catch (error) {
+        console.error(error);
+        return { status: 'error', message: "Actions.unexpectedError" };
+    }
 }
 
 export async function getDailySummaryAction(foodItems: FoodLogItem[]) {

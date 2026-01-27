@@ -11,6 +11,10 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from './ui/use-toast';
+import { useState } from 'react';
+import { analyzeTextAction } from '@/app/actions';
+import { Brain, Sparkles } from 'lucide-react';
+import type { Nutrient } from '@/lib/types';
 
 const manualEntrySchema = z.object({
   name: z.string().min(2, 'Food name must be at least 2 characters.'),
@@ -28,6 +32,7 @@ export function ManualEntryForm() {
   const { addFoodItem } = useFoodLog();
   const { t } = useLanguage();
   const { toast } = useToast();
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const form = useForm<ManualEntryValues>({
     resolver: zodResolver(manualEntrySchema),
@@ -40,6 +45,48 @@ export function ManualEntryForm() {
       fat: 0,
     },
   });
+
+  const handleAnalyze = async () => {
+    const foodName = form.getValues('name');
+    if (!foodName) {
+      toast({
+        variant: 'destructive',
+        title: t('ScanForm.errorTitle'),
+        description: t('Actions.foodNameRequired'),
+      });
+      return;
+    }
+    
+    setIsAnalyzing(true);
+    const result = await analyzeTextAction(foodName);
+    setIsAnalyzing(false);
+
+    if (result.status === 'error') {
+      toast({
+        variant: 'destructive',
+        title: t('ScanForm.analysisFailedTitle'),
+        description: t(result.message, result.messageValues),
+      });
+    } else if (result.data?.nutrients) {
+      toast({
+        title: t('ScanForm.analysisSuccessTitle'),
+        description: t(result.message, result.messageValues),
+      });
+      
+      result.data.nutrients.forEach((nutrient: Nutrient) => {
+        const nameLower = nutrient.name.toLowerCase();
+        if (nameLower.includes('calories') || nameLower.includes('energia') || nameLower.includes('kcal')) {
+            form.setValue('calories', Math.round(nutrient.amount));
+        } else if (nameLower.includes('protein') || nameLower.includes('proteína')) {
+            form.setValue('protein', nutrient.amount);
+        } else if (nameLower.includes('carbohydrate') || nameLower.includes('carbohidrato')) {
+            form.setValue('carbs', nutrient.amount);
+        } else if (nameLower.includes('fat') || nameLower.includes('grasa')) {
+            form.setValue('fat', nutrient.amount);
+        }
+      });
+    }
+  };
 
   function onSubmit(values: ManualEntryValues) {
     const item = {
@@ -75,9 +122,19 @@ export function ManualEntryForm() {
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
                     <FormLabel>{t('ManualEntryForm.foodNameLabel')}</FormLabel>
-                    <FormControl>
-                      <Input placeholder={t('ManualEntryForm.foodNamePlaceholder')} {...field} />
-                    </FormControl>
+                    <div className="flex items-center gap-2">
+                      <FormControl>
+                        <Input placeholder={t('ManualEntryForm.foodNamePlaceholder')} {...field} />
+                      </FormControl>
+                      <Button type="button" variant="outline" onClick={handleAnalyze} disabled={isAnalyzing}>
+                        {isAnalyzing ? (
+                          <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Brain className="mr-2 h-4 w-4" />
+                        )}
+                        {isAnalyzing ? t('ManualEntryForm.analyzingButton') : t('ManualEntryForm.analyzeButton')}
+                      </Button>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

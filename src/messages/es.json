@@ -67,7 +67,9 @@
     "proteinLabel": "Proteína (g)",
     "carbsLabel": "Carbohidratos (g)",
     "fatLabel": "Grasa (g)",
-    "addToHistoryButton": "Añadir al Historial"
+    "addToHistoryButton": "Añadir al Historial",
+    "analyzeButton": "Analizar",
+    "analyzingButton": "Analizando..."
   },
   "FoodLog": {
     "loadError": "No se pudo cargar tu historial de comidas.",
@@ -83,7 +85,10 @@
     "extractionError": "Identificado como {foodItem}, pero no se pudieron extraer los datos nutricionales. Intenta con una imagen más clara.",
     "unexpectedError": "Ocurrió un error inesperado durante el análisis.",
     "noFoodItems": "No se proporcionaron alimentos para el resumen.",
-    "summaryError": "No se pudo generar el resumen diario."
+    "summaryError": "No se pudo generar el resumen diario.",
+    "textAnalysisError": "La IA no pudo analizar el nombre del alimento. Por favor, intente con otro o ingréselo manualmente.",
+    "textAnalysisSuccess": "Nutrientes autocompletados para {foodName}.",
+    "foodNameRequired": "Por favor, ingrese un nombre de alimento para analizar."
   },
   "LanguageSwitcher": {
     "label": "Idioma"
