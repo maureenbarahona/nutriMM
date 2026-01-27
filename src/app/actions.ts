@@ -47,6 +47,14 @@ export async function analyzeImageAction(
       };
     }
 
+    if (result.nutritionalInformation === "Alimento no registrado") {
+      return {
+        status: 'error',
+        message: "Actions.foodNotFound",
+        messageValues: { foodItem: result.foodItem },
+      };
+    }
+
     const nutrients = parseNutritionString(result.nutritionalInformation);
 
     if (nutrients.length === 0) {
@@ -85,6 +93,14 @@ export async function analyzeTextAction(foodName: string): Promise<AnalysisState
                 status: 'error',
                 message: "Actions.textAnalysisError",
             };
+        }
+
+        if (result.nutritionalInformation === "Alimento no registrado") {
+          return {
+            status: 'error',
+            message: "Actions.foodNotFound",
+            messageValues: { foodItem: result.foodItem },
+          };
         }
 
         const nutrients = parseNutritionString(result.nutritionalInformation);

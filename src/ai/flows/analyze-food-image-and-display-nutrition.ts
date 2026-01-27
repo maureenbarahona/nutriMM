@@ -33,13 +33,16 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodImageAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodImageAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodImageAndDisplayNutritionOutputSchema},
-  prompt: `You are a nutritional expert. You will analyze the image of a food item and identify it. Then, you will use the INCAP database (https://www.sennutricion.org/media/tablas/INCAP.pdf) to determine its nutritional information.
+  prompt: `You are a nutritional expert. You will analyze the image of a food item and identify it.
+First, you will try to find its nutritional information using the INCAP database (https://www.sennutricion.org/media/tablas/INCAP.pdf).
+If you cannot find the food item in the INCAP database, you should then search for it on Open Food Facts (https://hn.openfoodfacts.org/).
+If the food item is not found in either database, the \`foodItem\` field in the output should be the identified food, and the \`nutritionalInformation\` field should be the exact string "Alimento no registrado".
 
 Analyze the following food item:
 
 Photo: {{media url=photoDataUri}}
 
-Return the food item name and its nutritional information. Provide a detailed nutritional composition including as many of the following as possible:
+Return the food item name and its nutritional information. If found, provide a detailed nutritional composition including as many of the following as possible:
 - Agua (%)
 - Energia (Kcal)
 - Proteina (g)

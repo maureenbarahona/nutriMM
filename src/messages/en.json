@@ -83,7 +83,8 @@
     "summaryError": "Failed to generate daily summary.",
     "textAnalysisError": "AI could not analyze the food name. Please try another one or enter manually.",
     "textAnalysisSuccess": "Nutrients populated for {foodName}.",
-    "foodNameRequired": "Please enter a food name to analyze."
+    "foodNameRequired": "Please enter a food name to analyze.",
+    "foodNotFound": "Food not registered: {foodItem}"
   },
   "LanguageSwitcher": {
     "label": "Language"

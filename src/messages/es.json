@@ -83,7 +83,8 @@
     "summaryError": "No se pudo generar el resumen diario.",
     "textAnalysisError": "La IA no pudo analizar el nombre del alimento. Por favor, intente con otro o ingréselo manualmente.",
     "textAnalysisSuccess": "Nutrientes autocompletados para {foodName}.",
-    "foodNameRequired": "Por favor, ingrese un nombre de alimento para analizar."
+    "foodNameRequired": "Por favor, ingrese un nombre de alimento para analizar.",
+    "foodNotFound": "Alimento no registrado: {foodItem}"
   },
   "LanguageSwitcher": {
     "label": "Idioma"
