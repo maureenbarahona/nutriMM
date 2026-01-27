@@ -14,7 +14,8 @@ import { useToast } from './ui/use-toast';
 import { useState } from 'react';
 import { analyzeTextAction } from '@/app/actions';
 import { Brain, Sparkles } from 'lucide-react';
-import type { Nutrient } from '@/lib/types';
+import type { FoodAnalysis, Nutrient } from '@/lib/types';
+import { NutritionResultCard } from './nutrition-result-card';
 
 const manualEntrySchema = z.object({
   name: z.string().min(2, 'Food name must be at least 2 characters.'),
@@ -33,6 +34,7 @@ export function ManualEntryForm() {
   const { t } = useLanguage();
   const { toast } = useToast();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<FoodAnalysis | null>(null);
 
   const form = useForm<ManualEntryValues>({
     resolver: zodResolver(manualEntrySchema),
@@ -58,6 +60,7 @@ export function ManualEntryForm() {
     }
     
     setIsAnalyzing(true);
+    setAnalysisResult(null);
     const result = await analyzeTextAction(foodName);
     setIsAnalyzing(false);
 
@@ -67,11 +70,12 @@ export function ManualEntryForm() {
         title: t('ScanForm.analysisFailedTitle'),
         description: t(result.message, result.messageValues),
       });
-    } else if (result.data?.nutrients) {
-      toast({
-        title: t('ScanForm.analysisSuccessTitle'),
-        description: t(result.message, result.messageValues),
-      });
+    } else if (result.data) {
+        setAnalysisResult(result.data);
+        toast({
+            title: t('ScanForm.analysisSuccessTitle'),
+            description: t(result.message, result.messageValues),
+        });
       
       result.data.nutrients.forEach((nutrient: Nutrient) => {
         const nameLower = nutrient.name.toLowerCase();
@@ -89,16 +93,21 @@ export function ManualEntryForm() {
   };
 
   function onSubmit(values: ManualEntryValues) {
-    const item = {
-      name: values.name,
-      quantity: values.quantity,
-      nutrients: [
+    const nutrientsToLog = analysisResult?.nutrients && analysisResult.nutrients.length > 0
+      ? analysisResult.nutrients
+      : [
         { name: 'Calories', amount: values.calories, unit: 'kcal' },
         { name: 'Protein', amount: values.protein, unit: 'g' },
         { name: 'Carbohydrates', amount: values.carbs, unit: 'g' },
         { name: 'Fat', amount: values.fat, unit: 'g' },
-      ],
+      ];
+    
+    const item = {
+      name: values.name,
+      quantity: values.quantity,
+      nutrients: nutrientsToLog,
     };
+    
     addFoodItem(item);
     toast({
         title: t('FoodLog.loggedToastTitle'),
@@ -108,6 +117,7 @@ export function ManualEntryForm() {
   }
 
   return (
+    <>
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>{t('ManualEntryForm.title')}</CardTitle>
@@ -212,5 +222,12 @@ export function ManualEntryForm() {
         </Form>
       </CardContent>
     </Card>
+
+    {analysisResult && (
+        <div className="max-w-2xl mx-auto mt-8">
+            <NutritionResultCard analysis={analysisResult} />
+        </div>
+    )}
+    </>
   );
 }

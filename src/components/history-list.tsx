@@ -5,7 +5,6 @@ import type { FoodLogItem } from '@/lib/types';
 import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Trash2 } from 'lucide-react';
-import { getNutrientIcon } from '@/lib/constants';
 import {
   Accordion,
   AccordionContent,
@@ -13,6 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { useLanguage } from '@/context/language-context';
+import { NutrientTable } from './nutrient-table';
 
 interface HistoryListProps {
   log: FoodLogItem[];
@@ -61,19 +61,11 @@ export function HistoryList({ log, onRemove }: HistoryListProps) {
                             </div>
                         </AccordionTrigger>
                         <AccordionContent className="p-4 pt-0">
-                            <div className="space-y-3">
-                                {item.nutrients.slice(0, 4).map(n => {
-                                    const Icon = getNutrientIcon(n.name);
-                                    return (
-                                        <div key={n.name} className="flex items-center justify-between text-sm">
-                                            <span className="flex items-center gap-2 text-muted-foreground"><Icon className="h-4 w-4"/> {n.name}</span>
-                                            <span className="font-medium">{n.amount.toLocaleString()} {n.unit}</span>
-                                        </div>
-                                    )
-                                })}
-                                <Button variant="ghost" size="sm" className="w-full text-destructive hover:text-destructive mt-2" onClick={() => onRemove(item.id)}>
-                                    <Trash2 className="mr-2 h-4 w-4" /> {t('HistoryList.deleteButton')}
-                                </Button>
+                            <div className="space-y-4">
+                              <NutrientTable nutrients={item.nutrients} />
+                              <Button variant="ghost" size="sm" className="w-full text-destructive hover:text-destructive mt-2" onClick={() => onRemove(item.id)}>
+                                  <Trash2 className="mr-2 h-4 w-4" /> {t('HistoryList.deleteButton')}
+                              </Button>
                             </div>
                         </AccordionContent>
                     </AccordionItem>
