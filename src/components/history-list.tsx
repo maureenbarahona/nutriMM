@@ -2,7 +2,7 @@
 
 import { format, parseISO, isSameDay } from 'date-fns';
 import type { FoodLogItem } from '@/lib/types';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Card } from './ui/card';
 import { Button } from './ui/button';
 import { Trash2 } from 'lucide-react';
 import { getNutrientIcon } from '@/lib/constants';
@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { useLanguage } from '@/context/language-context';
 
 interface HistoryListProps {
   log: FoodLogItem[];
@@ -19,6 +20,7 @@ interface HistoryListProps {
 }
 
 export function HistoryList({ log, onRemove }: HistoryListProps) {
+  const { t } = useLanguage();
 
   const groupedLog = log.reduce((acc, item) => {
     const date = format(parseISO(item.createdAt), 'yyyy-MM-dd');
@@ -34,14 +36,14 @@ export function HistoryList({ log, onRemove }: HistoryListProps) {
   const formatDateHeading = (dateStr: string) => {
     const date = parseISO(dateStr);
     if (isSameDay(date, new Date())) {
-      return 'Today';
+      return t('HistoryPage.today');
     }
     return format(date, 'MMMM d, yyyy');
   }
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold font-headline">Logged Items</h2>
+      <h2 className="text-2xl font-bold font-headline">{t('HistoryPage.loggedItems')}</h2>
       {sortedDates.map((date) => (
         <div key={date}>
           <h3 className="text-lg font-semibold text-muted-foreground mb-2">{formatDateHeading(date)}</h3>
@@ -70,7 +72,7 @@ export function HistoryList({ log, onRemove }: HistoryListProps) {
                                     )
                                 })}
                                 <Button variant="ghost" size="sm" className="w-full text-destructive hover:text-destructive mt-2" onClick={() => onRemove(item.id)}>
-                                    <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                    <Trash2 className="mr-2 h-4 w-4" /> {t('HistoryList.deleteButton')}
                                 </Button>
                             </div>
                         </AccordionContent>

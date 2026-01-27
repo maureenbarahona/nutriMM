@@ -13,6 +13,7 @@ import { Skeleton } from './ui/skeleton';
 import { fileToDataUri } from '@/lib/utils';
 import { useToast } from './ui/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { useLanguage } from '@/context/language-context';
 
 const initialState: AnalysisState = {
   status: 'error',
@@ -21,17 +22,18 @@ const initialState: AnalysisState = {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
+  const { t } = useLanguage();
   return (
     <Button type="submit" disabled={pending} className="w-full">
       {pending ? (
         <>
           <Sparkles className="mr-2 h-4 w-4 animate-spin" />
-          Analyzing...
+          {t('ScanForm.analyzingButton')}
         </>
       ) : (
         <>
           <Camera className="mr-2 h-4 w-4" />
-          Analyze Image
+          {t('ScanForm.analyzeButton')}
         </>
       )}
     </Button>
@@ -45,16 +47,23 @@ export function ScanForm() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (state.status === 'error' && state.message) {
       toast({
         variant: 'destructive',
-        title: 'Analysis Failed',
-        description: state.message,
+        title: t('ScanForm.analysisFailedTitle'),
+        description: t(state.message, state.messageValues),
       });
     }
-  }, [state, toast]);
+     if (state.status === 'success' && state.message && state.data) {
+        toast({
+            title: t(state.message),
+            description: `${state.data.foodItem} analyzed.`,
+        });
+    }
+  }, [state, toast, t]);
 
   const handleFileSelect = async (file: File) => {
     setSelectedFile(file);
@@ -89,8 +98,8 @@ export function ScanForm() {
 
         {state.status === 'error' && state.message && !pending && (
             <Alert variant="destructive" className="mt-6">
-                <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{state.message}</AlertDescription>
+                <AlertTitle>{t('ScanForm.errorTitle')}</AlertTitle>
+                <AlertDescription>{t(state.message, state.messageValues)}</AlertDescription>
             </Alert>
         )}
 

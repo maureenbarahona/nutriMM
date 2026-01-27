@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLanguage } from '@/context/language-context';
+import { useToast } from './ui/use-toast';
 
 const manualEntrySchema = z.object({
   name: z.string().min(2, 'Food name must be at least 2 characters.'),
@@ -24,6 +26,8 @@ type ManualEntryValues = z.infer<typeof manualEntrySchema>;
 export function ManualEntryForm() {
   const router = useRouter();
   const { addFoodItem } = useFoodLog();
+  const { t } = useLanguage();
+  const { toast } = useToast();
 
   const form = useForm<ManualEntryValues>({
     resolver: zodResolver(manualEntrySchema),
@@ -38,7 +42,7 @@ export function ManualEntryForm() {
   });
 
   function onSubmit(values: ManualEntryValues) {
-    addFoodItem({
+    const item = {
       name: values.name,
       quantity: values.quantity,
       nutrients: [
@@ -47,6 +51,11 @@ export function ManualEntryForm() {
         { name: 'Carbohydrates', amount: values.carbs, unit: 'g' },
         { name: 'Fat', amount: values.fat, unit: 'g' },
       ],
+    };
+    addFoodItem(item);
+    toast({
+        title: t('FoodLog.loggedToastTitle'),
+        description: t('FoodLog.loggedToastDescription', { quantity: item.quantity, name: item.name }),
     });
     router.push('/history');
   }
@@ -54,7 +63,7 @@ export function ManualEntryForm() {
   return (
     <Card className="max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Log Food Details</CardTitle>
+        <CardTitle>{t('ManualEntryForm.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -65,9 +74,9 @@ export function ManualEntryForm() {
                 name="name"
                 render={({ field }) => (
                   <FormItem className="md:col-span-2">
-                    <FormLabel>Food Name</FormLabel>
+                    <FormLabel>{t('ManualEntryForm.foodNameLabel')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Apple" {...field} />
+                      <Input placeholder={t('ManualEntryForm.foodNamePlaceholder')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -78,7 +87,7 @@ export function ManualEntryForm() {
                 name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quantity (g)</FormLabel>
+                    <FormLabel>{t('ManualEntryForm.quantityLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="100" {...field} />
                     </FormControl>
@@ -91,7 +100,7 @@ export function ManualEntryForm() {
                 name="calories"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Calories (kcal)</FormLabel>
+                    <FormLabel>{t('ManualEntryForm.caloriesLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="52" {...field} />
                     </FormControl>
@@ -104,7 +113,7 @@ export function ManualEntryForm() {
                 name="protein"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Protein (g)</FormLabel>
+                    <FormLabel>{t('ManualEntryForm.proteinLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="0.3" {...field} />
                     </FormControl>
@@ -117,7 +126,7 @@ export function ManualEntryForm() {
                 name="carbs"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Carbohydrates (g)</FormLabel>
+                    <FormLabel>{t('ManualEntryForm.carbsLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="13.8" {...field} />
                     </FormControl>
@@ -130,7 +139,7 @@ export function ManualEntryForm() {
                 name="fat"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Fat (g)</FormLabel>
+                    <FormLabel>{t('ManualEntryForm.fatLabel')}</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="0.2" {...field} />
                     </FormControl>
@@ -140,7 +149,7 @@ export function ManualEntryForm() {
               />
             </div>
             <div className="flex justify-end pt-4">
-              <Button type="submit" className="w-full md:w-auto">Add to History</Button>
+              <Button type="submit" className="w-full md:w-auto">{t('ManualEntryForm.addToHistoryButton')}</Button>
             </div>
           </form>
         </Form>

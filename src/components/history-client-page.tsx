@@ -5,9 +5,21 @@ import { useFoodLog } from "@/hooks/use-food-log";
 import { Skeleton } from "./ui/skeleton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Utensils } from "lucide-react";
+import { useLanguage } from "@/context/language-context";
+import { useToast } from "./ui/use-toast";
 
 export function HistoryClientPage() {
     const { log, removeFoodItem, isLoaded } = useFoodLog();
+    const { t } = useLanguage();
+    const { toast } = useToast();
+
+    const handleRemove = (id: string) => {
+        removeFoodItem(id);
+        toast({
+            title: t('FoodLog.removedToastTitle'),
+            description: t('FoodLog.removedToastDescription')
+        })
+    }
 
     if (!isLoaded) {
         return <HistorySkeleton />;
@@ -22,8 +34,8 @@ export function HistoryClientPage() {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <CardTitle className="text-2xl">No Food Logged Yet</CardTitle>
-                    <CardDescription className="mt-2">Start by scanning a food item to build your history.</CardDescription>
+                    <CardTitle className="text-2xl">{t('HistoryPage.noHistoryTitle')}</CardTitle>
+                    <CardDescription className="mt-2">{t('HistoryPage.noHistorySubtitle')}</CardDescription>
                 </CardContent>
             </Card>
         )
@@ -35,7 +47,7 @@ export function HistoryClientPage() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-                <HistoryList log={log} onRemove={removeFoodItem} />
+                <HistoryList log={log} onRemove={handleRemove} />
             </div>
             <div>
                 <DailySummary todayLog={todayLog} />

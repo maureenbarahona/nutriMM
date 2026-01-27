@@ -7,6 +7,7 @@ import { getDailySummaryAction } from '@/app/actions';
 import { useToast } from './ui/use-toast';
 import { Loader2, TrendingUp } from 'lucide-react';
 import { Progress } from './ui/progress';
+import { useLanguage } from '@/context/language-context';
 
 interface DailySummaryProps {
   todayLog: FoodLogItem[];
@@ -23,6 +24,7 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
   const [summary, setSummary] = useState<SummaryData[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleGenerateSummary = async () => {
     setIsLoading(true);
@@ -31,8 +33,8 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
     if (result.error) {
       toast({
         variant: 'destructive',
-        title: 'Summary Error',
-        description: result.error,
+        title: t('DailySummary.summaryErrorTitle'),
+        description: t(result.error),
       });
     } else if (result.data) {
       setSummary(result.data);
@@ -47,10 +49,10 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-6 w-6 text-primary"/>
-            Today's Summary
+            {t('DailySummary.title')}
         </CardTitle>
         <CardDescription>
-          An overview of your nutrient intake for today.
+          {t('DailySummary.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -68,7 +70,7 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
             </div>
         ) : (
             <div className="text-center text-muted-foreground py-8">
-                <p>{hasLog ? "Click the button to generate today's summary." : "Log some food to see your daily summary."}</p>
+                <p>{hasLog ? t('DailySummary.hasLog') : t('DailySummary.noLog')}</p>
             </div>
         )}
       </CardContent>
@@ -76,7 +78,7 @@ export function DailySummary({ todayLog }: DailySummaryProps) {
         <CardContent>
             <Button onClick={handleGenerateSummary} disabled={isLoading} className="w-full">
             {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Generate Summary
+            {t('DailySummary.generateButton')}
             </Button>
         </CardContent>
       )}

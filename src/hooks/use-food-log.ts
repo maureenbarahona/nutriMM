@@ -23,11 +23,6 @@ export function useFoodLog() {
       }
     } catch (error) {
       console.error('Failed to load food log from localStorage', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Could not load your food history.',
-      });
     }
     setIsLoaded(true);
   }, [toast]);
@@ -38,11 +33,6 @@ export function useFoodLog() {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
       } catch (error) {
         console.error('Failed to save food log to localStorage', error);
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-        description: 'Could not save your food history.',
-        });
       }
     }
   }, [log, isLoaded, toast]);
@@ -55,21 +45,13 @@ export function useFoodLog() {
         createdAt: new Date().toISOString(),
       };
       setLog((prevLog) => [newItem, ...prevLog]);
-      toast({
-        title: 'Food Logged!',
-        description: `${item.quantity}g of ${item.name} added to your history.`,
-      });
     },
-    [toast]
+    []
   );
   
   const removeFoodItem = useCallback((id: string) => {
     setLog(prevLog => prevLog.filter(item => item.id !== id));
-    toast({
-        title: 'Item Removed',
-        description: 'The food item has been removed from your history.'
-    })
-  }, [toast]);
+  }, []);
 
   return { log, addFoodItem, removeFoodItem, isLoaded };
 }

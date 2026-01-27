@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import type { FoodAnalysis } from '@/lib/types';
 import { getNutrientIcon } from '@/lib/constants';
 import { useFoodLog } from '@/hooks/use-food-log';
+import { useLanguage } from '@/context/language-context';
+import { useToast } from './ui/use-toast';
 
 const logFoodSchema = z.object({
   quantity: z.coerce.number().min(1, "Quantity must be greater than 0"),
@@ -19,6 +21,8 @@ type LogFoodFormValues = z.infer<typeof logFoodSchema>;
 
 export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
   const { addFoodItem } = useFoodLog();
+  const { t } = useLanguage();
+  const { toast } = useToast();
   
   const form = useForm<LogFoodFormValues>({
     resolver: zodResolver(logFoodSchema),
@@ -28,10 +32,15 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
   });
 
   function onSubmit(values: LogFoodFormValues) {
-    addFoodItem({
+    const item = {
       name: analysis.foodItem,
       quantity: values.quantity,
       nutrients: analysis.nutrients,
+    };
+    addFoodItem(item);
+    toast({
+        title: t('FoodLog.loggedToastTitle'),
+        description: t('FoodLog.loggedToastDescription', { quantity: item.quantity, name: item.name }),
     });
   }
 
@@ -39,7 +48,7 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
     <Card className="w-full animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
       <CardHeader>
         <CardTitle className="text-2xl font-headline text-primary">{analysis.foodItem}</CardTitle>
-        <CardDescription>Nutritional information per 100g (approx.)</CardDescription>
+        <CardDescription>{t('NutritionResultCard.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -67,7 +76,7 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
               name="quantity"
               render={({ field }) => (
                 <FormItem className="flex-grow">
-                  <FormLabel>Quantity (grams)</FormLabel>
+                  <FormLabel>{t('NutritionResultCard.quantityLabel')}</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="e.g., 150" {...field} />
                   </FormControl>
@@ -76,7 +85,7 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
               )}
             />
             <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              Log Food
+              {t('NutritionResultCard.logFoodButton')}
             </Button>
           </form>
         </Form>

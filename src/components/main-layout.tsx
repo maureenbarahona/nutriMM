@@ -4,14 +4,17 @@ import { usePathname } from 'next/navigation';
 import { Home, History, PlusCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from './icons';
+import { useLanguage } from '@/context/language-context';
+import { LanguageSwitcher } from './language-switcher';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   const navItems = [
-    { href: '/', label: 'Scan', icon: Home },
-    { href: '/history', label: 'History', icon: History },
-    { href: '/add', label: 'Add Manually', icon: PlusCircle },
+    { href: '/', label: t('Navigation.scan'), icon: Home },
+    { href: '/history', label: t('Navigation.history'), icon: History },
+    { href: '/add', label: t('Navigation.addManually'), icon: PlusCircle },
   ];
 
   return (
@@ -20,7 +23,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
             <Logo className="h-8 w-8 text-primary" />
-            <span className="font-headline text-xl font-bold">NutriSnap</span>
+            <span className="font-headline text-xl font-bold">{t('NutriSnap.title')}</span>
           </Link>
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex md:items-center md:gap-4">
@@ -40,6 +43,9 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 );
               })}
             </nav>
+            <div className="hidden md:block">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </header>

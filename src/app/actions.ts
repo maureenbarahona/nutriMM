@@ -9,6 +9,7 @@ import { z } from 'zod';
 export type AnalysisState = {
   status: 'error' | 'success';
   message: string;
+  messageValues?: Record<string, string | number>;
   data?: {
     foodItem: string;
     nutrients: Nutrient[];
@@ -31,7 +32,7 @@ export async function analyzeImageAction(
     });
 
     if (!validated.success) {
-      return { status: 'error', message: "Image must be a data URI" };
+      return { status: 'error', message: "Actions.imageRequired" };
     }
 
     const result = await analyzeFoodImageAndDisplayNutrition({
@@ -41,7 +42,7 @@ export async function analyzeImageAction(
     if (!result.foodItem || !result.nutritionalInformation) {
       return {
         status: 'error',
-        message: "AI could not analyze the image. Please try another one or enter manually.",
+        message: "Actions.analysisError",
       };
     }
 
@@ -50,13 +51,15 @@ export async function analyzeImageAction(
     if (nutrients.length === 0) {
       return {
         status: 'error',
-        message: `Identified as ${result.foodItem}, but could not extract nutritional data. Try a clearer image.`,
+        message: "Actions.extractionError",
+        messageValues: { foodItem: result.foodItem },
+        data: { foodItem: result.foodItem, nutrients: [] }
       };
     }
 
     return {
       status: 'success',
-      message: "Analysis successful!",
+      message: "ScanForm.analysisSuccessTitle",
       data: {
         foodItem: result.foodItem,
         nutrients,
@@ -64,13 +67,13 @@ export async function analyzeImageAction(
     };
   } catch (error) {
     console.error(error);
-    return { status: 'error', message: "An unexpected error occurred during analysis." };
+    return { status: 'error', message: "Actions.unexpectedError" };
   }
 }
 
 export async function getDailySummaryAction(foodItems: FoodLogItem[]) {
     if (!foodItems || foodItems.length === 0) {
-        return { error: "No food items provided for summary." };
+        return { error: "Actions.noFoodItems" };
     }
 
     // A simple set of recommended daily values. In a real app, this would be user-specific.
@@ -103,6 +106,6 @@ export async function getDailySummaryAction(foodItems: FoodLogItem[]) {
         return { data: summary.summary };
     } catch(error) {
         console.error("Daily summary error:", error);
-        return { error: "Failed to generate daily summary." };
+        return { error: "Actions.summaryError" };
     }
 }
