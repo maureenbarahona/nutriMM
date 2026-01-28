@@ -21,6 +21,8 @@ const analyzeImageSchema = z.object({
   image: z.string().refine((val) => val.startsWith('data:image/'), {
     message: 'Image must be a data URI',
   }),
+  latitude: z.coerce.number().optional(),
+  longitude: z.coerce.number().optional(),
 });
 
 export async function analyzeImageAction(
@@ -30,6 +32,8 @@ export async function analyzeImageAction(
   try {
     const validated = analyzeImageSchema.safeParse({
       image: formData.get('image'),
+      latitude: formData.get('latitude'),
+      longitude: formData.get('longitude'),
     });
 
     if (!validated.success) {
@@ -38,6 +42,8 @@ export async function analyzeImageAction(
 
     const result = await analyzeFoodImageAndDisplayNutrition({
       photoDataUri: validated.data.image,
+      latitude: validated.data.latitude,
+      longitude: validated.data.longitude,
     });
 
     if (!result.foodItem || !result.nutritionalInformation) {
@@ -80,13 +86,17 @@ export async function analyzeImageAction(
   }
 }
 
-export async function analyzeTextAction(foodName: string): Promise<AnalysisState> {
+export async function analyzeTextAction(foodName: string, location: { latitude: number, longitude: number } | null): Promise<AnalysisState> {
     if (!foodName) {
         return { status: 'error', message: 'Actions.foodNameRequired' };
     }
 
     try {
-        const result = await analyzeFoodTextAndDisplayNutrition({ foodName });
+        const result = await analyzeFoodTextAndDisplayNutrition({ 
+            foodName,
+            latitude: location?.latitude,
+            longitude: location?.longitude
+        });
 
         if (!result.foodItem || !result.nutritionalInformation) {
             return {

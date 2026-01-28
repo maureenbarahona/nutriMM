@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { analyzeTextAction } from '@/app/actions';
 import { Brain, Sparkles } from 'lucide-react';
 import type { FoodAnalysis } from '@/lib/types';
@@ -26,6 +26,23 @@ export function ManualEntryForm() {
   const { toast } = useToast();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysis | null>(null);
+  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    }
+  }, []);
 
   const form = useForm<ManualEntryValues>({
     resolver: zodResolver(manualEntrySchema),
@@ -39,7 +56,7 @@ export function ManualEntryForm() {
     
     setIsAnalyzing(true);
     setAnalysisResult(null);
-    const result = await analyzeTextAction(foodName);
+    const result = await analyzeTextAction(foodName, location);
     setIsAnalyzing(false);
 
     if (result.status === 'error') {

@@ -16,6 +16,8 @@ const AnalyzeFoodImageAndDisplayNutritionInputSchema = z.object({
     .describe(
       "A photo of a food item, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
+  latitude: z.number().optional().describe('The latitude of the user.'),
+  longitude: z.number().optional().describe('The longitude of the user.'),
 });
 export type AnalyzeFoodImageAndDisplayNutritionInput = z.infer<typeof AnalyzeFoodImageAndDisplayNutritionInputSchema>;
 
@@ -34,6 +36,10 @@ const prompt = ai.definePrompt({
   input: {schema: AnalyzeFoodImageAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodImageAndDisplayNutritionOutputSchema},
   prompt: `You are an expert nutritionist acting as a specialized agent. Your main goal is to find the nutritional content of a food item.
+{{#if latitude}}
+
+The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. Use this location to provide a more accurate analysis for endemic or regional foods. For example, if the user is in Honduras and the food appears to be a "tustaca", you should analyze it as a Honduran tustaca.
+{{/if}}
 
 **Workflow for Analyzing Food:**
 
@@ -50,8 +56,7 @@ const prompt = ai.definePrompt({
     *   The \`foodItem\` field should be the name of the prepared dish (e.g., "Desayuno Típico Hondureño").
     *   The \`nutritionalInformation\` field should contain the *total summed nutritional values* for the entire dish.
 4.  **Find Nutritional Information (for single ingredients or deconstructed items):**
-    *   **Primary Source:** Your primary knowledge base is the "Tabla de Composición de Alimentos de Centroamérica (INCAP)". First, try to find the nutritional information strictly from your knowledge of the INCAP table.
-    *   **Fallback Search:** If you cannot find the exact food item in the INCAP table, use your broader general knowledge as a nutritional expert to find the typical nutritional information.
+    *   Use your broader general knowledge as a nutritional expert to find the typical nutritional information.
 5.  **Format Output:**
     *   Return the food item name and its detailed nutritional composition. For single ingredients, this is per 100g. For prepared dishes, this is the total for the estimated portion.
     *   Include as many of the listed nutrients as possible.

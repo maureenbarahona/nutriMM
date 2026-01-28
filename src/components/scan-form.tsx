@@ -40,14 +40,16 @@ function SubmitButton() {
   );
 }
 
-function FormFields({
+function FormContent({
   onFileSelect,
   previewUrl,
   selectedFile,
+  location,
 }: {
   onFileSelect: (file: File) => void;
   previewUrl: string | null;
   selectedFile: File | null;
+  location: { latitude: number; longitude: number } | null;
 }) {
   const { pending } = useFormStatus();
 
@@ -55,6 +57,12 @@ function FormFields({
     <>
       <FileUploader onFileSelect={onFileSelect} previewUrl={previewUrl} disabled={pending} />
       {selectedFile && <input type="hidden" name="image" value={previewUrl ?? ''} />}
+      {location && (
+        <>
+            <input type="hidden" name="latitude" value={location.latitude} />
+            <input type="hidden" name="longitude" value={location.longitude} />
+        </>
+      )}
       {selectedFile && (
         <div className="flex justify-end">
           <SubmitButton />
@@ -80,9 +88,26 @@ export function ScanForm() {
   const [state, formAction] = useActionState(analyzeImageAction, initialState);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   const { t } = useLanguage();
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     if (state.status === 'error' && state.message) {
@@ -106,30 +131,33 @@ export function ScanForm() {
     setPreviewUrl(dataUri);
   };
 
+  const analysisData = state.status === 'success' ? state.data : null;
+
   return (
     <>
       <Card>
         <CardContent className="pt-6">
           <form ref={formRef} action={formAction} className="space-y-6">
-            <FormFields
+            <FormContent
               onFileSelect={handleFileSelect}
               previewUrl={previewUrl}
               selectedFile={selectedFile}
+              location={location}
             />
           </form>
         </CardContent>
       </Card>
       
-      {state.status === 'error' && state.message && (
+      {state.status === 'error' && state.message && !analysisData && (
         <Alert variant="destructive" className="mt-6">
           <AlertTitle>{t('ScanForm.errorTitle')}</AlertTitle>
           <AlertDescription>{t(state.message, state.messageValues)}</AlertDescription>
         </Alert>
       )}
 
-      {state.status === 'success' && state.data && (
+      {analysisData && (
         <div className="mt-6">
-          <NutritionResultCard analysis={state.data} />
+          <NutritionResultCard analysis={analysisData} />
         </div>
       )}
     </>
