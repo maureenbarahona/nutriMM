@@ -29,15 +29,17 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodTextAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodTextAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodTextAndDisplayNutritionOutputSchema},
-  prompt: `You are a nutritional expert. Your task is to provide the typical nutritional information for the given food item name, based on your general knowledge.
+  prompt: `You are an expert nutritionist acting as a specialized agent. Your main goal is to find the nutritional content of a food item.
 
-If the provided name is too generic, ambiguous, or you cannot determine a specific food item from it, the \`foodItem\` field in the output should be the original food name you were given, and the \`nutritionalInformation\` field should be the exact string "Alimento no registrado".
+1.  **Primary Source:** Your primary knowledge base is the "Tabla de Composición de Alimentos de Centroamérica (INCAP)". First, try to find the food by its name and get its nutritional information strictly from your knowledge of the INCAP table.
+2.  **Fallback Search:** If you cannot find the exact food item in the INCAP table, use your broader general knowledge as a nutritional expert to find the typical nutritional information for the food.
+3.  **Failure:** If the provided name is too generic, ambiguous, or you cannot find its nutritional information from any source, the \`foodItem\` field in the output should be the original food name you were given, and the \`nutritionalInformation\` field must be the exact string "Alimento no registrado".
 
-If you can identify the food, analyze the following food item:
+Now, analyze the following food item:
 
 Food Name: {{{foodName}}}
 
-Return the food item name and its typical nutritional information. Provide a detailed nutritional composition per 100g, including as many of the following as possible:
+Return the food item name and its detailed nutritional composition per 100g, including as many of the following as possible:
 - Agua (%)
 - Energia (Kcal)
 - Proteina (g)

@@ -33,15 +33,17 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodImageAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodImageAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodImageAndDisplayNutritionOutputSchema},
-  prompt: `You are a nutritional expert. Your task is to identify the food item in the provided image and return its typical nutritional information based on your general knowledge.
+  prompt: `You are an expert nutritionist acting as a specialized agent. Your main goal is to find the nutritional content of a food item.
 
-If you cannot confidently identify a primary food item in the image, the \`foodItem\` field in the output should be the best identification possible (e.g., "Mixed Salad", "Unknown fruit"), and the \`nutritionalInformation\` field should be the exact string "Alimento no registrado".
+1.  **Primary Source:** Your primary knowledge base is the "Tabla de Composición de Alimentos de Centroamérica (INCAP)". First, try to identify the food in the image and find its nutritional information strictly from your knowledge of the INCAP table.
+2.  **Fallback Search:** If you cannot find the exact food item in the INCAP table, use your broader general knowledge as a nutritional expert to find the typical nutritional information for the identified food.
+3.  **Failure:** If you cannot confidently identify the food or find its nutritional information from any source, the \`foodItem\` field in the output should be the best identification possible (e.g., "Mixed Salad", "Unknown fruit"), and the \`nutritionalInformation\` field must be the exact string "Alimento no registrado".
 
-If you can identify the food, analyze the following food item:
+Now, analyze the food item in the following image:
 
 Photo: {{media url=photoDataUri}}
 
-Return the food item name and its typical nutritional information. Provide a detailed nutritional composition per 100g, including as many of the following as possible:
+Return the food item name and its detailed nutritional composition per 100g, including as many of the following as possible:
 - Agua (%)
 - Energia (Kcal)
 - Proteina (g)
