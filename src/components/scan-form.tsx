@@ -40,19 +40,16 @@ function SubmitButton() {
   );
 }
 
-function FormContent({
-  state,
+function FormFields({
   onFileSelect,
   previewUrl,
   selectedFile,
 }: {
-  state: AnalysisState;
   onFileSelect: (file: File) => void;
   previewUrl: string | null;
   selectedFile: File | null;
 }) {
   const { pending } = useFormStatus();
-  const { t } = useLanguage();
 
   return (
     <>
@@ -73,19 +70,6 @@ function FormContent({
             <Skeleton className="h-24 rounded-lg" />
             <Skeleton className="h-24 rounded-lg" />
           </div>
-        </div>
-      )}
-
-      {state.status === 'error' && state.message && !pending && (
-        <Alert variant="destructive" className="mt-6">
-          <AlertTitle>{t('ScanForm.errorTitle')}</AlertTitle>
-          <AlertDescription>{t(state.message, state.messageValues)}</AlertDescription>
-        </Alert>
-      )}
-
-      {state.status === 'success' && state.data && !pending && (
-        <div className="mt-6">
-          <NutritionResultCard analysis={state.data} />
         </div>
       )}
     </>
@@ -123,17 +107,31 @@ export function ScanForm() {
   };
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <form ref={formRef} action={formAction} className="space-y-6">
-          <FormContent
-            state={state}
-            onFileSelect={handleFileSelect}
-            previewUrl={previewUrl}
-            selectedFile={selectedFile}
-          />
-        </form>
-      </CardContent>
-    </Card>
+    <>
+      <Card>
+        <CardContent className="pt-6">
+          <form ref={formRef} action={formAction} className="space-y-6">
+            <FormFields
+              onFileSelect={handleFileSelect}
+              previewUrl={previewUrl}
+              selectedFile={selectedFile}
+            />
+          </form>
+        </CardContent>
+      </Card>
+      
+      {state.status === 'error' && state.message && (
+        <Alert variant="destructive" className="mt-6">
+          <AlertTitle>{t('ScanForm.errorTitle')}</AlertTitle>
+          <AlertDescription>{t(state.message, state.messageValues)}</AlertDescription>
+        </Alert>
+      )}
+
+      {state.status === 'success' && state.data && (
+        <div className="mt-6">
+          <NutritionResultCard analysis={state.data} />
+        </div>
+      )}
+    </>
   );
 }
