@@ -55,7 +55,7 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
       </CardContent>
       <CardFooter>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-end gap-4 w-full">
+          <div className="flex items-end gap-4 w-full">
             <FormField
               control={form.control}
               name="quantity"
@@ -69,10 +69,10 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="bg-accent hover:bg-accent/90 text-accent-foreground">
+            <Button onClick={form.handleSubmit(onSubmit)} className="bg-accent hover:bg-accent/90 text-accent-foreground">
               {t('NutritionResultCard.logFoodButton')}
             </Button>
-          </form>
+          </div>
         </Form>
       </CardFooter>
     </Card>

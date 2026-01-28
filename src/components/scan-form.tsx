@@ -63,21 +63,26 @@ function FormContent({
             <input type="hidden" name="longitude" value={location.longitude} />
         </>
       )}
-      {selectedFile && (
+      {selectedFile && !pending && (
         <div className="flex justify-end">
           <SubmitButton />
         </div>
       )}
 
       {pending && (
-        <div className="mt-6 space-y-4 animate-pulse">
-          <Skeleton className="h-8 w-1/2" />
-          <Skeleton className="h-6 w-1/3" />
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2">
-            <Skeleton className="h-24 rounded-lg" />
-            <Skeleton className="h-24 rounded-lg" />
-            <Skeleton className="h-24 rounded-lg" />
-          </div>
+        <div className="mt-6 space-y-4">
+            <div className="flex justify-end">
+                <SubmitButton />
+            </div>
+            <div className="space-y-4 animate-pulse">
+                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="h-6 w-1/3" />
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-2">
+                    <Skeleton className="h-24 rounded-lg" />
+                    <Skeleton className="h-24 rounded-lg" />
+                    <Skeleton className="h-24 rounded-lg" />
+                </div>
+            </div>
         </div>
       )}
     </>
@@ -127,6 +132,8 @@ export function ScanForm() {
 
   const handleFileSelect = async (file: File) => {
     setSelectedFile(file);
+    // Reset state when a new file is selected
+    formRef.current?.reset();
     const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
     setPreviewUrl(dataUri);
   };
@@ -148,7 +155,7 @@ export function ScanForm() {
         </CardContent>
       </Card>
       
-      {state.status === 'error' && state.message && !analysisData && (
+      {state.status === 'error' && state.message && (
         <Alert variant="destructive" className="mt-6">
           <AlertTitle>{t('ScanForm.errorTitle')}</AlertTitle>
           <AlertDescription>{t(state.message, state.messageValues)}</AlertDescription>
