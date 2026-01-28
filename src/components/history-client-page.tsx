@@ -6,7 +6,7 @@ import { Skeleton } from "./ui/skeleton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Utensils } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export function HistoryClientPage() {
     const { log, removeFoodItem, isLoaded } = useFoodLog();

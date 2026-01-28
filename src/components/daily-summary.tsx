@@ -4,7 +4,7 @@ import type { FoodLogItem } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { getDailySummaryAction } from '@/app/actions';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Loader2, TrendingUp } from 'lucide-react';
 import { Progress } from './ui/progress';
 import { useLanguage } from '@/context/language-context';

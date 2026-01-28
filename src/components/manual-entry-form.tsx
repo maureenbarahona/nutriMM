@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/context/language-context';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
 import { analyzeTextAction } from '@/app/actions';
 import { Brain, Sparkles } from 'lucide-react';

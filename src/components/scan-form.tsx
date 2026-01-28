@@ -11,7 +11,7 @@ import { FileUploader } from './file-uploader';
 import { NutritionResultCard } from './nutrition-result-card';
 import { Skeleton } from './ui/skeleton';
 import { fileToDataUri } from '@/lib/utils';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { useLanguage } from '@/context/language-context';
 

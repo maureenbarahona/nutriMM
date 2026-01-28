@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { FoodLogItem, Nutrient } from '@/lib/types';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 const STORAGE_KEY = 'nutrimm-food-log';
 

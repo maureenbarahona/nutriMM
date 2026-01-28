@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import type { FoodAnalysis } from '@/lib/types';
 import { useFoodLog } from '@/hooks/use-food-log';
 import { useLanguage } from '@/context/language-context';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { NutrientTable } from './nutrient-table';
 
 const logFoodSchema = z.object({
