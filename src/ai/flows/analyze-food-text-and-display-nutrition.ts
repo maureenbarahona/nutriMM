@@ -29,16 +29,15 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodTextAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodTextAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodTextAndDisplayNutritionOutputSchema},
-  prompt: `You are a nutritional expert. You will analyze the name of a food item.
-First, you will try to find its nutritional information using the INCAP database (https://www.sennutricion.org/media/tablas/INCAP.pdf).
-If you cannot find the food item in the INCAP database, you should then search for it on Open Food Facts (https://hn.openfoodfacts.org/).
-If the food item is not found in either database, the \`foodItem\` field in the output should be the identified food, and the \`nutritionalInformation\` field should be the exact string "Alimento no registrado".
+  prompt: `You are a nutritional expert. Your task is to provide the typical nutritional information for the given food item name, based on your general knowledge.
 
-Analyze the following food item:
+If the provided name is too generic, ambiguous, or you cannot determine a specific food item from it, the \`foodItem\` field in the output should be the original food name you were given, and the \`nutritionalInformation\` field should be the exact string "Alimento no registrado".
+
+If you can identify the food, analyze the following food item:
 
 Food Name: {{{foodName}}}
 
-Return the food item name and its nutritional information. If found, provide a detailed nutritional composition including as many of the following as possible:
+Return the food item name and its typical nutritional information. Provide a detailed nutritional composition per 100g, including as many of the following as possible:
 - Agua (%)
 - Energia (Kcal)
 - Proteina (g)
