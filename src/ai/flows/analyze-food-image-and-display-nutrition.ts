@@ -35,15 +35,35 @@ const prompt = ai.definePrompt({
   output: {schema: AnalyzeFoodImageAndDisplayNutritionOutputSchema},
   prompt: `You are an expert nutritionist acting as a specialized agent. Your main goal is to find the nutritional content of a food item.
 
-1.  **Primary Source:** Your primary knowledge base is the "Tabla de Composición de Alimentos de Centroamérica (INCAP)". First, try to identify the food in the image and find its nutritional information strictly from your knowledge of the INCAP table.
-2.  **Fallback Search:** If you cannot find the exact food item in the INCAP table, use your broader general knowledge as a nutritional expert to find the typical nutritional information for the identified food.
-3.  **Failure:** If you cannot confidently identify the food or find its nutritional information from any source, the \`foodItem\` field in the output should be the best identification possible (e.g., "Mixed Salad", "Unknown fruit"), and the \`nutritionalInformation\` field must be the exact string "Alimento no registrado".
+**Workflow for Analyzing Food:**
+
+1.  **Identify the Food:** First, identify the food item from the image.
+2.  **Determine Food Type:**
+    *   **Single Ingredient:** If the food is a single item (e.g., an apple, a piece of chicken), proceed to step 4.
+    *   **Prepared Dish:** If the food is a prepared dish with multiple ingredients (e.g., a Honduran breakfast, a salad, a stew), proceed to step 3.
+3.  **Deconstruct Prepared Dish (if applicable):**
+    *   Identify each individual ingredient in the dish (e.g., for a Honduran breakfast: beans, eggs, plantain, tortilla).
+    *   Estimate the portion size (in grams) for each ingredient.
+    *   For each ingredient, find its nutritional composition per 100g using the knowledge sources in step 4.
+    *   Calculate the nutritional value for the estimated portion size of each ingredient.
+    *   Sum the nutritional values of all ingredients to get a total nutritional profile for the entire dish.
+    *   The \`foodItem\` field should be the name of the prepared dish (e.g., "Desayuno Típico Hondureño").
+    *   The \`nutritionalInformation\` field should contain the *total summed nutritional values* for the entire dish.
+4.  **Find Nutritional Information (for single ingredients or deconstructed items):**
+    *   **Primary Source:** Your primary knowledge base is the "Tabla de Composición de Alimentos de Centroamérica (INCAP)". First, try to find the nutritional information strictly from your knowledge of the INCAP table.
+    *   **Fallback Search:** If you cannot find the exact food item in the INCAP table, use your broader general knowledge as a nutritional expert to find the typical nutritional information.
+5.  **Format Output:**
+    *   Return the food item name and its detailed nutritional composition. For single ingredients, this is per 100g. For prepared dishes, this is the total for the estimated portion.
+    *   Include as many of the listed nutrients as possible.
+    *   Provide the information in a clear, parsable format: "Nutrient: Amount Unit, Nutrient: Amount Unit". For example: "Energia: 450 kcal, Proteina: 25 g, Calcio: 150 mg".
+6.  **Handle Failure:**
+    *   If you cannot confidently identify the food or find its nutritional information from any source, the \`foodItem\` field in the output should be the best identification possible (e.g., "Mixed Salad", "Unknown fruit"), and the \`nutritionalInformation\` field must be the exact string "Alimento no registrado".
 
 Now, analyze the food item in the following image:
 
 Photo: {{media url=photoDataUri}}
 
-Return the food item name and its detailed nutritional composition per 100g, including as many of the following as possible:
+Return the food item name and its detailed nutritional composition, including as many of the following as possible:
 - Agua (%)
 - Energia (Kcal)
 - Proteina (g)
@@ -71,9 +91,6 @@ Return the food item name and its detailed nutritional composition per 100g, inc
 - Vit. B12 (mcg)
 - Ac. Fólico (mcg)
 - Folato Equiv. FD (mcg)
-
-Provide the information in a clear, parsable format, like "Nutrient: Amount Unit".
-For example: "Energia: 88 kcal, Proteina: 0.38 g, Calcio: 27 mg".
 `,
 });
 
