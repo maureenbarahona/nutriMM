@@ -10,15 +10,22 @@ export function parseNutritionString(nutritionString: string): Nutrient[] {
   if (!nutritionString || typeof nutritionString !== 'string') return [];
 
   const nutrients: Nutrient[] = [];
-  const regex = /([\w\s\(\)]+?)\s*:\s*([\d,]+\.?[\d]*)\s*(\w*)/g;
+  const seenNames = new Set<string>();
+  // Regex updated to better handle special characters in nutrient names
+  const regex = /([\w\s\(\).Á-ü]+?)\s*:\s*([\d,]+\.?[\d]*)\s*([a-zA-Zμg%]*)/g;
   let match;
 
   while ((match = regex.exec(nutritionString)) !== null) {
-    nutrients.push({
-      name: match[1].trim(),
-      amount: parseFloat(match[2].replace(',', '')),
-      unit: match[3].trim() || 'g',
-    });
+    const name = match[1].trim();
+    // Ensure we don't add duplicate nutrients
+    if (!seenNames.has(name)) {
+      nutrients.push({
+        name: name,
+        amount: parseFloat(match[2].replace(',', '')),
+        unit: match[3].trim() || 'g',
+      });
+      seenNames.add(name);
+    }
   }
   
   // Fallback for simple comma-separated lists if regex fails
@@ -28,11 +35,15 @@ export function parseNutritionString(nutritionString: string): Nutrient[] {
     for (const part of parts) {
       const fallbackMatch = part.match(fallbackRegex);
       if (fallbackMatch) {
-        nutrients.push({
-          name: fallbackMatch[1].trim(),
-          amount: parseFloat(fallbackMatch[2]),
-          unit: fallbackMatch[3].trim() || 'g',
-        });
+        const name = fallbackMatch[1].trim();
+        if (!seenNames.has(name)) {
+            nutrients.push({
+              name: name,
+              amount: parseFloat(fallbackMatch[2]),
+              unit: fallbackMatch[3].trim() || 'g',
+            });
+            seenNames.add(name);
+        }
       }
     }
   }
