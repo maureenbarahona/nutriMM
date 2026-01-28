@@ -3,7 +3,7 @@ import type {NextConfig} from 'next';
 const nextConfig: NextConfig = {
   /* config options here */
   serverActions: {
-    bodySizeLimit: 20 * 1024 * 1024, // 20MB
+    bodySizeLimit: '50mb',
   },
   typescript: {
     ignoreBuildErrors: true,
