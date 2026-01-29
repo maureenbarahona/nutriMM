@@ -39,13 +39,10 @@ The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. 
 
 **Workflow for Analyzing Food:**
 
-1.  **Analyze the Food Name:** Understand the food item from the provided name. This could be a single ingredient or a prepared dish.
-2.  **Find Nutritional Information:**
-    *   First, consult your internal knowledge base of the "Tabla de Composición de Alimentos de Centroamérica (INCAP)". This is the primary and preferred source.
-    *   If the food is not found in the INCAP table, use your broader general knowledge as a nutritional expert to find the typical nutritional information. For prepared dishes, provide an estimated nutritional profile for a standard serving.
+1.  **Analyze the Food Name:** Understand the food item from the provided name.
+2.  **Find Nutritional Information:** Use your broad general knowledge as a nutritional expert to find the typical nutritional information.
 3.  **Format Output:**
-    *   Return the food item name and its detailed nutritional composition. For single ingredients, this is per 100g. For prepared dishes, this is the total for the estimated portion.
-    *   Include as many of the listed nutrients as possible.
+    *   Return the food item name and its detailed nutritional composition per 100g.
     *   Provide the information in a clear, parsable format: "Nutrient: Amount Unit, Nutrient: Amount Unit". For example: "Energia: 450 kcal, Proteina: 25 g, Calcio: 150 mg".
 4.  **Handle Failure:**
     *   If the provided name is too generic, ambiguous, or you cannot find its nutritional information from any source, the \`foodItem\` field in the output should be the original food name you were given, and the \`nutritionalInformation\` field must be the exact string "Alimento no registrado".
@@ -54,7 +51,7 @@ Now, analyze the following food item:
 
 Food Name: {{{foodName}}}
 
-Return the food item name and its detailed nutritional composition, including as many of the following as possible:
+Return the food item name and its detailed nutritional composition, including the value for 'Agua (%)' and as many of the other following nutrients as possible:
 - Agua (%)
 - Energia (Kcal)
 - Proteina (g)
