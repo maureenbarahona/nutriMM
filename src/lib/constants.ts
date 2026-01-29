@@ -12,8 +12,6 @@ export const NUTRIENT_ICONS: Record<string, LucideIcon> = {
   carbohidratos: Wheat,
   fibra: Leaf,
   grasa: Droplet,
-  water: Droplet,
-  agua: Droplet,
 };
 
 export const getNutrientIcon = (nutrientName: string): LucideIcon => {

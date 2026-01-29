@@ -10,22 +10,17 @@ const groupNutrients = (nutrients: Nutrient[]) => {
   const grouped: {
     macronutrients: Nutrient[];
     micronutrients: Nutrient[];
-    water: Nutrient[];
   } = {
     macronutrients: [],
     micronutrients: [],
-    water: [],
   };
 
   const MACRONUTRIENT_KEYS = ['protein', 'carbohydrate', 'fat', 'fiber', 'proteina', 'carbohidrato', 'grasa', 'fibra', 'calories', 'energia', 'kcal', 'ceniza', 'colesterol', 'ác. grasos'];
-  const WATER_KEYS = ['water', 'agua'];
 
   for (const nutrient of nutrients) {
     const nameLower = nutrient.name.toLowerCase();
     if (MACRONUTRIENT_KEYS.some(key => nameLower.includes(key))) {
       grouped.macronutrients.push(nutrient);
-    } else if (WATER_KEYS.some(key => nameLower.includes(key))) {
-      grouped.water.push(nutrient);
     } else {
       grouped.micronutrients.push(nutrient);
     }
@@ -86,9 +81,6 @@ export function NutrientTable({ nutrients }: { nutrients: Nutrient[] }) {
                 {groupedNutrients.macronutrients.length > 0 && renderGroupHeader(t('NutritionResultCard.macronutrients'))}
                 {groupedNutrients.macronutrients.map(renderNutrientRow)}
                 
-                {groupedNutrients.water.length > 0 && renderGroupHeader(t('NutritionResultCard.water'))}
-                {groupedNutrients.water.map(renderNutrientRow)}
-
                 {groupedNutrients.micronutrients.length > 0 && renderGroupHeader(t('NutritionResultCard.micronutrients'))}
                 {groupedNutrients.micronutrients.map(renderNutrientRow)}
             </TableBody>
