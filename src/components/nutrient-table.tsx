@@ -86,11 +86,11 @@ export function NutrientTable({ nutrients }: { nutrients: Nutrient[] }) {
                 {groupedNutrients.macronutrients.length > 0 && renderGroupHeader(t('NutritionResultCard.macronutrients'))}
                 {groupedNutrients.macronutrients.map(renderNutrientRow)}
                 
-                {groupedNutrients.micronutrients.length > 0 && renderGroupHeader(t('NutritionResultCard.micronutrients'))}
-                {groupedNutrients.micronutrients.map(renderNutrientRow)}
-
                 {groupedNutrients.water.length > 0 && renderGroupHeader(t('NutritionResultCard.water'))}
                 {groupedNutrients.water.map(renderNutrientRow)}
+
+                {groupedNutrients.micronutrients.length > 0 && renderGroupHeader(t('NutritionResultCard.micronutrients'))}
+                {groupedNutrients.micronutrients.map(renderNutrientRow)}
             </TableBody>
         </Table>
     </Card>
