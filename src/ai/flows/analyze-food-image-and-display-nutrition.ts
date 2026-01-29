@@ -55,8 +55,8 @@ Now, analyze the food item in the following image:
 
 Photo: {{media url=photoDataUri}}
 
-Return the food item name and its detailed nutritional composition, including the value for 'Agua (%)' and as many of the other following nutrients as possible:
-- Agua (%)
+Return the food item name and its detailed nutritional composition, including the value for 'Agua' and as many of the other following nutrients as possible. Ensure 'Agua' is returned with '%' as its unit (e.g. "Agua: 85 %").
+- Agua
 - Energia (Kcal)
 - Proteina (g)
 - Grasa Total (g)
