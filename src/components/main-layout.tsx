@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Logo } from './icons';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from './language-switcher';
+import { SiteFooter } from './site-footer';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -50,6 +51,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main className="flex-1">{children}</main>
+      <SiteFooter />
       <footer className="sticky bottom-0 z-40 w-full border-t bg-background/95 md:hidden">
         <nav className="container mx-auto grid grid-cols-3 items-center justify-items-center gap-4 px-4 py-2">
           {navItems.map((item) => {
