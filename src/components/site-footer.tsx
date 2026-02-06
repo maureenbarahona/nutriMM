@@ -19,7 +19,7 @@ export function SiteFooter() {
                         <h4 className="font-semibold mb-2 text-foreground">Explorar</h4>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/" className="hover:text-primary transition-colors">Inicio</Link></li>
-                            <li><Link href="/about" className="hover:text-primary transition-colors">Sobre nosotros</Link></li>
+                            <li><Link href="/about" className="hover:text-primary transition-colors">Sobre NutriM&M</Link></li>
                             <li><Link href="/contact" className="hover:text-primary transition-colors">Contacto</Link></li>
                         </ul>
                     </div>
