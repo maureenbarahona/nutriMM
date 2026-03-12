@@ -47,11 +47,13 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert nutritional computer vision agent specialized in mass and portion estimation.
 
 **Your goal:**
-Analyze the food image provided and estimate the total weight of the food on the plate in grams and the visual portions using the **Hand Model (PMC8115205)**.
+Analyze the food image provided, estimate the total weight in grams, and calculate the ABSOLUTE nutritional values for the entire portion (not per 100g).
 
 **Task:**
-1. **Visual Volume:** Estimate total mass based on the size of the plate, silverware, and depth of the food.
-2. **Anatomical Reference (Hand Model):** Provide a breakdown of portions using the following references:
+1. **Visual Volume:** Estimate total mass based on the plate, silverware, and depth.
+2. **Exhaustive Absolute Nutrient Analysis:** Calculate the total content for the ENTIRE portion mass for all these nutrients: 
+   Energia (kcal), Proteína (g), Grasa Total (g), Carbohidratos Totales (g), Fibra Dietética (g), Ceniza (g), Calcio (mg), Hierro (mg), Zinc (mg), Vitamina A (μg RAE), Vitamina C (mg), Tiamina (mg), Riboflavina (mg), Niacina (mg), Vitamina B6 (mg), Folato (μg DFE), Vitamina B12 (μg), Colesterol (mg), Ácidos Grasos Saturados (g), Sodio (mg), Potasio (mg), Fósforo (mg), and ALWAYS include Agua (%).
+3. **Anatomical Reference (Hand Model):** Provide a breakdown of portions using the following references:
    - 'palma' (palm): Protein (meat, fish).
    - 'puño' (fist): Carbs (rice, pasta) or vegetables.
    - 'puñado' (handful): Fruits or snacks.
@@ -59,18 +61,14 @@ Analyze the food image provided and estimate the total weight of the food on the
    - 'punta' (fingertip): Oils/Sweets.
 
 **Language:**
-Respond in the language specified by locale: "{{{locale}}}". Default to "es" if not provided.
+Respond in the language specified by locale: "{{{locale}}}". Default to "es".
 
 **Context:**
 {{#if latitude}}
-The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. ALWAYS prioritize nutritional data from regional food composition tables (like INCAP for Central America) for the identified ingredients.
+The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. Use regional food composition tables (like INCAP for Central America) for ALL calculations based on endemic foods.
 {{/if}}
 
-**Requirements for Output:**
-- Provide Total Calories, Protein (g), Fat (g), Carbohydrates (g), Fiber (g), and Sodium (mg) for the ENTIRE estimated mass.
-- Explain the reasoning.
-- Always include 'Agua' (Water) in the nutrients list with '%' as the unit.
-- Populate 'handPortions' with the specific references found in the image.
+**Crucial Requirement:** All nutrient amounts in the output MUST be absolute values for the WHOLE estimated portion mass. Do NOT return values per 100g. If the plate has 350g of food, return the total nutrients for 350g.
 
 Photo: {{media url=photoDataUri}}
 `,

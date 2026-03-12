@@ -110,7 +110,10 @@ export function PortionResultCard({ result }: { result: PortionAnalysis }) {
           <h4 className="font-bold text-lg flex items-center gap-2">
             {t('NutritionResultCard.nutrient')}
           </h4>
-          <NutrientTable nutrients={result.nutrients} />
+          <NutrientTable 
+            nutrients={result.nutrients} 
+            amountHeader={t('PortionResultCard.amountTotal')}
+          />
         </div>
       </CardContent>
 

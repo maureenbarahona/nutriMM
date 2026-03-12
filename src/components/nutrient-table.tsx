@@ -47,7 +47,12 @@ const groupNutrients = (nutrients: Nutrient[]) => {
   return grouped;
 };
 
-export function NutrientTable({ nutrients }: { nutrients: Nutrient[] }) {
+interface NutrientTableProps {
+  nutrients: Nutrient[];
+  amountHeader?: string;
+}
+
+export function NutrientTable({ nutrients, amountHeader }: NutrientTableProps) {
     const { t } = useLanguage();
     const groupedNutrients = groupNutrients(nutrients);
 
@@ -78,7 +83,7 @@ export function NutrientTable({ nutrients }: { nutrients: Nutrient[] }) {
             <TableHeader className="bg-muted/30">
                 <TableRow>
                     <TableHead className="font-bold">{t('NutritionResultCard.nutrient')}</TableHead>
-                    <TableHead className="text-right font-bold">{t('NutritionResultCard.amountPer100g')}</TableHead>
+                    <TableHead className="text-right font-bold">{amountHeader || t('NutritionResultCard.amountPer100g')}</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>

@@ -1,4 +1,3 @@
-
 {
   "NutriMM": {
     "title": "NutriM&M",
@@ -6,10 +5,10 @@
   },
   "Navigation": {
     "scan": "Scan",
-    "portions": "Count Calories",
+    "portions": "Count Your Calories",
     "history": "History",
     "addManually": "Manual",
-    "bmi": "Nutritional Status"
+    "bmi": "Know your nutritional status"
   },
   "HomePage": {
     "title": "Nutrition in detail: from macros to micros.",
@@ -30,8 +29,9 @@
   },
   "PortionResultCard": {
     "estimatedWeight": "Estimated Weight",
-    "absoluteValuesNote": "Total nutritional content for the entire portion.",
-    "compositionTableBadge": "Regional Food Composition Table"
+    "absoluteValuesNote": "Total values for the estimated portion (macros and micros).",
+    "compositionTableBadge": "Regional Food Composition Table",
+    "amountTotal": "Total Amount"
   },
   "ScanForm": {
     "analyzeButton": "Analyze Image",
