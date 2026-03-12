@@ -28,30 +28,26 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodTextAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodTextAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodTextAndDisplayNutritionOutputSchema},
-  prompt: `You are an expert nutritionist acting as a specialized agent. Your main goal is to find the nutritional content of a food item based on its name.
-{{#if latitude}}
+  prompt: `You are an expert nutritionist specialized in regional food composition tables (INCAP, etc.).
 
-The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. Use this location to provide a more accurate analysis for endemic or regional foods. For example, if the user is in Honduras and asks for "tustaca", you should analyze it as a Honduran tustaca.
+**Task:**
+Find the nutritional content of the food item per 100g.
+
+**Requirements:**
+1.  **Exhaustive Analysis:** You MUST return a full profile including: Energia (kcal), Proteína (g), Grasa Total (g), Carbohidratos Totales (g), Fibra Dietética (g), Ceniza (g), Calcio (mg), Hierro (mg), Zinc (mg), Vitamina A (μg RAE), Vitamina C (mg), Tiamina (mg), Riboflavina (mg), Niacina (mg), Vitamina B6 (mg), Folato (μg DFE), Vitamina B12 (μg), Colesterol (mg), Ácidos Grasos Saturados (g), Sodio (mg), Potasio (mg), Fósforo (mg), and ALWAYS include Agua (%).
+
+2.  **Context:**
+{{#if latitude}}
+The user is at latitude: {{{latitude}}}, longitude: {{{longitude}}}. Use local data for regional foods.
 {{/if}}
 
-**Language:**
-Respond in the language specified by locale: "{{{locale}}}". Default to "es" if not provided.
+3.  **Language:**
+Respond strictly in the language specified by locale: "{{{locale}}}". Default to "es".
 
-**Workflow for Analyzing Food:**
-
-1.  **Analyze the Food Name:** Understand the food item from the provided name.
-2.  **Find Nutritional Information:** Use your broad general knowledge as a nutritional expert to find the typical nutritional information.
-3.  **Format Output:**
-    *   Return the food item name and its detailed nutritional composition per 100g.
-    *   Provide the information in a clear, parsable format: "Nutrient: Amount Unit, Nutrient: Amount Unit". For example: "Energia: 450 kcal, Proteina: 25 g, Calcio: 150 mg".
-4.  **Handle Failure:**
-    *   If the provided name is too generic, ambiguous, or you cannot find its nutritional information from any source, the \`foodItem\` field in the output should be the original food name you were given, and the \`nutritionalInformation\` field must be the exact string "Alimento no registrado" or "Food not registered".
-
-Now, analyze the following food item:
+4.  **Format:**
+"Nutrient: Amount Unit, Nutrient: Amount Unit".
 
 Food Name: {{{foodName}}}
-
-Return the food item name and its detailed nutritional composition, including the value for 'Agua' and as many of the other following nutrients as possible. Ensure 'Agua' is returned with '%' as its unit (e.g. "Agua: 85 %").
 `,
 });
 

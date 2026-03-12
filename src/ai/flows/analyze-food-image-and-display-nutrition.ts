@@ -38,11 +38,13 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodImageAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodImageAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodImageAndDisplayNutritionOutputSchema},
-  prompt: `You are an expert nutritionist specialized in visual portion estimation and INCAP database analysis.
+  prompt: `You are an expert nutritionist specialized in visual portion estimation and regional food composition tables (like INCAP).
 
 **Task:**
-1. Identify the food item.
-2. Provide nutritional info per 100g. ALWAYS include 'Agua' with '%' as unit.
+1. Identify the food item accurately.
+2. Provide a COMPREHENSIVE nutritional analysis per 100g. You MUST attempt to return all standard nutrients found in official composition tables:
+   - Energia (kcal), Proteína (g), Grasa Total (g), Carbohidratos Totales (g), Fibra Dietética (g), Ceniza (g), Calcio (mg), Hierro (mg), Zinc (mg), Vitamina A (μg RAE), Vitamina C (mg), Tiamina (mg), Riboflavina (mg), Niacina (mg), Vitamina B6 (mg), Folato (μg DFE), Vitamina B12 (μg), Colesterol (mg), Ácidos Grasos Saturados (g), Sodio (mg), Potasio (mg), Fósforo (mg), and ALWAYS include Agua (%).
+
 3. Estimate portions using the **Hand Model (PMC8115205)**:
    - 'palma' (palm): Protein (meat, fish).
    - 'puño' (fist): Carbs (rice, pasta) or vegetables.
@@ -50,13 +52,18 @@ const prompt = ai.definePrompt({
    - 'pulgar' (thumb): Fats/Cheeses.
    - 'punta' (fingertip): Oils/Sweets.
 
+**Context:**
+{{#if latitude}}
+The user is at latitude: {{{latitude}}}, longitude: {{{longitude}}}. Use regional databases (e.g., INCAP for Central America) for endemic foods.
+{{/if}}
+
 **Language:**
-Respond in the language specified by locale: "{{{locale}}}". Default to "es" if not provided.
+Respond in the language specified by locale: "{{{locale}}}". Default to "es".
 
-Photo: {{media url=photoDataUri}}
+**Nutrient format:**
+"Nutrient: Amount Unit, Nutrient: Amount Unit". Use standard names.
 
-Nutrient format: "Nutrient: Amount Unit, Nutrient: Amount Unit".
-If unknown, nutritionalInformation should be "Alimento no registrado" or "Food not registered".`,
+Photo: {{media url=photoDataUri}}`,
 });
 
 const analyzeFoodImageAndDisplayNutritionFlow = ai.defineFlow(

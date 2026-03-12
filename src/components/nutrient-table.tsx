@@ -15,29 +15,33 @@ const groupNutrients = (nutrients: Nutrient[]) => {
     micronutrients: [],
   };
 
-  const MACRONUTRIENT_KEYS = ['protein', 'carbohydrate', 'fat', 'fiber', 'proteina', 'carbohidrato', 'grasa', 'fibra', 'calories', 'energia', 'kcal', 'ceniza', 'colesterol', 'ác. grasos'];
+  const MACRO_KEYWORDS = [
+    'protein', 'proteína', 'carbohidrato', 'carbohydrate', 'grasa', 'fat', 
+    'fibra', 'fiber', 'energia', 'energy', 'kcal', 'ceniza', 'ash', 
+    'colesterol', 'cholesterol', 'grasos', 'fatty', 'agua', 'water'
+  ];
 
   for (const nutrient of nutrients) {
     const nameLower = nutrient.name.toLowerCase();
-    if (MACRONUTRIENT_KEYS.some(key => nameLower.includes(key))) {
+    if (MACRO_KEYWORDS.some(key => nameLower.includes(key))) {
       grouped.macronutrients.push(nutrient);
     } else {
       grouped.micronutrients.push(nutrient);
     }
   }
 
-  // Sort macronutrients to have Calories first
+  // Sort macronutrients: Energy first, then Protein, then others
   grouped.macronutrients.sort((a, b) => {
     const aName = a.name.toLowerCase();
     const bName = b.name.toLowerCase();
-    if (aName.includes('calories') || aName.includes('energia')) return -1;
-    if (bName.includes('calories') || bName.includes('energia')) return 1;
-    if (aName.includes('protein') || aName.includes('proteina')) return -1;
-    if (bName.includes('protein') || bName.includes('proteina')) return 1;
+    if (aName.includes('energia') || aName.includes('energy') || aName.includes('kcal')) return -1;
+    if (bName.includes('energia') || bName.includes('energy') || bName.includes('kcal')) return 1;
+    if (aName.includes('prote') || aName.includes('protein')) return -1;
+    if (bName.includes('prote') || bName.includes('protein')) return 1;
     return 0;
   });
   
-  // Sort micronutrients alphabetically
+  // Sort micronutrients (Vitamins/Minerals) alphabetically
   grouped.micronutrients.sort((a,b) => a.name.localeCompare(b.name));
 
   return grouped;
@@ -50,31 +54,31 @@ export function NutrientTable({ nutrients }: { nutrients: Nutrient[] }) {
     const renderNutrientRow = (nutrient: Nutrient) => {
         const Icon = getNutrientIcon(nutrient.name);
         return (
-            <TableRow key={nutrient.name}>
+            <TableRow key={nutrient.name} className="hover:bg-muted/30">
                 <TableCell className="font-medium flex items-center gap-2">
-                    <Icon className="h-4 w-4 text-muted-foreground" />
+                    <Icon className="h-4 w-4 text-primary/60" />
                     <span>{nutrient.name}</span>
                 </TableCell>
-                <TableCell className="text-right">
-                    {nutrient.amount.toLocaleString()} {nutrient.unit}
+                <TableCell className="text-right tabular-nums">
+                    {nutrient.amount.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 2 })} {nutrient.unit}
                 </TableCell>
             </TableRow>
         );
     };
 
     const renderGroupHeader = (title: string) => (
-      <TableRow className="bg-secondary hover:bg-secondary">
-          <TableCell colSpan={2} className="font-semibold text-secondary-foreground">{title}</TableCell>
+      <TableRow className="bg-secondary/40 hover:bg-secondary/40 border-y-2 border-border/50">
+          <TableCell colSpan={2} className="font-bold text-xs uppercase tracking-widest text-secondary-foreground py-2 px-4">{title}</TableCell>
       </TableRow>
   );
 
   return (
-    <Card>
+    <Card className="overflow-hidden border-border/50 shadow-sm">
         <Table>
-            <TableHeader>
+            <TableHeader className="bg-muted/30">
                 <TableRow>
-                    <TableHead>{t('NutritionResultCard.nutrient')}</TableHead>
-                    <TableHead className="text-right">{t('NutritionResultCard.amountPer100g')}</TableHead>
+                    <TableHead className="font-bold">{t('NutritionResultCard.nutrient')}</TableHead>
+                    <TableHead className="text-right font-bold">{t('NutritionResultCard.amountPer100g')}</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
