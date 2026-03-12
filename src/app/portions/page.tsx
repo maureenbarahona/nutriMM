@@ -1,8 +1,7 @@
-
 'use client';
 import { PortionEstimatorForm } from "@/components/portion-estimator-form";
 import { useLanguage } from "@/context/language-context";
-import { Scale, Info, Sparkles, Flame } from "lucide-react";
+import { Flame, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function PortionsPage() {
@@ -17,16 +16,16 @@ export default function PortionsPage() {
                     <h1 className="font-headline text-4xl md:text-5xl font-bold text-primary">
                         {t('PortionsPage.title')}
                     </h1>
-                    <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
+                    <p className="text-xl text-foreground/70 max-w-2xl mx-auto leading-relaxed">
                         {t('PortionsPage.subtitle')}
                     </p>
                 </div>
 
-                <Card className="bg-secondary/50 border-primary/20 shadow-none">
-                    <CardContent className="p-4 flex items-start gap-3">
-                        <Sparkles className="h-5 w-5 text-primary shrink-0 mt-1" />
+                <Card className="bg-primary/10 border-primary/20 shadow-none border">
+                    <CardContent className="p-4 flex items-center gap-3">
+                        <Sparkles className="h-5 w-5 text-primary shrink-0" />
                         <div className="text-sm">
-                            <strong className="text-primary font-bold">{t('PortionsPage.methodTitle')}</strong>: <span className="text-foreground/80">{t('PortionsPage.methodDescription')}</span>
+                            <strong className="text-primary font-bold">{t('PortionsPage.methodTitle')}</strong> - <span className="text-foreground/80">{t('PortionsPage.methodDescription')}</span>
                         </div>
                     </CardContent>
                 </Card>

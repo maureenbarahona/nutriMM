@@ -23,8 +23,8 @@
     "methodDescription": "Esta herramienta calcula el peso total y calorías absolutas basadas en el volumen visual y referencias de la mano."
   },
   "PortionEstimator": {
-    "analyzeButton": "Calcular Calorías del Plato",
-    "analyzingButton": "Calculando masa del plato...",
+    "analyzeButton": "CALCULAR CALORÍAS DEL PLATO",
+    "analyzingButton": "CALCULANDO MASA DEL PLATO...",
     "success": "¡Calorías calculadas con éxito!"
   },
   "PortionResultCard": {
@@ -40,7 +40,7 @@
     "uploaderFormats": "PNG, JPG, o WEBP",
     "changeImage": "Hacer clic para cambiar la imagen",
     "analysisFailedTitle": "Análisis Fallido",
-    "errorTitle": "Error",
+    "errorTitle": "Análisis de Plato",
     "analysisSuccessTitle": "¡Análisis exitoso!"
   },
   "NutritionResultCard": {

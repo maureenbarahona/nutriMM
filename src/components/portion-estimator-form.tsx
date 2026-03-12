@@ -11,6 +11,7 @@ import { Skeleton } from './ui/skeleton';
 import { fileToDataUri } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 
 const initialState: AnalysisState = {
   status: 'error',
@@ -65,10 +66,24 @@ export function PortionEstimatorForm() {
 
   return (
     <div className="space-y-8">
-      <Card>
+      <Card className="border-border/50">
         <CardContent className="pt-6">
           <form action={formAction} className="space-y-6">
-            <FileUploader onFileSelect={handleFileSelect} previewUrl={previewUrl} disabled={isPending} />
+            <div className="relative">
+              <FileUploader onFileSelect={handleFileSelect} previewUrl={previewUrl} disabled={isPending} />
+              
+              {state.status === 'error' && state.message && (
+                <div className="absolute top-1/2 right-4 -translate-y-1/2 z-20 max-w-[200px] animate-in fade-in zoom-in duration-300">
+                   <Alert variant="destructive" className="shadow-xl border-2">
+                    <AlertTitle className="text-xs font-bold">{t('ScanForm.errorTitle')}</AlertTitle>
+                    <AlertDescription className="text-[10px] leading-tight">
+                      {t(state.message, state.messageValues)}
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              )}
+            </div>
+
             {selectedFile && <input type="hidden" name="image" value={previewUrl ?? ''} />}
             <input type="hidden" name="locale" value={locale} />
             {location && (
@@ -79,16 +94,16 @@ export function PortionEstimatorForm() {
             )}
             
             {selectedFile && !isPending && (
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
-                <Scale className="mr-2 h-4 w-4" />
+              <Button type="submit" className="w-full bg-primary hover:bg-primary/90 font-bold tracking-wider uppercase h-12">
+                <Scale className="mr-2 h-5 w-5" />
                 {t('PortionEstimator.analyzeButton')}
               </Button>
             )}
 
             {isPending && (
               <div className="space-y-4 animate-pulse">
-                <Button disabled className="w-full">
-                  <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+                <Button disabled className="w-full h-12">
+                  <Sparkles className="mr-2 h-5 w-5 animate-spin" />
                   {t('PortionEstimator.analyzingButton')}
                 </Button>
                 <div className="space-y-2">
