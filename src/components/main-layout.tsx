@@ -1,8 +1,7 @@
-
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, History, PlusCircle, Scale, Calculator, KeyRound, Camera } from 'lucide-react';
+import { History, PlusCircle, Scale, Calculator, KeyRound, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from './icons';
 import { useLanguage } from '@/context/language-context';
