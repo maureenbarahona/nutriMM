@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { Logo } from './icons';
+import { useLanguage } from '@/context/language-context';
 
 export function SiteFooter() {
+    const { t } = useLanguage();
     return (
-        <footer className="bg-muted/50 text-muted-foreground">
+        <footer className="bg-muted/50 text-muted-foreground pb-20 md:pb-10">
             <div className="container py-10 px-5">
                 <div className="flex flex-wrap justify-between gap-8">
                     
@@ -18,7 +20,9 @@ export function SiteFooter() {
                     <div className="flex-1 min-w-[150px] mb-5">
                         <h4 className="font-semibold mb-2 text-foreground">Explorar</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="/" className="hover:text-primary transition-colors">Inicio</Link></li>
+                            <li><Link href="/" className="hover:text-primary transition-colors">{t('Navigation.scan')}</Link></li>
+                            <li><Link href="/portions" className="hover:text-primary transition-colors">{t('Navigation.portions')}</Link></li>
+                            <li><Link href="/bmi" className="hover:text-primary transition-colors">{t('Navigation.bmi')}</Link></li>
                             <li><Link href="/about" className="hover:text-primary transition-colors">Sobre NutriM&M</Link></li>
                             <li><Link href="/contact" className="hover:text-primary transition-colors">Contacto</Link></li>
                         </ul>

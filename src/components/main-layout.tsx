@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, History, PlusCircle } from 'lucide-react';
+import { Home, History, PlusCircle, Scale, Calculator } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from './icons';
 import { useLanguage } from '@/context/language-context';
@@ -14,8 +14,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { href: '/', label: t('Navigation.scan'), icon: Home },
+    { href: '/portions', label: t('Navigation.portions'), icon: Scale },
     { href: '/history', label: t('Navigation.history'), icon: History },
     { href: '/add', label: t('Navigation.addManually'), icon: PlusCircle },
+    { href: '/bmi', label: t('Navigation.bmi'), icon: Calculator },
   ];
 
   return (
@@ -53,7 +55,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1">{children}</main>
       <SiteFooter />
       <footer className="sticky bottom-0 z-40 w-full border-t bg-background/95 md:hidden">
-        <nav className="container mx-auto grid grid-cols-3 items-center justify-items-center gap-4 px-4 py-2">
+        <nav className="container mx-auto grid grid-cols-5 items-center justify-items-center gap-1 px-2 py-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -61,11 +63,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center gap-1 rounded-md p-2 text-sm font-medium transition-colors',
+                  'flex flex-col items-center gap-1 rounded-md p-1 text-[10px] font-medium transition-colors text-center',
                   isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
-                <item.icon className="h-6 w-6" />
+                <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
               </Link>
             );

@@ -7,6 +7,19 @@ export type Nutrient = {
 export type FoodAnalysis = {
   foodItem: string;
   nutrients: Nutrient[];
+  portionEstimation?: {
+    type: string;
+    description: string;
+    amount: number;
+  }[];
+};
+
+export type PortionAnalysis = {
+  foodItem: string;
+  estimatedWeightGrams: number;
+  totalCalories: number;
+  nutrients: Nutrient[];
+  reasoning: string;
 };
 
 export type FoodLogItem = {

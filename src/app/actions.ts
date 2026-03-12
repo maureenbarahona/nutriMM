@@ -3,18 +3,16 @@
 import { analyzeFoodImageAndDisplayNutrition } from '@/ai/flows/analyze-food-image-and-display-nutrition';
 import { analyzeFoodTextAndDisplayNutrition } from '@/ai/flows/analyze-food-text-and-display-nutrition';
 import { summarizeDailyNutrientIntake } from "@/ai/flows/summarize-daily-nutrient-intake";
+import { estimatePortionsFromImage } from '@/ai/flows/estimate-portions-from-image';
 import { parseNutritionString } from '@/lib/utils';
-import type { FoodLogItem, Nutrient } from '@/lib/types';
+import type { FoodLogItem, Nutrient, PortionAnalysis } from '@/lib/types';
 import { z } from 'zod';
 
 export type AnalysisState = {
   status: 'error' | 'success';
   message: string;
   messageValues?: Record<string, string | number>;
-  data?: {
-    foodItem: string;
-    nutrients: Nutrient[];
-  };
+  data?: any;
 };
 
 const analyzeImageSchema = z.object({
@@ -79,6 +77,31 @@ export async function analyzeImageAction(
         foodItem: result.foodItem,
         nutrients,
       },
+    };
+  } catch (error) {
+    console.error(error);
+    return { status: 'error', message: "Actions.unexpectedError" };
+  }
+}
+
+export async function estimatePortionsAction(
+  prevState: any,
+  formData: FormData
+): Promise<AnalysisState> {
+  try {
+    const image = formData.get('image') as string;
+    if (!image) {
+      return { status: 'error', message: "Actions.imageRequired" };
+    }
+
+    const result = await estimatePortionsFromImage({
+      photoDataUri: image,
+    });
+
+    return {
+      status: 'success',
+      message: "PortionEstimator.success",
+      data: result,
     };
   } catch (error) {
     console.error(error);

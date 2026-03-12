@@ -5,14 +5,31 @@
   },
   "Navigation": {
     "scan": "Scan",
+    "portions": "Portions",
     "history": "History",
-    "addManually": "Add Manually"
+    "addManually": "Add Manually",
+    "bmi": "BMI"
   },
   "HomePage": {
     "title": "Nutrition in detail: from macros to micros.",
     "subtitle": "Instantly discover the nutritional value of your meals. Just take a picture and let NutriM&M do the rest.",
     "cardTitle": "Eat Smarter, Live Better.",
     "cardSubtitle": "Your journey to mindful eating starts here."
+  },
+  "PortionsPage": {
+    "title": "Portion Estimation",
+    "subtitle": "Advanced mass estimation based on the Nutrition5k methodology. Analyze your entire plate at once.",
+    "methodTitle": "AI Estimation",
+    "methodDescription": "This tool uses computer vision to calculate total weight and absolute calories based on volume."
+  },
+  "PortionEstimator": {
+    "analyzeButton": "Estimate Portion",
+    "analyzingButton": "Calculating mass...",
+    "success": "Portion estimated successfully!"
+  },
+  "PortionResultCard": {
+    "estimatedWeight": "Estimated Weight",
+    "absoluteValuesNote": "Total nutritional content for the entire portion."
   },
   "ScanForm": {
     "analyzeButton": "Analyze Image",
