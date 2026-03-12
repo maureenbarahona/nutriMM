@@ -1,6 +1,7 @@
 'use server';
 /**
  * @fileOverview Specialized flow for estimating food portions and absolute nutritional values from images.
+ * Uses Nutrition5k logic and PMC8115205 (Hand Model) for consistent mass estimation.
  */
 
 import {ai} from '@/ai/genkit';
@@ -44,31 +45,33 @@ const prompt = ai.definePrompt({
   name: 'estimatePortionsFromImagePrompt',
   input: {schema: EstimatePortionsInputSchema},
   output: {schema: EstimatePortionsOutputSchema},
-  prompt: `You are an expert nutritional computer vision agent specialized in mass and portion estimation.
+  prompt: `You are an expert nutritional computer vision agent specialized in mass and portion estimation, inspired by datasets like Nutrition5k.
 
-**Your goal:**
-Analyze the food image provided, estimate the total weight in grams, and calculate the ABSOLUTE nutritional values for the entire portion (not per 100g).
+**Goal:**
+Estimate the total weight in grams and calculate the ABSOLUTE nutritional values for the ENTIRE portion shown in the image.
 
-**Task:**
-1. **Visual Volume:** Estimate total mass based on the plate, silverware, and depth.
-2. **Exhaustive Absolute Nutrient Analysis:** Calculate the total content for the ENTIRE portion mass for all these nutrients: 
-   Energia (kcal), Proteína (g), Grasa Total (g), Carbohidratos Totales (g), Fibra Dietética (g), Ceniza (g), Calcio (mg), Hierro (mg), Zinc (mg), Vitamina A (μg RAE), Vitamina C (mg), Tiamina (mg), Riboflavina (mg), Niacina (mg), Vitamina B6 (mg), Folato (μg DFE), Vitamina B12 (μg), Colesterol (mg), Ácidos Grasos Saturados (g), Sodio (mg), Potasio (mg), Fósforo (mg), and ALWAYS include Agua (%).
-3. **Anatomical Reference (Hand Model):** Provide a breakdown of portions using the following references:
-   - 'palma' (palm): Protein (meat, fish).
-   - 'puño' (fist): Carbs (rice, pasta) or vegetables.
-   - 'puñado' (handful): Fruits or snacks.
-   - 'pulgar' (thumb): Fats/Cheeses.
-   - 'punta' (fingertip): Oils/Sweets.
+**Step-by-Step Consistent Estimation Logic:**
+1. **Calibration:** Use the plate (assume standard 26cm diameter if not obvious) and silverware to establish a physical scale.
+2. **Segmentation:** Identify each individual food component on the plate.
+3. **Volume Estimation:** Estimate the surface area and depth (height) of each component.
+4. **Mass Calculation:** Apply standard food densities to the estimated volume to get grams per component.
+5. **Hand Model Validation (PMC8115205):** Use anatomical references to double-check:
+   - 'palma' (palm): ~100-150g of protein.
+   - 'puño' (fist): ~1 cup (~150-200g) of starches/veggies.
+   - 'puñado' (handful): ~30-50g of snacks/fruits.
+   - 'pulgar' (thumb): ~15-30g of fats/cheeses.
+
+**Requirements:**
+- **Exhaustive Nutrient Analysis:** You MUST return absolute totals for the WHOLE portion for: Energia (kcal), Proteína (g), Grasa Total (g), Carbohidratos Totales (g), Fibra Dietética (g), Ceniza (g), Calcio (mg), Hierro (mg), Zinc (mg), Vitamina A (μg RAE), Vitamina C (mg), Tiamina (mg), Riboflavina (mg), Niacina (mg), Vitamina B6 (mg), Folato (μg DFE), Vitamina B12 (μg), Colesterol (mg), Ácidos Grasos Saturados (g), Sodio (mg), Potasio (mg), Fósforo (mg), and ALWAYS include Agua (%).
+- **Consistency:** Ensure estimations are conservative and grounded in the physical scale provided by the plate. Avoid radical deviations for similar visual volumes.
 
 **Language:**
 Respond in the language specified by locale: "{{{locale}}}". Default to "es".
 
 **Context:**
 {{#if latitude}}
-The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. Use regional food composition tables (like INCAP for Central America) for ALL calculations based on endemic foods.
+User location: lat {{{latitude}}}, lon {{{longitude}}}. Use regional food composition tables (e.g., INCAP) for all nutritional data calculations.
 {{/if}}
-
-**Crucial Requirement:** All nutrient amounts in the output MUST be absolute values for the WHOLE estimated portion mass. Do NOT return values per 100g. If the plate has 350g of food, return the total nutrients for 350g.
 
 Photo: {{media url=photoDataUri}}
 `,
