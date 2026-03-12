@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Badge } from '@/components/ui/badge';
 import { NutrientTable } from './nutrient-table';
 import { useLanguage } from '@/context/language-context';
-import { Flame, Scale, Info, Utensils, Database } from 'lucide-react';
+import { Flame, Scale, Info, Utensils, Database, Sparkles } from 'lucide-react';
 import type { PortionAnalysis } from '@/lib/types';
 import { Button } from './ui/button';
 import { useFoodLog } from '@/hooks/use-food-log';
@@ -43,8 +43,9 @@ export function PortionResultCard({ result }: { result: PortionAnalysis }) {
               <Database className="h-3 w-3 text-primary" />
               {t('PortionResultCard.compositionTableBadge')}
             </Badge>
-            <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white">
-              Nutrition5k Method
+            <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white flex items-center gap-1.5">
+              <Sparkles className="h-3 w-3 text-primary" />
+              IA NutriM&M
             </Badge>
           </div>
         </div>

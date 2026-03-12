@@ -18,9 +18,9 @@
   },
   "PortionsPage": {
     "title": "Estimado de Porciones",
-    "subtitle": "Estimación avanzada de masa basada en la metodología Nutrition5k. Analiza tu plato completo.",
-    "methodTitle": "IA Avanzada (Nutrition5k)",
-    "methodDescription": "Esta herramienta calcula el peso total y calorías absolutas basadas en el volumen visual del plato."
+    "subtitle": "Estimación avanzada de masa potenciada por IA basada en volumen visual y referencias anatómicas. Analiza tu plato completo.",
+    "methodTitle": "IA Avanzada NutriM&M",
+    "methodDescription": "Esta herramienta calcula el peso total y calorías absolutas basadas en el volumen visual y referencias de la mano."
   },
   "PortionEstimator": {
     "analyzeButton": "Estimar Porción Completa",

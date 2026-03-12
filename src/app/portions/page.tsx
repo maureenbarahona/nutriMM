@@ -1,7 +1,7 @@
 'use client';
 import { PortionEstimatorForm } from "@/components/portion-estimator-form";
 import { useLanguage } from "@/context/language-context";
-import { Scale, Info } from "lucide-react";
+import { Scale, Info, Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function PortionsPage() {
@@ -23,7 +23,7 @@ export default function PortionsPage() {
 
                 <Card className="bg-blue-50 border-blue-200">
                     <CardContent className="p-4 flex items-start gap-3">
-                        <Info className="h-5 w-5 text-blue-600 shrink-0 mt-1" />
+                        <Sparkles className="h-5 w-5 text-blue-600 shrink-0 mt-1" />
                         <div className="text-sm text-blue-800">
                             <strong>{t('PortionsPage.methodTitle')}</strong>: {t('PortionsPage.methodDescription')}
                         </div>

@@ -1,7 +1,7 @@
 'use server';
 /**
  * @fileOverview Specialized flow for estimating food portions and absolute nutritional values from images.
- * Inspired by the Nutrition5k (CVPR 2021) approach of mass-based nutritional prediction.
+ * Uses a hybrid approach combining mass-based prediction (Nutrition5k) and anatomical reference (Hand Model PMC8115205).
  */
 
 import {ai} from '@/ai/genkit';
@@ -27,7 +27,7 @@ const EstimatePortionsOutputSchema = z.object({
     amount: z.number(),
     unit: z.string()
   })).describe('Absolute nutritional values for the entire portion (not per 100g).'),
-  reasoning: z.string().describe('Brief reasoning for the portion estimation based on visual cues.'),
+  reasoning: z.string().describe('Brief reasoning for the portion estimation based on visual cues and anatomical references.'),
 });
 export type EstimatePortionsOutput = z.infer<typeof EstimatePortionsOutputSchema>;
 
@@ -39,24 +39,21 @@ const prompt = ai.definePrompt({
   name: 'estimatePortionsFromImagePrompt',
   input: {schema: EstimatePortionsInputSchema},
   output: {schema: EstimatePortionsOutputSchema},
-  prompt: `You are an expert nutritional computer vision agent specialized in mass estimation and caloric prediction, following the methodology of the Nutrition5k research paper.
+  prompt: `You are an expert nutritional computer vision agent specialized in mass estimation.
+
+**Your goal:**
+Analyze the food image provided and estimate the total weight of the food on the plate in grams using a hybrid approach:
+1. **Visual Volume (Nutrition5k Methodology):** Estimate mass based on the size of the plate, silverware, and depth of the food.
+2. **Anatomical Reference (Hand Model PMC8115205):** Use the user's hand if present in the photo as a scale (Palm = protein, Fist = carbs/veg, Handful = fruit, etc.).
 
 **Context:**
 {{#if latitude}}
-The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. Use this location to prioritize nutritional data from regional food composition tables (like INCAP for Central America) to ensure the values reflect local food varieties and preparation methods.
+The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. ALWAYS prioritize nutritional data from regional food composition tables (like INCAP for Central America) for the identified ingredients.
 {{/if}}
 
-**Your goal:**
-Analyze the food image provided and perform the following:
-
-1. **Mass Estimation:** Estimate the total weight of the food on the plate in grams. Use visual cues like the size of the plate, silverware, or common reference objects if present.
-2. **Absolute Nutritional Breakdown:** Use the composition table relevant to the user's region to calculate the TOTAL nutritional content for the entire estimated mass of the plate.
-3. **Reasoning:** Explain why you estimated that weight (e.g., "The serving size of the rice occupies half of a standard 10-inch plate...").
-
 **Requirements for Output:**
-- Focus on the identified food items.
-- Provide Total Calories, Protein (g), Fat (g), Carbohydrates (g), Fiber (g), and Sodium (mg).
-- If multiple food items are present, aggregate them into a single portion estimation for the plate.
+- Provide Total Calories, Protein (g), Fat (g), Carbohydrates (g), Fiber (g), and Sodium (mg) for the ENTIRE estimated mass.
+- Explain the reasoning (e.g., "The portion size was estimated based on its visual volume compared to a standard 10-inch plate...").
 - Always include 'Agua' (Water) in the nutrients list with '%' as the unit.
 
 Photo: {{media url=photoDataUri}}

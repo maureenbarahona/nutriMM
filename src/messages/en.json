@@ -18,9 +18,9 @@
   },
   "PortionsPage": {
     "title": "Portion Estimation",
-    "subtitle": "Advanced mass estimation based on the Nutrition5k methodology. Analyze your entire plate at once.",
-    "methodTitle": "Advanced AI (Nutrition5k)",
-    "methodDescription": "This tool calculates total weight and absolute calories based on the visual volume of the plate."
+    "subtitle": "Advanced AI-powered estimation based on visual volume and anatomical references. Analyze your entire plate at once.",
+    "methodTitle": "Advanced NutriM&M AI",
+    "methodDescription": "This tool calculates total weight and absolute calories based on the visual volume and hand references."
   },
   "PortionEstimator": {
     "analyzeButton": "Estimate Entire Plate",
@@ -46,8 +46,8 @@
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrientes",
-    "micronutrients": "Micronutrientes",
+    "macronutrients": "Macronutrients",
+    "micronutrients": "Micronutrients",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",
