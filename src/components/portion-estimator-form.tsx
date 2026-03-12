@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useRef, useEffect } from 'react';
+import { useActionState, useState, useEffect } from 'react';
 import { Sparkles, Scale } from 'lucide-react';
 import { estimatePortionsAction, type AnalysisState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
@@ -102,7 +102,11 @@ export function PortionEstimatorForm() {
       </Card>
 
       {state.status === 'success' && state.data && (
-        <PortionResultCard result={state.data} />
+        <PortionResultCard 
+          result={state.data} 
+          originalImage={previewUrl} 
+          location={location}
+        />
       )}
     </div>
   );

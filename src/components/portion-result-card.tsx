@@ -1,19 +1,34 @@
 'use client';
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { NutrientTable } from './nutrient-table';
 import { useLanguage } from '@/context/language-context';
-import { Flame, Scale, Info, Utensils, Database, Sparkles, Hand } from 'lucide-react';
+import { Flame, Scale, Info, Utensils, Database, Sparkles, Hand, Pencil, Check, X, Loader2 } from 'lucide-react';
 import type { PortionAnalysis } from '@/lib/types';
 import { Button } from './ui/button';
+import { Input } from './ui/input';
 import { useFoodLog } from '@/hooks/use-food-log';
 import { useToast } from '@/hooks/use-toast';
+import { estimatePortionsAction } from '@/app/actions';
+import { cn } from '@/lib/utils';
 
-export function PortionResultCard({ result }: { result: PortionAnalysis }) {
-  const { t } = useLanguage();
+interface PortionResultCardProps {
+  result: PortionAnalysis;
+  originalImage: string | null;
+  location: { latitude: number; longitude: number } | null;
+}
+
+export function PortionResultCard({ result: initialResult, originalImage, location }: PortionResultCardProps) {
+  const { t, locale } = useLanguage();
   const { addFoodItem } = useFoodLog();
   const { toast } = useToast();
+
+  const [result, setResult] = useState<PortionAnalysis>(initialResult);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState(initialResult.foodItem);
+  const [isRecalculating, setIsRecalculating] = useState(false);
 
   const handleLog = () => {
     addFoodItem({
@@ -27,12 +42,90 @@ export function PortionResultCard({ result }: { result: PortionAnalysis }) {
     });
   };
 
+  const handleRecalculate = async () => {
+    if (!originalImage || !editedName.trim()) return;
+
+    setIsRecalculating(true);
+    const formData = new FormData();
+    formData.append('image', originalImage);
+    formData.append('overrideFoodItem', editedName);
+    formData.append('locale', locale);
+    if (location) {
+      formData.append('latitude', location.latitude.toString());
+      formData.append('longitude', location.longitude.toString());
+    }
+
+    try {
+      const actionResult = await estimatePortionsAction(null, formData);
+      if (actionResult.status === 'success' && actionResult.data) {
+        setResult(actionResult.data);
+        setIsEditing(false);
+        toast({
+          title: t('PortionEstimator.success'),
+          description: `${actionResult.data.foodItem} recalculated.`,
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: t('ScanForm.analysisFailedTitle'),
+          description: t(actionResult.message || 'Actions.unexpectedError'),
+        });
+      }
+    } catch (error) {
+      console.error('Recalculate error:', error);
+      toast({
+        variant: 'destructive',
+        title: t('ScanForm.analysisFailedTitle'),
+        description: t('Actions.unexpectedError'),
+      });
+    } finally {
+      setIsRecalculating(false);
+    }
+  };
+
   return (
-    <Card className="w-full animate-in fade-in-50 slide-in-from-bottom-5 duration-500 overflow-hidden border-2 border-primary/20">
-      <CardHeader className="bg-primary/5">
+    <Card className={cn(
+      "w-full animate-in fade-in-50 slide-in-from-bottom-5 duration-500 overflow-hidden border-2 transition-all",
+      isRecalculating ? "opacity-70 grayscale-[0.5] border-primary/40" : "border-primary/20"
+    )}>
+      <CardHeader className="bg-primary/5 relative">
+        {isRecalculating && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/20 backdrop-blur-[2px] z-10">
+            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+          </div>
+        )}
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-          <div>
-            <CardTitle className="text-3xl font-headline text-primary mb-1">{result.foodItem}</CardTitle>
+          <div className="w-full">
+            {isEditing ? (
+              <div className="flex items-center gap-2 w-full mt-2">
+                <Input 
+                  value={editedName} 
+                  onChange={(e) => setEditedName(e.target.value)}
+                  className="text-xl font-bold font-headline h-12 bg-white"
+                  autoFocus
+                />
+                <Button size="icon" variant="default" onClick={handleRecalculate} disabled={isRecalculating}>
+                  <Check className="h-4 w-4" />
+                </Button>
+                <Button size="icon" variant="ghost" onClick={() => { setIsEditing(false); setEditedName(result.foodItem); }}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-start gap-3 group">
+                <CardTitle className="text-3xl font-headline text-primary mb-1">
+                  {result.foodItem}
+                </CardTitle>
+                <Button 
+                  size="icon" 
+                  variant="ghost" 
+                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/10 rounded-full transition-opacity opacity-0 group-hover:opacity-100"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
             <CardDescription className="flex items-center gap-2 text-foreground/70">
               <Utensils className="h-4 w-4" />
               {t('PortionResultCard.absoluteValuesNote')}
@@ -118,7 +211,7 @@ export function PortionResultCard({ result }: { result: PortionAnalysis }) {
       </CardContent>
 
       <CardFooter className="bg-muted/30 border-t p-6">
-        <Button onClick={handleLog} className="w-full h-12 text-lg bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
+        <Button onClick={handleLog} disabled={isRecalculating} className="w-full h-12 text-lg bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
           {t('NutritionResultCard.logFoodButton')}
         </Button>
       </CardFooter>

@@ -92,6 +92,7 @@ const estimatePortionsSchema = z.object({
   image: z.string().refine((val) => val.startsWith('data:image/'), {
     message: 'Image must be a data URI',
   }),
+  overrideFoodItem: z.string().optional(),
   latitude: z.coerce.number().optional(),
   longitude: z.coerce.number().optional(),
   locale: z.string().optional(),
@@ -104,6 +105,7 @@ export async function estimatePortionsAction(
   try {
     const validated = estimatePortionsSchema.safeParse({
       image: formData.get('image'),
+      overrideFoodItem: formData.get('overrideFoodItem'),
       latitude: formData.get('latitude'),
       longitude: formData.get('longitude'),
       locale: formData.get('locale'),
@@ -115,6 +117,7 @@ export async function estimatePortionsAction(
 
     const result = await estimatePortionsFromImage({
       photoDataUri: validated.data.image,
+      overrideFoodItem: validated.data.overrideFoodItem,
       latitude: validated.data.latitude,
       longitude: validated.data.longitude,
       locale: validated.data.locale,

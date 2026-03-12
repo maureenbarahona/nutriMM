@@ -13,6 +13,7 @@ const EstimatePortionsInputSchema = z.object({
     .describe(
       "A photo of a food plate, as a data URI that must include a MIME type and use Base64 encoding."
     ),
+  overrideFoodItem: z.string().optional().describe('A manual correction of the food identification provided by the user.'),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   locale: z.string().optional().describe('The language to use for the output (e.g., "es", "en").'),
@@ -46,10 +47,16 @@ const prompt = ai.definePrompt({
   name: 'estimatePortionsFromImagePrompt',
   input: {schema: EstimatePortionsInputSchema},
   output: {schema: EstimatePortionsOutputSchema},
-  prompt: `You are an expert nutritional computer vision agent specialized in mass and portion estimation, inspired by datasets like Nutrition5k.
+  prompt: `You are an expert nutritional computer vision agent specialized in mass and portion estimation.
 
 **Goal:**
 Estimate the total weight in grams and calculate the ABSOLUTE nutritional values for the ENTIRE portion shown in the image.
+
+{{#if overrideFoodItem}}
+**IMPORTANT CORRECTION:** 
+The user has manually corrected the identification of this food to: "{{{overrideFoodItem}}}". 
+You MUST use this description as the absolute source of truth for your calculations, overriding what you visually identify if there is a conflict. Recalculate all nutritional values based on this specific description.
+{{/if}}
 
 **Step-by-Step Consistent Estimation Logic:**
 1. **Calibration:** Use the plate (assume standard 26cm diameter if not obvious) and silverware to establish a physical scale.
