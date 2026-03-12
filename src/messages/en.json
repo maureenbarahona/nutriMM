@@ -1,3 +1,4 @@
+
 {
   "NutriMM": {
     "title": "NutriM&M",
@@ -8,7 +9,7 @@
     "portions": "Portions",
     "history": "History",
     "addManually": "Add Manually",
-    "bmi": "BMI"
+    "bmi": "Calculate your BMI"
   },
   "HomePage": {
     "title": "Nutrition in detail: from macros to micros.",
@@ -46,8 +47,8 @@
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrients",
-    "micronutrients": "Micronutrients",
+    "macronutrients": "Macronutrientes",
+    "micronutrients": "Micronutrientes",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",
@@ -116,5 +117,11 @@
   },
   "LanguageSwitcher": {
     "label": "Language"
+  },
+  "BMIPage": {
+    "title": "Calculate your BMI",
+    "subtitle": "Get to know your Body Mass Index according to international health standards.",
+    "ageWarning": "Note: This calculator is for people over 20 years old.",
+    "referenceTitle": "Classification Table (IMSS)"
   }
 }

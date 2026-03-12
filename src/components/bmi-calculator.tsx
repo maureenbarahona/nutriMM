@@ -1,9 +1,9 @@
+
 'use client';
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Slider } from './ui/slider';
 import { useLanguage } from '@/context/language-context';
@@ -69,7 +69,7 @@ export function BMICalculator() {
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-2xl font-headline flex items-center gap-2">
                                 <Calculator className="h-6 w-6 text-primary" />
-                                {t('ManualEntryForm.title')}
+                                {t('BMIPage.title')}
                             </CardTitle>
                             <div className="flex bg-muted p-1 rounded-full">
                                 <Button 
@@ -78,7 +78,7 @@ export function BMICalculator() {
                                     className="rounded-full px-4"
                                     onClick={() => toggleUnits('metric')}
                                 >
-                                    Métrico
+                                    {locale === 'es' ? 'Métrico' : 'Metric'}
                                 </Button>
                                 <Button 
                                     variant={unitSystem === 'imperial' ? 'default' : 'ghost'} 
@@ -86,7 +86,7 @@ export function BMICalculator() {
                                     className="rounded-full px-4"
                                     onClick={() => toggleUnits('imperial')}
                                 >
-                                    Inglés
+                                    {locale === 'es' ? 'Inglés' : 'Imperial'}
                                 </Button>
                             </div>
                         </div>
@@ -104,7 +104,9 @@ export function BMICalculator() {
                                 <div className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-sm">
                                     <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: MALE_AVATAR_SVG }} />
                                 </div>
-                                <p className={cn("font-bold", gender === 'male' ? "text-primary" : "text-muted-foreground")}>MASCULINO</p>
+                                <p className={cn("font-bold uppercase tracking-wider", gender === 'male' ? "text-primary" : "text-muted-foreground")}>
+                                    {locale === 'es' ? 'Masculino' : 'Male'}
+                                </p>
                             </div>
                             <div 
                                 onClick={() => setGender('female')}
@@ -116,7 +118,9 @@ export function BMICalculator() {
                                 <div className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center bg-white shadow-sm">
                                     <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: FEMALE_AVATAR_SVG }} />
                                 </div>
-                                <p className={cn("font-bold", gender === 'female' ? "text-accent" : "text-muted-foreground")}>FEMENINO</p>
+                                <p className={cn("font-bold uppercase tracking-wider", gender === 'female' ? "text-accent" : "text-muted-foreground")}>
+                                    {locale === 'es' ? 'Femenino' : 'Female'}
+                                </p>
                             </div>
                         </div>
 
@@ -125,7 +129,7 @@ export function BMICalculator() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-lg font-bold">ESTATURA</Label>
+                                        <Label className="text-lg font-bold uppercase tracking-wider">{locale === 'es' ? 'ESTATURA' : 'HEIGHT'}</Label>
                                         <span className="text-2xl font-black text-primary">{height} <span className="text-sm font-normal text-muted-foreground">{unitSystem === 'metric' ? 'cm' : 'in'}</span></span>
                                     </div>
                                     <Slider 
@@ -139,7 +143,7 @@ export function BMICalculator() {
                                 </div>
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
-                                        <Label className="text-lg font-bold">PESO</Label>
+                                        <Label className="text-lg font-bold uppercase tracking-wider">{locale === 'es' ? 'PESO' : 'WEIGHT'}</Label>
                                         <span className="text-2xl font-black text-primary">{weight} <span className="text-sm font-normal text-muted-foreground">{unitSystem === 'metric' ? 'kg' : 'lb'}</span></span>
                                     </div>
                                     <Slider 
@@ -154,7 +158,7 @@ export function BMICalculator() {
                             </div>
 
                             <div className="flex flex-col items-center space-y-4 bg-muted/30 p-6 rounded-xl">
-                                <Label className="text-lg font-bold">EDAD</Label>
+                                <Label className="text-lg font-bold uppercase tracking-wider">{locale === 'es' ? 'EDAD' : 'AGE'}</Label>
                                 <div className="flex items-center gap-6">
                                     <Button variant="outline" size="icon" className="h-12 w-12 rounded-full border-2" onClick={() => setAge(Math.max(1, age - 1))}>-</Button>
                                     <span className="text-4xl font-black text-primary w-16 text-center">{age}</span>
@@ -169,7 +173,7 @@ export function BMICalculator() {
                             disabled={isCalculating}
                         >
                             {isCalculating ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : <Calculator className="mr-2 h-6 w-6" />}
-                            CALCULAR IMC
+                            {locale === 'es' ? 'CALCULAR IMC' : 'CALCULATE BMI'}
                         </Button>
                     </CardContent>
                 </Card>
@@ -178,7 +182,9 @@ export function BMICalculator() {
                     <div className="animate-in fade-in-50 slide-in-from-bottom-10 duration-700">
                         <Card className="border-2 border-primary overflow-hidden shadow-2xl">
                             <div className="bg-primary p-8 text-center text-white">
-                                <p className="text-lg font-bold opacity-90 uppercase tracking-widest mb-1">Tu Resultado</p>
+                                <p className="text-lg font-bold opacity-90 uppercase tracking-widest mb-1">
+                                    {locale === 'es' ? 'Tu Resultado' : 'Your Result'}
+                                </p>
                                 <h3 className="text-6xl font-black mb-2">{result.bmi.toFixed(1)}</h3>
                                 <div className="inline-block px-6 py-2 bg-white/20 rounded-full font-black text-xl backdrop-blur-sm">
                                     {result.status}
@@ -190,7 +196,9 @@ export function BMICalculator() {
                                         <CheckCircle2 className="h-6 w-6" />
                                     </div>
                                     <div className="space-y-2">
-                                        <h4 className="font-bold text-xl text-foreground">Indicaciones Médicas</h4>
+                                        <h4 className="font-bold text-xl text-foreground">
+                                            {locale === 'es' ? 'Indicaciones Médicas' : 'Medical Indications'}
+                                        </h4>
                                         <p className="text-muted-foreground leading-relaxed text-lg italic">
                                             "{result.indications}"
                                         </p>
@@ -199,7 +207,9 @@ export function BMICalculator() {
                                 <div className="p-4 bg-muted/50 rounded-xl flex items-start gap-3 border border-border/50">
                                     <Info className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
                                     <p className="text-xs text-muted-foreground">
-                                        Esta información es proporcionada por nuestro agente experto en antropología nutricional de NutriM&M. Consulte siempre a un profesional de la salud.
+                                        {locale === 'es' 
+                                            ? 'Esta información es proporcionada por nuestro agente experto en antropología nutricional de NutriM&M basado en estándares del IMSS. Consulte siempre a un profesional de la salud.'
+                                            : 'This information is provided by our NutriM&M nutritional anthropology expert based on IMSS standards. Always consult a health professional.'}
                                     </p>
                                 </div>
                             </CardContent>
@@ -213,25 +223,29 @@ export function BMICalculator() {
                     <CardHeader>
                         <CardTitle className="text-lg font-bold flex items-center gap-2">
                             <Info className="h-5 w-5 text-primary" />
-                            ¿Cómo se mide el IMC?
+                            {locale === 'es' ? '¿Cómo se mide el IMC?' : 'How is BMI measured?'}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            El Índice de Masa Corporal (IMC) es un número que se calcula con base en el peso y la estatura de la persona.
+                            {locale === 'es' 
+                                ? 'El Índice de Masa Corporal (IMC) es un número que se calcula con base en el peso y la estatura de la persona.'
+                                : 'The Body Mass Index (BMI) is a number calculated based on a person\'s weight and height.'}
                         </p>
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            Para la mayoría de las personas, el IMC es un indicador confiable de la gordura y se usa para identificar las categorías de peso que pueden llevar a problemas de salud.
+                            {locale === 'es'
+                                ? 'De acuerdo con el IMSS, el IMC es un indicador confiable para identificar categorías de peso que pueden llevar a problemas de salud.'
+                                : 'According to IMSS, BMI is a reliable indicator to identify weight categories that can lead to health problems.'}
                         </p>
                         
                         <div className="mt-8 pt-6 border-t border-border">
-                            <h4 className="font-bold mb-4 text-primary uppercase text-xs tracking-widest">Tabla de Referencia</h4>
+                            <h4 className="font-bold mb-4 text-primary uppercase text-xs tracking-widest">{t('BMIPage.referenceTitle')}</h4>
                             <div className="space-y-3">
                                 {[
-                                    { range: '< 18.5', label: 'Bajo peso', color: 'bg-blue-400' },
-                                    { range: '18.5 - 24.9', label: 'Normal', color: 'bg-green-500' },
-                                    { range: '25.0 - 29.9', label: 'Sobrepeso', color: 'bg-yellow-500' },
-                                    { range: '>= 30.0', label: 'Obesidad', color: 'bg-red-500' },
+                                    { range: '< 18.5', label: locale === 'es' ? 'Bajo peso' : 'Underweight', color: 'bg-blue-400' },
+                                    { range: '18.5 - 24.9', label: locale === 'es' ? 'Normal' : 'Normal', color: 'bg-green-500' },
+                                    { range: '25.0 - 29.9', label: locale === 'es' ? 'Sobrepeso' : 'Overweight', color: 'bg-yellow-500' },
+                                    { range: '>= 30.0', label: locale === 'es' ? 'Obesidad' : 'Obesity', color: 'bg-red-500' },
                                 ].map((item) => (
                                     <div key={item.label} className="flex items-center justify-between text-sm p-3 rounded-lg bg-white shadow-sm border border-border/50">
                                         <div className="flex items-center gap-2">
