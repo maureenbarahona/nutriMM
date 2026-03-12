@@ -29,7 +29,8 @@
   },
   "PortionResultCard": {
     "estimatedWeight": "Estimated Weight",
-    "absoluteValuesNote": "Total nutritional content for the entire portion."
+    "absoluteValuesNote": "Total nutritional content for the entire portion.",
+    "compositionTableBadge": "Regional Food Composition Table"
   },
   "ScanForm": {
     "analyzeButton": "Analyze Image",

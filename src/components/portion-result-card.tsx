@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Badge } from '@/components/ui/badge';
 import { NutrientTable } from './nutrient-table';
 import { useLanguage } from '@/context/language-context';
-import { Flame, Scale, Info, Utensils } from 'lucide-react';
+import { Flame, Scale, Info, Utensils, Database } from 'lucide-react';
 import type { PortionAnalysis } from '@/lib/types';
 import { Button } from './ui/button';
 import { useFoodLog } from '@/hooks/use-food-log';
@@ -30,7 +30,7 @@ export function PortionResultCard({ result }: { result: PortionAnalysis }) {
   return (
     <Card className="w-full animate-in fade-in-50 slide-in-from-bottom-5 duration-500 overflow-hidden border-2 border-primary/20">
       <CardHeader className="bg-primary/5">
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
           <div>
             <CardTitle className="text-3xl font-headline text-primary mb-1">{result.foodItem}</CardTitle>
             <CardDescription className="flex items-center gap-2 text-foreground/70">
@@ -38,9 +38,15 @@ export function PortionResultCard({ result }: { result: PortionAnalysis }) {
               {t('PortionResultCard.absoluteValuesNote')}
             </CardDescription>
           </div>
-          <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white">
-            Nutrition5k Method
-          </Badge>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white flex items-center gap-1.5">
+              <Database className="h-3 w-3 text-primary" />
+              {t('PortionResultCard.compositionTableBadge')}
+            </Badge>
+            <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white">
+              Nutrition5k Method
+            </Badge>
+          </div>
         </div>
       </CardHeader>
       

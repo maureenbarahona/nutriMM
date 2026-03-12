@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useState, useRef, useEffect } from 'react';
-import { Camera, Sparkles, Scale } from 'lucide-react';
+import { Sparkles, Scale } from 'lucide-react';
 import { estimatePortionsAction, type AnalysisState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,7 +10,6 @@ import { PortionResultCard } from './portion-result-card';
 import { Skeleton } from './ui/skeleton';
 import { fileToDataUri } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { useLanguage } from '@/context/language-context';
 
 const initialState: AnalysisState = {
@@ -22,16 +21,32 @@ export function PortionEstimatorForm() {
   const [state, formAction, isPending] = useActionState(estimatePortionsAction, initialState);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const formRef = useRef<HTMLFormElement>(null);
+  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const { toast } = useToast();
   const { t } = useLanguage();
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     if (state.status === 'error' && state.message) {
       toast({
         variant: 'destructive',
         title: t('ScanForm.analysisFailedTitle'),
-        description: t(state.message),
+        description: t(state.message, state.messageValues),
       });
     }
     if (state.status === 'success' && state.data) {
@@ -55,6 +70,12 @@ export function PortionEstimatorForm() {
           <form action={formAction} className="space-y-6">
             <FileUploader onFileSelect={handleFileSelect} previewUrl={previewUrl} disabled={isPending} />
             {selectedFile && <input type="hidden" name="image" value={previewUrl ?? ''} />}
+            {location && (
+              <>
+                <input type="hidden" name="latitude" value={location.latitude} />
+                <input type="hidden" name="longitude" value={location.longitude} />
+              </>
+            )}
             
             {selectedFile && !isPending && (
               <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
