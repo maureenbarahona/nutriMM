@@ -9,7 +9,7 @@
     "portions": "Porciones",
     "history": "Historial",
     "addManually": "Manual",
-    "bmi": "Calcula tu IMC"
+    "bmi": "Tu Estado Nutricional"
   },
   "HomePage": {
     "title": "Nutrición al detalle: de los macros a los micros.",
@@ -119,9 +119,9 @@
     "label": "Idioma"
   },
   "BMIPage": {
-    "title": "Calcula tu IMC",
-    "subtitle": "Conoce tu Índice de Masa Corporal de acuerdo con los estándares de salud internacionales.",
-    "ageWarning": "Nota: Esta calculadora es para personas mayores de 20 años.",
-    "referenceTitle": "Tabla de clasificación (IMSS)"
+    "title": "Conoce tu estado nutricional",
+    "subtitle": "Análisis completo de IMC y requerimientos calóricos diarios.",
+    "ageWarning": "Nota: Esta herramienta proporciona estimaciones profesionales para todas las edades.",
+    "referenceTitle": "Clasificación de IMC"
   }
 }

@@ -8,8 +8,8 @@
     "scan": "Scan",
     "portions": "Portions",
     "history": "History",
-    "addManually": "Add Manually",
-    "bmi": "Calculate your BMI"
+    "addManually": "Manual",
+    "bmi": "Nutritional Status"
   },
   "HomePage": {
     "title": "Nutrition in detail: from macros to micros.",
@@ -47,8 +47,8 @@
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrientes",
-    "micronutrients": "Micronutrientes",
+    "macronutrients": "Macronutrients",
+    "micronutrients": "Micronutrients",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",
@@ -119,9 +119,9 @@
     "label": "Language"
   },
   "BMIPage": {
-    "title": "Calculate your BMI",
-    "subtitle": "Get to know your Body Mass Index according to international health standards.",
-    "ageWarning": "Note: This calculator is for people over 20 years old.",
-    "referenceTitle": "Classification Table (IMSS)"
+    "title": "Check your nutritional status",
+    "subtitle": "Full analysis of BMI and daily calorie requirements.",
+    "ageWarning": "Note: This tool provides professional estimates for all ages.",
+    "referenceTitle": "BMI Classification"
   }
 }

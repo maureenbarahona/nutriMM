@@ -1,3 +1,4 @@
+
 'use server';
 
 import { analyzeFoodImageAndDisplayNutrition } from '@/ai/flows/analyze-food-image-and-display-nutrition';
@@ -198,12 +199,27 @@ export async function analyzeTextAction(foodName: string, location: { latitude: 
     }
 }
 
-export async function calculateBMIAction(bmi: number, age: number, gender: 'male' | 'female', locale: string = 'es') {
+export async function calculateBMIAction(
+    bmi: number, 
+    age: number, 
+    gender: 'male' | 'female', 
+    weight: number, 
+    height: number, 
+    activityLevel: 'sedentary' | 'moderate' | 'active',
+    isPregnant: boolean = false,
+    isBreastfeeding: boolean = false,
+    locale: string = 'es'
+) {
     try {
         const result = await calculateBMIIndications({
             bmi,
             age,
             gender,
+            weight,
+            height,
+            activityLevel,
+            isPregnant,
+            isBreastfeeding,
             locale
         });
         return { data: result };
