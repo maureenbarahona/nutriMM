@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom';
 import { useEffect, useState, useRef, useActionState } from 'react';
-import { Camera, Sparkles } from 'lucide-react';
+import { Camera, Sparkles, Loader2 } from 'lucide-react';
 
 import { analyzeImageAction, type AnalysisState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
@@ -43,22 +43,23 @@ function SubmitButton() {
 function FormContent({
   onFileSelect,
   previewUrl,
-  selectedFile,
+  isProcessing,
   location,
   locale,
 }: {
   onFileSelect: (file: File) => void;
   previewUrl: string | null;
-  selectedFile: File | null;
+  isProcessing: boolean;
   location: { latitude: number; longitude: number } | null;
   locale: string;
 }) {
   const { pending } = useFormStatus();
+  const { t } = useLanguage();
 
   return (
     <>
-      <FileUploader onFileSelect={onFileSelect} previewUrl={previewUrl} disabled={pending} />
-      {selectedFile && <input type="hidden" name="image" value={previewUrl ?? ''} />}
+      <FileUploader onFileSelect={onFileSelect} previewUrl={previewUrl} disabled={pending || isProcessing} />
+      {previewUrl && <input type="hidden" name="image" value={previewUrl} />}
       <input type="hidden" name="locale" value={locale} />
       {location && (
         <>
@@ -66,7 +67,17 @@ function FormContent({
             <input type="hidden" name="longitude" value={location.longitude} />
         </>
       )}
-      {selectedFile && !pending && (
+
+      {isProcessing && (
+        <div className="flex justify-end">
+          <Button disabled className="w-full sm:w-auto">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            {locale === 'es' ? 'Procesando...' : 'Processing...'}
+          </Button>
+        </div>
+      )}
+      
+      {previewUrl && !pending && !isProcessing && (
         <div className="flex justify-end">
           <SubmitButton />
         </div>
@@ -95,7 +106,7 @@ function FormContent({
 export function ScanForm() {
   const [state, formAction] = useActionState(analyzeImageAction, initialState);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
@@ -134,11 +145,17 @@ export function ScanForm() {
   }, [state, toast, t]);
 
   const handleFileSelect = async (file: File) => {
-    setSelectedFile(file);
+    setIsProcessing(true);
     // Reset state when a new file is selected
     formRef.current?.reset();
-    const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
-    setPreviewUrl(dataUri);
+    try {
+      const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
+      setPreviewUrl(dataUri);
+    } catch (error) {
+      console.error("Error processing file:", error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const analysisData = state.status === 'success' ? state.data : null;
@@ -151,7 +168,7 @@ export function ScanForm() {
             <FormContent
               onFileSelect={handleFileSelect}
               previewUrl={previewUrl}
-              selectedFile={selectedFile}
+              isProcessing={isProcessing}
               location={location}
               locale={locale}
             />

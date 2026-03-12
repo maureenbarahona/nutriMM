@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useState, useEffect } from 'react';
-import { Sparkles, Scale } from 'lucide-react';
+import { Sparkles, Scale, Loader2 } from 'lucide-react';
 import { estimatePortionsAction, type AnalysisState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,6 +22,7 @@ export function PortionEstimatorForm() {
   const [state, formAction, isPending] = useActionState(estimatePortionsAction, initialState);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const { toast } = useToast();
   const { t, locale } = useLanguage();
@@ -59,9 +60,21 @@ export function PortionEstimatorForm() {
   }, [state, toast, t]);
 
   const handleFileSelect = async (file: File) => {
+    setIsProcessing(true);
     setSelectedFile(file);
-    const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
-    setPreviewUrl(dataUri);
+    try {
+      const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
+      setPreviewUrl(dataUri);
+    } catch (error) {
+      console.error("Error processing file:", error);
+      toast({
+        variant: 'destructive',
+        title: t('ScanForm.errorTitle'),
+        description: t('Actions.unexpectedError'),
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -70,7 +83,7 @@ export function PortionEstimatorForm() {
         <CardContent className="pt-6">
           <form action={formAction} className="space-y-6">
             <div className="relative">
-              <FileUploader onFileSelect={handleFileSelect} previewUrl={previewUrl} disabled={isPending} />
+              <FileUploader onFileSelect={handleFileSelect} previewUrl={previewUrl} disabled={isPending || isProcessing} />
               
               {state.status === 'error' && state.message && (
                 <div className="absolute top-1/2 right-4 -translate-y-1/2 z-20 max-w-[200px] animate-in fade-in zoom-in duration-300">
@@ -84,7 +97,7 @@ export function PortionEstimatorForm() {
               )}
             </div>
 
-            {selectedFile && <input type="hidden" name="image" value={previewUrl ?? ''} />}
+            {previewUrl && <input type="hidden" name="image" value={previewUrl} />}
             <input type="hidden" name="locale" value={locale} />
             {location && (
               <>
@@ -93,7 +106,14 @@ export function PortionEstimatorForm() {
               </>
             )}
             
-            {selectedFile && !isPending && (
+            {isProcessing && (
+              <Button disabled className="w-full h-12 bg-muted text-muted-foreground">
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Procesando imagen...
+              </Button>
+            )}
+
+            {previewUrl && !isPending && !isProcessing && (
               <Button type="submit" className="w-full bg-primary hover:bg-primary/90 font-bold tracking-wider uppercase h-12">
                 <Scale className="mr-2 h-5 w-5" />
                 {t('PortionEstimator.analyzeButton')}
