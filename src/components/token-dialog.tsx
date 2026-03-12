@@ -23,7 +23,7 @@ export function TokenDialog({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState('');
   const [open, setOpen] = useState(false);
   const { authorize, isAuthorized } = useToken();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const { toast } = useToast();
 
   const handleValidate = () => {
