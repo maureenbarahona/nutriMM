@@ -23,7 +23,7 @@ export function PortionEstimatorForm() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -70,6 +70,7 @@ export function PortionEstimatorForm() {
           <form action={formAction} className="space-y-6">
             <FileUploader onFileSelect={handleFileSelect} previewUrl={previewUrl} disabled={isPending} />
             {selectedFile && <input type="hidden" name="image" value={previewUrl ?? ''} />}
+            <input type="hidden" name="locale" value={locale} />
             {location && (
               <>
                 <input type="hidden" name="latitude" value={location.latitude} />

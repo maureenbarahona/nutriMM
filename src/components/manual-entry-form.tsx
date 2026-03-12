@@ -22,7 +22,7 @@ const manualEntrySchema = z.object({
 type ManualEntryValues = z.infer<typeof manualEntrySchema>;
 
 export function ManualEntryForm() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const { toast } = useToast();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysis | null>(null);
@@ -56,7 +56,7 @@ export function ManualEntryForm() {
     
     setIsAnalyzing(true);
     setAnalysisResult(null);
-    const result = await analyzeTextAction(foodName, location);
+    const result = await analyzeTextAction(foodName, location, locale);
     setIsAnalyzing(false);
 
     if (result.status === 'error') {

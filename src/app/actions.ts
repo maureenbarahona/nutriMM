@@ -4,6 +4,7 @@ import { analyzeFoodImageAndDisplayNutrition } from '@/ai/flows/analyze-food-ima
 import { analyzeFoodTextAndDisplayNutrition } from '@/ai/flows/analyze-food-text-and-display-nutrition';
 import { summarizeDailyNutrientIntake } from '@/ai/flows/summarize-daily-nutrient-intake';
 import { estimatePortionsFromImage } from '@/ai/flows/estimate-portions-from-image';
+import { calculateBMIIndications } from '@/ai/flows/calculate-bmi-indications';
 import { parseNutritionString } from '@/lib/utils';
 import type { FoodLogItem, Nutrient, PortionAnalysis } from '@/lib/types';
 import { z } from 'zod';
@@ -21,6 +22,7 @@ const analyzeImageSchema = z.object({
   }),
   latitude: z.coerce.number().optional(),
   longitude: z.coerce.number().optional(),
+  locale: z.string().optional(),
 });
 
 export async function analyzeImageAction(
@@ -32,6 +34,7 @@ export async function analyzeImageAction(
       image: formData.get('image'),
       latitude: formData.get('latitude'),
       longitude: formData.get('longitude'),
+      locale: formData.get('locale'),
     });
 
     if (!validated.success) {
@@ -42,6 +45,7 @@ export async function analyzeImageAction(
       photoDataUri: validated.data.image,
       latitude: validated.data.latitude,
       longitude: validated.data.longitude,
+      locale: validated.data.locale,
     });
 
     if (!result.foodItem || !result.nutritionalInformation) {
@@ -51,7 +55,7 @@ export async function analyzeImageAction(
       };
     }
 
-    if (result.nutritionalInformation === "Alimento no registrado") {
+    if (result.nutritionalInformation.includes("no registrado") || result.nutritionalInformation.includes("not registered")) {
       return {
         status: 'error',
         message: "Actions.foodNotFound",
@@ -91,6 +95,7 @@ const estimatePortionsSchema = z.object({
   }),
   latitude: z.coerce.number().optional(),
   longitude: z.coerce.number().optional(),
+  locale: z.string().optional(),
 });
 
 export async function estimatePortionsAction(
@@ -102,6 +107,7 @@ export async function estimatePortionsAction(
       image: formData.get('image'),
       latitude: formData.get('latitude'),
       longitude: formData.get('longitude'),
+      locale: formData.get('locale'),
     });
 
     if (!validated.success) {
@@ -112,9 +118,9 @@ export async function estimatePortionsAction(
       photoDataUri: validated.data.image,
       latitude: validated.data.latitude,
       longitude: validated.data.longitude,
+      locale: validated.data.locale,
     });
 
-    // Aseguramos que el resultado sea un objeto plano serializable
     const sanitizedResult: PortionAnalysis = {
       foodItem: result.foodItem || 'Alimento desconocido',
       estimatedWeightGrams: result.estimatedWeightGrams || 0,
@@ -138,7 +144,7 @@ export async function estimatePortionsAction(
   }
 }
 
-export async function analyzeTextAction(foodName: string, location: { latitude: number, longitude: number } | null): Promise<AnalysisState> {
+export async function analyzeTextAction(foodName: string, location: { latitude: number, longitude: number } | null, locale: string = 'es'): Promise<AnalysisState> {
     if (!foodName) {
         return { status: 'error', message: 'Actions.foodNameRequired' };
     }
@@ -147,7 +153,8 @@ export async function analyzeTextAction(foodName: string, location: { latitude: 
         const result = await analyzeFoodTextAndDisplayNutrition({ 
             foodName,
             latitude: location?.latitude,
-            longitude: location?.longitude
+            longitude: location?.longitude,
+            locale
         });
 
         if (!result.foodItem || !result.nutritionalInformation) {
@@ -157,7 +164,7 @@ export async function analyzeTextAction(foodName: string, location: { latitude: 
             };
         }
 
-        if (result.nutritionalInformation === "Alimento no registrado") {
+        if (result.nutritionalInformation.includes("no registrado") || result.nutritionalInformation.includes("not registered")) {
           return {
             status: 'error',
             message: "Actions.foodNotFound",
@@ -188,6 +195,21 @@ export async function analyzeTextAction(foodName: string, location: { latitude: 
     } catch (error) {
         console.error('Analyze Text Error:', error);
         return { status: 'error', message: "Actions.unexpectedError" };
+    }
+}
+
+export async function calculateBMIAction(bmi: number, age: number, gender: 'male' | 'female', locale: string = 'es') {
+    try {
+        const result = await calculateBMIIndications({
+            bmi,
+            age,
+            gender,
+            locale
+        });
+        return { data: result };
+    } catch (error) {
+        console.error('Calculate BMI Error:', error);
+        return { error: 'Actions.unexpectedError' };
     }
 }
 

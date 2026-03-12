@@ -1,7 +1,6 @@
 'use server';
 /**
  * @fileOverview Specialized flow for estimating food portions and absolute nutritional values from images.
- * Uses a hybrid approach combining mass-based prediction (Nutrition5k) and anatomical reference (Hand Model PMC8115205).
  */
 
 import {ai} from '@/ai/genkit';
@@ -15,6 +14,7 @@ const EstimatePortionsInputSchema = z.object({
     ),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
+  locale: z.string().optional().describe('The language to use for the output (e.g., "es", "en").'),
 });
 export type EstimatePortionsInput = z.infer<typeof EstimatePortionsInputSchema>;
 
@@ -45,6 +45,9 @@ const prompt = ai.definePrompt({
 Analyze the food image provided and estimate the total weight of the food on the plate in grams using a hybrid approach:
 1. **Visual Volume (Nutrition5k Methodology):** Estimate mass based on the size of the plate, silverware, and depth of the food.
 2. **Anatomical Reference (Hand Model PMC8115205):** Use the user's hand if present in the photo as a scale (Palm = protein, Fist = carbs/veg, Handful = fruit, etc.).
+
+**Language:**
+Respond in the language specified by locale: "{{{locale}}}". Default to "es" if not provided.
 
 **Context:**
 {{#if latitude}}

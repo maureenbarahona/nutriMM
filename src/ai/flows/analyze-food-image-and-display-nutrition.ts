@@ -14,6 +14,7 @@ const AnalyzeFoodImageAndDisplayNutritionInputSchema = z.object({
     ),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
+  locale: z.string().optional().describe('The language to use for the output (e.g., "es", "en").'),
 });
 
 const AnalyzeFoodImageAndDisplayNutritionOutputSchema = z.object({
@@ -49,10 +50,13 @@ const prompt = ai.definePrompt({
    - 'pulgar' (thumb): Fats/Cheeses.
    - 'punta' (fingertip): Oils/Sweets.
 
+**Language:**
+Respond in the language specified by locale: "{{{locale}}}". Default to "es" if not provided.
+
 Photo: {{media url=photoDataUri}}
 
 Nutrient format: "Nutrient: Amount Unit, Nutrient: Amount Unit".
-If unknown, nutritionalInformation should be "Alimento no registrado".`,
+If unknown, nutritionalInformation should be "Alimento no registrado" or "Food not registered".`,
 });
 
 const analyzeFoodImageAndDisplayNutritionFlow = ai.defineFlow(

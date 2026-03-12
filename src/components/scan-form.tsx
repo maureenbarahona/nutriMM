@@ -45,11 +45,13 @@ function FormContent({
   previewUrl,
   selectedFile,
   location,
+  locale,
 }: {
   onFileSelect: (file: File) => void;
   previewUrl: string | null;
   selectedFile: File | null;
   location: { latitude: number; longitude: number } | null;
+  locale: string;
 }) {
   const { pending } = useFormStatus();
 
@@ -57,6 +59,7 @@ function FormContent({
     <>
       <FileUploader onFileSelect={onFileSelect} previewUrl={previewUrl} disabled={pending} />
       {selectedFile && <input type="hidden" name="image" value={previewUrl ?? ''} />}
+      <input type="hidden" name="locale" value={locale} />
       {location && (
         <>
             <input type="hidden" name="latitude" value={location.latitude} />
@@ -96,7 +99,7 @@ export function ScanForm() {
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -150,6 +153,7 @@ export function ScanForm() {
               previewUrl={previewUrl}
               selectedFile={selectedFile}
               location={location}
+              locale={locale}
             />
           </form>
         </CardContent>
