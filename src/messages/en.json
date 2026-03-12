@@ -142,14 +142,14 @@
   "TokenDialog": {
     "title": "Enter Token",
     "description": "Enter your access token to unlock NutriM&M advanced features.",
-    "placeholder": "TOKEN",
+    "placeholder": "Enter Token",
     "submit": "Validate",
     "invalidToken": "Invalid Token",
     "successTitle": "Access granted!",
     "successDescription": "Advanced features have been unlocked.",
     "errorTitle": "Error",
     "alreadyAuthorized": "You already have access to all features.",
-    "apply": "Apply Token",
+    "apply": "Activate Token",
     "cancel": "Cancel"
   }
 }

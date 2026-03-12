@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function TokenDialog({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState('');
@@ -79,15 +80,21 @@ export function TokenDialog({ children }: { children: React.ReactNode }) {
         
         {!isAuthorized ? (
           <div className="space-y-6 py-6">
-            <div className="space-y-2">
-                <Input
-                  placeholder={t('TokenDialog.placeholder')}
-                  value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleValidate()}
-                  className="text-center uppercase tracking-widest font-bold h-12 text-lg border-2 focus-visible:ring-primary"
-                  autoFocus
-                />
+            <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="token-input" className="text-sm font-bold uppercase tracking-wide text-primary">
+                    {t('TokenDialog.placeholder')}
+                  </Label>
+                  <Input
+                    id="token-input"
+                    placeholder={t('TokenDialog.placeholder')}
+                    value={token}
+                    onChange={(e) => setToken(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleValidate()}
+                    className="text-center uppercase tracking-widest font-bold h-12 text-lg border-2 focus-visible:ring-primary"
+                    autoFocus
+                  />
+                </div>
             </div>
           </div>
         ) : (

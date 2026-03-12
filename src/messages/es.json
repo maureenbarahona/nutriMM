@@ -125,7 +125,7 @@
     "unexpectedError": "Ocurrió un error inesperado durante el análisis.",
     "noFoodItems": "No se proporcionaron alimentos para el resumen.",
     "summaryError": "No se pudo generar el resumen diario.",
-    "textAnalysisError": "La IA no pudo analizar el nombre del alimento. Por favor, intente con otro o ingréselo manualmente.",
+    "textAnalysisError": "La IA no pudo analizar el nombre del alimento. Por favor, intente con otro o ingrese manualmente.",
     "textAnalysisSuccess": "Nutrientes autocompletados para {foodName}.",
     "foodNameRequired": "Por favor, ingrese un nombre de alimento para analizar.",
     "foodNotFound": "Alimento no registrado: {foodItem}"
@@ -142,14 +142,14 @@
   "TokenDialog": {
     "title": "Introduzca Token",
     "description": "Introduzca su token de acceso para desbloquear las funciones avanzadas de NutriM&M.",
-    "placeholder": "TOKEN",
+    "placeholder": "Digite Token",
     "submit": "Validar",
     "invalidToken": "Token Invalido",
     "successTitle": "¡Acceso concedido!",
     "successDescription": "Las funciones avanzadas han sido desbloqueadas.",
     "errorTitle": "Error",
     "alreadyAuthorized": "Usted ya tiene acceso a todas las funciones.",
-    "apply": "Aplicar Token",
+    "apply": "Activar Token",
     "cancel": "Cancelar"
   }
 }
