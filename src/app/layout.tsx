@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   description: 'Snap a photo of your food and get its nutritional value instantly.',
 };
 
+// Aumentar la duración máxima de las server actions para dar tiempo al procesamiento de IA
+export const maxDuration = 60;
+
 export default function RootLayout({
   children,
 }: Readonly<{

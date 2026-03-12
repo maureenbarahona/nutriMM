@@ -21,11 +21,11 @@ export default function PortionsPage() {
                     </p>
                 </div>
 
-                <Card className="bg-blue-50 border-blue-200">
+                <Card className="bg-secondary/50 border-primary/20 shadow-none">
                     <CardContent className="p-4 flex items-start gap-3">
-                        <Sparkles className="h-5 w-5 text-blue-600 shrink-0 mt-1" />
-                        <div className="text-sm text-blue-800">
-                            <strong>{t('PortionsPage.methodTitle')}</strong>: {t('PortionsPage.methodDescription')}
+                        <Sparkles className="h-5 w-5 text-primary shrink-0 mt-1" />
+                        <div className="text-sm">
+                            <strong className="text-primary font-bold">{t('PortionsPage.methodTitle')}</strong>: <span className="text-foreground/80">{t('PortionsPage.methodDescription')}</span>
                         </div>
                     </CardContent>
                 </Card>

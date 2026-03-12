@@ -2,7 +2,7 @@
 
 import { analyzeFoodImageAndDisplayNutrition } from '@/ai/flows/analyze-food-image-and-display-nutrition';
 import { analyzeFoodTextAndDisplayNutrition } from '@/ai/flows/analyze-food-text-and-display-nutrition';
-import { summarizeDailyNutrientIntake } from "@/ai/flows/summarize-daily-nutrient-intake";
+import { summarizeDailyNutrientIntake } from '@/ai/flows/summarize-daily-nutrient-intake';
 import { estimatePortionsFromImage } from '@/ai/flows/estimate-portions-from-image';
 import { parseNutritionString } from '@/lib/utils';
 import type { FoodLogItem, Nutrient, PortionAnalysis } from '@/lib/types';
@@ -80,7 +80,7 @@ export async function analyzeImageAction(
       },
     };
   } catch (error) {
-    console.error(error);
+    console.error('Analyze Image Error:', error);
     return { status: 'error', message: "Actions.unexpectedError" };
   }
 }
@@ -114,13 +114,26 @@ export async function estimatePortionsAction(
       longitude: validated.data.longitude,
     });
 
+    // Aseguramos que el resultado sea un objeto plano serializable
+    const sanitizedResult: PortionAnalysis = {
+      foodItem: result.foodItem || 'Alimento desconocido',
+      estimatedWeightGrams: result.estimatedWeightGrams || 0,
+      totalCalories: result.totalCalories || 0,
+      nutrients: (result.nutrients || []).map(n => ({
+        name: n.name,
+        amount: n.amount,
+        unit: n.unit
+      })),
+      reasoning: result.reasoning || ''
+    };
+
     return {
       status: 'success',
       message: "PortionEstimator.success",
-      data: result,
+      data: sanitizedResult,
     };
   } catch (error) {
-    console.error(error);
+    console.error('Estimate Portions Error:', error);
     return { status: 'error', message: "Actions.unexpectedError" };
   }
 }
@@ -173,7 +186,7 @@ export async function analyzeTextAction(foodName: string, location: { latitude: 
             },
         };
     } catch (error) {
-        console.error(error);
+        console.error('Analyze Text Error:', error);
         return { status: 'error', message: "Actions.unexpectedError" };
     }
 }
@@ -183,7 +196,6 @@ export async function getDailySummaryAction(foodItems: FoodLogItem[]) {
         return { error: "Actions.noFoodItems" };
     }
 
-    // A simple set of recommended daily values. In a real app, this would be user-specific.
     const recommendedDailyValues = {
         'Calories': 2000,
         'Protein': 50,
@@ -192,12 +204,10 @@ export async function getDailySummaryAction(foodItems: FoodLogItem[]) {
         'Fiber': 28,
     };
     
-    // Transform FoodLogItem nutrients into the format required by the AI flow
     const flowInputItems = foodItems.map(item => ({
         name: item.name,
         quantity: item.quantity,
         nutritionalInfo: item.nutrients.reduce((acc, nutrient) => {
-            // Find a matching key in recommended values to normalize names (e.g., "Energia (kcal)" -> "Calories")
             const recommendedKey = Object.keys(recommendedDailyValues).find(key => nutrient.name.toLowerCase().includes(key.toLowerCase()));
             const key = recommendedKey || nutrient.name;
             acc[key] = nutrient.amount;
