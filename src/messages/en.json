@@ -148,6 +148,8 @@
     "successTitle": "Access granted!",
     "successDescription": "Advanced features have been unlocked.",
     "errorTitle": "Error",
-    "alreadyAuthorized": "You already have access to all features."
+    "alreadyAuthorized": "You already have access to all features.",
+    "apply": "Apply Token",
+    "cancel": "Cancel"
   }
 }

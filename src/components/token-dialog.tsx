@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -29,7 +30,7 @@ export function TokenDialog({ children }: { children: React.ReactNode }) {
         toast({
             variant: 'destructive',
             title: t('TokenDialog.errorTitle'),
-            description: t('Actions.foodNameRequired'), // Reutilizando llave o podrías crear una nueva
+            description: t('Actions.foodNameRequired'),
         });
         return;
     }
@@ -49,6 +50,11 @@ export function TokenDialog({ children }: { children: React.ReactNode }) {
       });
     }
     setToken('');
+  };
+
+  const handleCancel = () => {
+    setToken('');
+    setOpen(false);
   };
 
   return (
@@ -83,9 +89,6 @@ export function TokenDialog({ children }: { children: React.ReactNode }) {
                   autoFocus
                 />
             </div>
-            <Button onClick={handleValidate} className="w-full h-12 font-bold text-lg bg-primary hover:bg-primary/90">
-              {t('TokenDialog.submit')}
-            </Button>
           </div>
         ) : (
           <div className="py-8">
@@ -96,11 +99,25 @@ export function TokenDialog({ children }: { children: React.ReactNode }) {
           </div>
         )}
 
-        <DialogFooter className="sm:justify-center">
-            <p className="text-[10px] text-muted-foreground text-center italic">
-                NutriM&M Security System v1.0
-            </p>
+        <DialogFooter className="flex flex-row justify-center gap-3 sm:justify-center">
+            {!isAuthorized ? (
+              <>
+                <Button variant="outline" onClick={handleCancel} className="flex-1 h-12 font-bold">
+                  {t('TokenDialog.cancel')}
+                </Button>
+                <Button onClick={handleValidate} className="flex-1 h-12 font-bold bg-primary hover:bg-primary/90">
+                  {t('TokenDialog.apply')}
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => setOpen(false)} className="w-full h-12 font-bold">
+                {t('PortionEstimator.cancelButton')}
+              </Button>
+            )}
         </DialogFooter>
+        <div className="pt-4 text-[10px] text-muted-foreground text-center italic">
+            NutriM&M Security System v1.0
+        </div>
       </DialogContent>
     </Dialog>
   );

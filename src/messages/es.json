@@ -148,6 +148,8 @@
     "successTitle": "¡Acceso concedido!",
     "successDescription": "Las funciones avanzadas han sido desbloqueadas.",
     "errorTitle": "Error",
-    "alreadyAuthorized": "Usted ya tiene acceso a todas las funciones."
+    "alreadyAuthorized": "Usted ya tiene acceso a todas las funciones.",
+    "apply": "Aplicar Token",
+    "cancel": "Cancelar"
   }
 }
