@@ -1,4 +1,3 @@
-
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -8,10 +7,16 @@ import { Logo } from './icons';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from './language-switcher';
 import { SiteFooter } from './site-footer';
+import { useState, useEffect } from 'react';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navItems = [
     { href: '/', label: t('Navigation.scan'), icon: Home },
@@ -31,7 +36,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           </Link>
           <div className="flex items-center gap-4">
             <nav className="hidden md:flex md:items-center md:gap-4">
-              {navItems.map((item) => {
+              {mounted && navItems.map((item) => {
                 const isActive = pathname === item.href;
                 return (
                   <Link
@@ -57,7 +62,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <SiteFooter />
       <footer className="sticky bottom-0 z-40 w-full border-t bg-background/95 md:hidden">
         <nav className="container mx-auto grid grid-cols-5 items-center justify-items-center gap-1 px-2 py-2">
-          {navItems.map((item) => {
+          {mounted && navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link

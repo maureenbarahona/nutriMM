@@ -1,10 +1,25 @@
-
+'use client';
 import Link from 'next/link';
 import { Logo } from './icons';
 import { useLanguage } from '@/context/language-context';
+import { useState, useEffect } from 'react';
 
 export function SiteFooter() {
     const { t } = useLanguage();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const footerLinks = [
+        { href: '/', label: t('Navigation.scan') },
+        { href: '/add', label: t('Navigation.addManually') },
+        { href: '/portions', label: t('Navigation.portions') },
+        { href: '/bmi', label: t('Navigation.bmi') },
+        { href: '/history', label: t('Navigation.history') },
+    ];
+
     return (
         <footer className="bg-muted/50 text-muted-foreground pb-20 md:pb-10">
             <div className="container py-10 px-5">
@@ -21,11 +36,13 @@ export function SiteFooter() {
                     <div className="flex-1 min-w-[150px] mb-5">
                         <h4 className="font-semibold mb-2 text-foreground">Explorar</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="/" className="hover:text-primary transition-colors">{t('Navigation.scan')}</Link></li>
-                            <li><Link href="/add" className="hover:text-primary transition-colors">{t('Navigation.addManually')}</Link></li>
-                            <li><Link href="/portions" className="hover:text-primary transition-colors">{t('Navigation.portions')}</Link></li>
-                            <li><Link href="/bmi" className="hover:text-primary transition-colors">{t('Navigation.bmi')}</Link></li>
-                            <li><Link href="/history" className="hover:text-primary transition-colors">{t('Navigation.history')}</Link></li>
+                            {mounted && footerLinks.map((link) => (
+                                <li key={link.href}>
+                                    <Link href={link.href} className="hover:text-primary transition-colors">
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
