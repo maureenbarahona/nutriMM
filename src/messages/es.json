@@ -25,7 +25,11 @@
   "PortionEstimator": {
     "analyzeButton": "CALCULAR CALORÍAS DEL PLATO",
     "analyzingButton": "CALCULANDO MASA DEL PLATO...",
-    "success": "¡Calorías calculadas con éxito!"
+    "success": "¡Calorías calculadas con éxito!",
+    "editDialogTitle": "Modificar ingredientes del plato",
+    "editDialogDescription": "Si la IA no identificó correctamente los ingredientes, descríbelos aquí para un recálculo preciso basado en la porción de la imagen.",
+    "recalculateButton": "Recalcular",
+    "cancelButton": "Cancelar"
   },
   "PortionResultCard": {
     "estimatedWeight": "Peso Estimado",

@@ -13,6 +13,15 @@ import { useFoodLog } from '@/hooks/use-food-log';
 import { useToast } from '@/hooks/use-toast';
 import { estimatePortionsAction } from '@/app/actions';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface PortionResultCardProps {
   result: PortionAnalysis;
@@ -26,7 +35,7 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
   const { toast } = useToast();
 
   const [result, setResult] = useState<PortionAnalysis>(initialResult);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editedName, setEditedName] = useState(initialResult.foodItem);
   const [isRecalculating, setIsRecalculating] = useState(false);
 
@@ -46,6 +55,8 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
     if (!originalImage || !editedName.trim()) return;
 
     setIsRecalculating(true);
+    setIsDialogOpen(false); // Close dialog while calculating
+
     const formData = new FormData();
     formData.append('image', originalImage);
     formData.append('overrideFoodItem', editedName);
@@ -59,7 +70,6 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
       const actionResult = await estimatePortionsAction(null, formData);
       if (actionResult.status === 'success' && actionResult.data) {
         setResult(actionResult.data);
-        setIsEditing(false);
         toast({
           title: t('PortionEstimator.success'),
           description: `${actionResult.data.foodItem} recalculated.`,
@@ -96,36 +106,49 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
         )}
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
           <div className="w-full">
-            {isEditing ? (
-              <div className="flex items-center gap-2 w-full mt-2">
-                <Input 
-                  value={editedName} 
-                  onChange={(e) => setEditedName(e.target.value)}
-                  className="text-xl font-bold font-headline h-12 bg-white"
-                  autoFocus
-                />
-                <Button size="icon" variant="default" onClick={handleRecalculate} disabled={isRecalculating}>
-                  <Check className="h-4 w-4" />
-                </Button>
-                <Button size="icon" variant="ghost" onClick={() => { setIsEditing(false); setEditedName(result.foodItem); }}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-start gap-3 group">
-                <CardTitle className="text-3xl font-headline text-primary mb-1">
-                  {result.foodItem}
-                </CardTitle>
-                <Button 
-                  size="icon" 
-                  variant="ghost" 
-                  className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/10 rounded-full transition-opacity opacity-0 group-hover:opacity-100"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
+            <div className="flex items-start gap-3 group">
+              <CardTitle className="text-3xl font-headline text-primary mb-1">
+                {result.foodItem}
+              </CardTitle>
+              
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    className="h-8 w-8 text-primary/40 hover:text-primary hover:bg-primary/10 rounded-full transition-opacity opacity-0 group-hover:opacity-100"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>{t('PortionEstimator.editDialogTitle')}</DialogTitle>
+                    <DialogDescription>
+                      {t('PortionEstimator.editDialogDescription')}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <Input
+                      id="name"
+                      value={editedName}
+                      onChange={(e) => setEditedName(e.target.value)}
+                      className="col-span-3"
+                      placeholder={t('ManualEntryForm.foodNamePlaceholder')}
+                    />
+                  </div>
+                  <DialogFooter className="flex flex-row justify-end gap-2">
+                    <Button variant="ghost" onClick={() => { setIsDialogOpen(false); setEditedName(result.foodItem); }}>
+                      {t('PortionEstimator.cancelButton')}
+                    </Button>
+                    <Button onClick={handleRecalculate} disabled={isRecalculating}>
+                      {isRecalculating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                      {t('PortionEstimator.recalculateButton')}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
             <CardDescription className="flex items-center gap-2 text-foreground/70">
               <Utensils className="h-4 w-4" />
               {t('PortionResultCard.absoluteValuesNote')}

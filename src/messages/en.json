@@ -25,7 +25,11 @@
   "PortionEstimator": {
     "analyzeButton": "Calculate Plate Calories",
     "analyzingButton": "Calculating plate mass...",
-    "success": "Calories calculated successfully!"
+    "success": "Calories calculated successfully!",
+    "editDialogTitle": "Edit plate ingredients",
+    "editDialogDescription": "If the AI didn't identify the ingredients correctly, describe them here for an accurate recalculation based on the image portion.",
+    "recalculateButton": "Recalculate",
+    "cancelButton": "Cancel"
   },
   "PortionResultCard": {
     "estimatedWeight": "Estimated Weight",
