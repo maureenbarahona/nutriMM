@@ -22,6 +22,7 @@ export function PortionEstimatorForm() {
   const [state, formAction, isPending] = useActionState(estimatePortionsAction, initialState);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [resultsVisible, setResultsVisible] = useState(false);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const { toast } = useToast();
   const { t, locale } = useLanguage();
@@ -50,11 +51,16 @@ export function PortionEstimatorForm() {
         description: t(state.message, state.messageValues),
       });
     }
+    if (state.status === 'success') {
+      setResultsVisible(true);
+    }
   }, [state, toast, t]);
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);
-    setPreviewUrl(null); // Clear previous while processing
+    setPreviewUrl(null);
+    setResultsVisible(false); // Limpia la "caché" visual al cambiar imagen
+    
     try {
       const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
       setPreviewUrl(dataUri);
@@ -92,7 +98,6 @@ export function PortionEstimatorForm() {
               )}
             </div>
 
-            {/* Hidden inputs always present when submission is possible */}
             <input type="hidden" name="image" value={previewUrl || ''} />
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="latitude" value={location?.latitude?.toString() || ''} />
@@ -128,7 +133,7 @@ export function PortionEstimatorForm() {
         </CardContent>
       </Card>
 
-      {state.status === 'success' && state.data && (
+      {resultsVisible && state.status === 'success' && state.data && (
         <PortionResultCard 
           result={state.data} 
           originalImage={previewUrl} 

@@ -104,6 +104,7 @@ export function ScanForm() {
   const [state, formAction] = useActionState(analyzeImageAction, initialState);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [resultsVisible, setResultsVisible] = useState(false);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
@@ -133,11 +134,15 @@ export function ScanForm() {
         description: t(state.message, state.messageValues),
       });
     }
+    if (state.status === 'success') {
+      setResultsVisible(true);
+    }
   }, [state, toast, t]);
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);
     setPreviewUrl(null);
+    setResultsVisible(false); // Limpia resultados previos al cambiar imagen
     try {
       const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
       setPreviewUrl(dataUri);
@@ -148,7 +153,7 @@ export function ScanForm() {
     }
   };
 
-  const analysisData = state.status === 'success' ? state.data : null;
+  const analysisData = resultsVisible && state.status === 'success' ? state.data : null;
 
   return (
     <>
