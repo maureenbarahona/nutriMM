@@ -8,7 +8,8 @@
     "portions": "Count Your Calories",
     "history": "History",
     "addManually": "Manual",
-    "bmi": "Know your nutritional status"
+    "bmi": "Your Nutritional Status",
+    "token": "Token"
   },
   "HomePage": {
     "title": "Nutrition in detail: from macros to micros.",
@@ -44,15 +45,15 @@
     "uploaderFormats": "PNG, JPG, or WEBP",
     "changeImage": "Click to change image",
     "analysisFailedTitle": "Analysis Failed",
-    "errorTitle": "Error",
+    "errorTitle": "Plate Analysis",
     "analysisSuccessTitle": "Analysis successful!"
   },
   "NutritionResultCard": {
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrientes",
-    "micronutrients": "Micronutrientes",
+    "macronutrients": "Macronutrients",
+    "micronutrients": "Micronutrients",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",
@@ -127,5 +128,16 @@
     "subtitle": "Full analysis of BMI and daily calorie requirements.",
     "ageWarning": "Note: This tool provides professional estimates for all ages.",
     "referenceTitle": "BMI Classification"
+  },
+  "TokenDialog": {
+    "title": "Enter Token",
+    "description": "Enter your access token to unlock NutriM&M advanced features.",
+    "placeholder": "TOKEN",
+    "submit": "Validate",
+    "invalidToken": "Invalid Token",
+    "successTitle": "Access granted!",
+    "successDescription": "Advanced features have been unlocked.",
+    "errorTitle": "Error",
+    "alreadyAuthorized": "You already have access to all features."
   }
 }

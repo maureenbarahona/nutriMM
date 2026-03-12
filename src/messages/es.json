@@ -8,7 +8,8 @@
     "portions": "Cuenta tus Calorías",
     "history": "Historial",
     "addManually": "Manual",
-    "bmi": "Conoce tu estado nutricional"
+    "bmi": "Tu Estado Nutricional",
+    "token": "Token"
   },
   "HomePage": {
     "title": "Nutrición al detalle: de los macros a los micros.",
@@ -28,7 +29,7 @@
     "success": "¡Calorías calculadas con éxito!",
     "editDialogTitle": "Modificar ingredientes del plato",
     "editDialogDescription": "Si la IA no identificó correctamente los ingredientes, descríbelos aquí para un recálculo preciso basado en la porción de la imagen.",
-    "recalculateButton": "Recalcular",
+    "recalculateButton": "Recalculate",
     "cancelButton": "Cancelar"
   },
   "PortionResultCard": {
@@ -127,5 +128,16 @@
     "subtitle": "Análisis completo de IMC y requerimientos calóricos diarios.",
     "ageWarning": "Nota: Esta herramienta proporciona estimaciones profesionales para todas las edades.",
     "referenceTitle": "Clasificación de IMC"
+  },
+  "TokenDialog": {
+    "title": "Introduzca Token",
+    "description": "Introduzca su token de acceso para desbloquear las funciones avanzadas de NutriM&M.",
+    "placeholder": "TOKEN",
+    "submit": "Validar",
+    "invalidToken": "Token Invalido",
+    "successTitle": "¡Acceso concedido!",
+    "successDescription": "Las funciones avanzadas han sido desbloqueadas.",
+    "errorTitle": "Error",
+    "alreadyAuthorized": "Usted ya tiene acceso a todas las funciones."
   }
 }
