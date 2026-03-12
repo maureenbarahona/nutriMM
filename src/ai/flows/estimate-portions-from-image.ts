@@ -33,7 +33,8 @@ const EstimatePortionsOutputSchema = z.object({
     type: z.enum(['palma', 'puño', 'puñado', 'pulgar', 'punta']),
     description: z.string().describe('Short label for the specific food item this portion refers to (e.g., "Arroz blanco")'),
     count: z.number().describe('Number of portions (e.g., 1, 1.5, 0.5)')
-  })).optional().describe('Estimated portions based on the Hand Model (PMC8115205).')
+  })).optional().describe('Estimated portions based on the Hand Model (PMC8115205).'),
+  dataSource: z.string().describe('The name of the official food composition table used (e.g., "Tabla de Composición de Alimentos del INCAP").')
 });
 export type EstimatePortionsOutput = z.infer<typeof EstimatePortionsOutputSchema>;
 
@@ -70,8 +71,10 @@ Respond in the language specified by locale: "{{{locale}}}". Default to "es".
 
 **Context:**
 {{#if latitude}}
-User location: lat {{{latitude}}}, lon {{{longitude}}}. Use regional food composition tables (e.g., INCAP) for all nutritional data calculations.
+User location: lat {{{latitude}}}, lon {{{longitude}}}. Use regional food composition tables (e.g., INCAP for Central America and Panama, USDA for USA, etc.) for all nutritional data calculations.
 {{/if}}
+
+**DataSource:** Identify the specific food composition table used based on the location and provide its full name in the "dataSource" field. If in Central America or Panama, use "Tabla de Composición de Alimentos del INCAP".
 
 Photo: {{media url=photoDataUri}}
 `,

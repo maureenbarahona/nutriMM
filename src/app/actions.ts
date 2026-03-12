@@ -131,6 +131,7 @@ export async function estimatePortionsAction(
       })),
       reasoning: result.reasoning || '',
       handPortions: result.handPortions,
+      dataSource: result.dataSource,
     };
 
     return {
@@ -186,7 +187,7 @@ export async function analyzeTextAction(foodName: string, location: { latitude: 
         return {
             status: 'success',
             message: "Actions.textAnalysisSuccess",
-            messageValues: { foodItem: result.foodItem },
+            messageValues: { foodName },
             data: {
                 foodItem: result.foodItem,
                 nutrients,

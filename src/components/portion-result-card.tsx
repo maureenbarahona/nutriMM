@@ -39,9 +39,9 @@ export function PortionResultCard({ result }: { result: PortionAnalysis }) {
             </CardDescription>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white flex items-center gap-1.5">
-              <Database className="h-3 w-3 text-primary" />
-              {t('PortionResultCard.compositionTableBadge')}
+            <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white flex items-center gap-1.5 h-auto">
+              <Database className="h-3 w-3 text-primary shrink-0" />
+              <span className="text-left">{result.dataSource || t('PortionResultCard.compositionTableBadge')}</span>
             </Badge>
             <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white flex items-center gap-1.5">
               <Sparkles className="h-3 w-3 text-primary" />
