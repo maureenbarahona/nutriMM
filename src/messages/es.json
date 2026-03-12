@@ -19,12 +19,12 @@
   "PortionsPage": {
     "title": "Estimado de Porciones",
     "subtitle": "Estimación avanzada de masa basada en la metodología Nutrition5k. Analiza tu plato completo.",
-    "methodTitle": "Estimación por IA",
-    "methodDescription": "Esta herramienta utiliza visión por computadora para calcular el peso total y calorías absolutas basadas en volumen."
+    "methodTitle": "IA Avanzada (Nutrition5k)",
+    "methodDescription": "Esta herramienta calcula el peso total y calorías absolutas basadas en el volumen visual del plato."
   },
   "PortionEstimator": {
-    "analyzeButton": "Estimar Porción",
-    "analyzingButton": "Calculando masa...",
+    "analyzeButton": "Estimar Porción Completa",
+    "analyzingButton": "Calculando masa del plato...",
     "success": "¡Porción estimada con éxito!"
   },
   "PortionResultCard": {
@@ -51,7 +51,17 @@
     "nutrient": "Nutriente",
     "amountPer100g": "Cantidad (por 100g)",
     "vitamins": "Vitaminas",
-    "minerals": "Minerales"
+    "minerals": "Minerales",
+    "handEstimationTitle": "Estimación por Modelo de Mano",
+    "handMethodNote": "Método basado en el estudio PMC8115205 para estimación visual rápida.",
+    "handPortions": "Porciones Visuales"
+  },
+  "PortionTypes": {
+    "palma": "Palma",
+    "puño": "Puño",
+    "puñado": "Puñado",
+    "pulgar": "Pulgar",
+    "punta": "Punta de Dedo"
   },
   "HistoryPage": {
     "title": "Historial de Comidas",

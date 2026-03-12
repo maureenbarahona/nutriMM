@@ -4,14 +4,16 @@ export type Nutrient = {
   unit: string;
 };
 
+export type PortionReference = {
+  type: 'palma' | 'puño' | 'puñado' | 'pulgar' | 'punta';
+  description: string;
+  count: number;
+};
+
 export type FoodAnalysis = {
   foodItem: string;
   nutrients: Nutrient[];
-  portionEstimation?: {
-    type: string;
-    description: string;
-    amount: number;
-  }[];
+  handPortions?: PortionReference[];
 };
 
 export type PortionAnalysis = {

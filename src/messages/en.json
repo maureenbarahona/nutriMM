@@ -19,12 +19,12 @@
   "PortionsPage": {
     "title": "Portion Estimation",
     "subtitle": "Advanced mass estimation based on the Nutrition5k methodology. Analyze your entire plate at once.",
-    "methodTitle": "AI Estimation",
-    "methodDescription": "This tool uses computer vision to calculate total weight and absolute calories based on volume."
+    "methodTitle": "Advanced AI (Nutrition5k)",
+    "methodDescription": "This tool calculates total weight and absolute calories based on the visual volume of the plate."
   },
   "PortionEstimator": {
-    "analyzeButton": "Estimate Portion",
-    "analyzingButton": "Calculating mass...",
+    "analyzeButton": "Estimate Entire Plate",
+    "analyzingButton": "Calculating plate mass...",
     "success": "Portion estimated successfully!"
   },
   "PortionResultCard": {
@@ -45,13 +45,23 @@
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrients",
-    "micronutrients": "Micronutrients",
+    "macronutrients": "Macronutrientes",
+    "micronutrients": "Micronutrientes",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",
     "vitamins": "Vitamins",
-    "minerals": "Minerals"
+    "minerals": "Minerals",
+    "handEstimationTitle": "Hand Model Portion Estimation",
+    "handMethodNote": "Method based on study PMC8115205 for quick visual estimation.",
+    "handPortions": "Visual Portions"
+  },
+  "PortionTypes": {
+    "palma": "Palm",
+    "puño": "Fist",
+    "puñado": "Handful",
+    "pulgar": "Thumb",
+    "punta": "Fingertip"
   },
   "HistoryPage": {
     "title": "Food History",

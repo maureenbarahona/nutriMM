@@ -1,10 +1,6 @@
 'use server';
 /**
- * @fileOverview Analyzes a food image and displays its nutritional information from the INCAP database.
- *
- * - analyzeFoodImageAndDisplayNutrition - A function that handles the food image analysis and nutritional information display.
- * - AnalyzeFoodImageAndDisplayNutritionInput - The input type for the analyzeFoodImageAndDisplayNutrition function.
- * - AnalyzeFoodImageAndDisplayNutritionOutput - The return type for the analyzeFoodImageAndDisplayNutrition function.
+ * @fileOverview Analyzes a food image and displays its nutritional information and hand-based portion estimation.
  */
 
 import {ai} from '@/ai/genkit';
@@ -14,17 +10,23 @@ const AnalyzeFoodImageAndDisplayNutritionInputSchema = z.object({
   photoDataUri: z
     .string()
     .describe(
-      "A photo of a food item, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
+      "A photo of a food item, as a data URI that must include a MIME type and use Base64 encoding."
     ),
-  latitude: z.number().optional().describe('The latitude of the user.'),
-  longitude: z.number().optional().describe('The longitude of the user.'),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
 });
-export type AnalyzeFoodImageAndDisplayNutritionInput = z.infer<typeof AnalyzeFoodImageAndDisplayNutritionInputSchema>;
 
 const AnalyzeFoodImageAndDisplayNutritionOutputSchema = z.object({
   foodItem: z.string().describe('The identified food item.'),
   nutritionalInformation: z.string().describe('The nutritional information of the food item.'),
+  handPortions: z.array(z.object({
+    type: z.enum(['palma', 'puño', 'puñado', 'pulgar', 'punta']),
+    description: z.string(),
+    count: z.number()
+  })).optional().describe('Estimated portions based on the Hand Model (PMC8115205).')
 });
+
+export type AnalyzeFoodImageAndDisplayNutritionInput = z.infer<typeof AnalyzeFoodImageAndDisplayNutritionInputSchema>;
 export type AnalyzeFoodImageAndDisplayNutritionOutput = z.infer<typeof AnalyzeFoodImageAndDisplayNutritionOutputSchema>;
 
 export async function analyzeFoodImageAndDisplayNutrition(input: AnalyzeFoodImageAndDisplayNutritionInput): Promise<AnalyzeFoodImageAndDisplayNutritionOutput> {
@@ -35,55 +37,22 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodImageAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodImageAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodImageAndDisplayNutritionOutputSchema},
-  prompt: `You are an expert nutritionist acting as a specialized agent. Your main goal is to find the nutritional content of a food item.
-{{#if latitude}}
+  prompt: `You are an expert nutritionist specialized in visual portion estimation and INCAP database analysis.
 
-The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. Use this location to provide a more accurate analysis for endemic or regional foods. For example, if the user is in Honduras and the food appears to be a "tustaca", you should analyze it as a Honduran tustaca.
-{{/if}}
-
-**Workflow for Analyzing Food:**
-
-1.  **Identify the Food:** Identify the food item from the image.
-2.  **Find Nutritional Information:** Use your broad general knowledge as a nutritional expert to find the typical nutritional information.
-3.  **Format Output:**
-    *   Return the food item name and its detailed nutritional composition per 100g.
-    *   Provide the information in a clear, parsable format: "Nutrient: Amount Unit, Nutrient: Amount Unit". For example: "Energia: 450 kcal, Proteina: 25 g, Calcio: 150 mg".
-4.  **Handle Failure:**
-    *   If you cannot confidently identify the food or find its nutritional information from any source, the \`foodItem\` field in the output should be the best identification possible (e.g., "Mixed Salad", "Unknown fruit"), and the \`nutritionalInformation\` field must be the exact string "Alimento no registrado".
-
-Now, analyze the food item in the following image:
+**Task:**
+1. Identify the food item.
+2. Provide nutritional info per 100g. ALWAYS include 'Agua' with '%' as unit.
+3. Estimate portions using the **Hand Model (PMC8115205)**:
+   - 'palma' (palm): Protein (meat, fish).
+   - 'puño' (fist): Carbs (rice, pasta) or vegetables.
+   - 'puñado' (handful): Fruits or snacks.
+   - 'pulgar' (thumb): Fats/Cheeses.
+   - 'punta' (fingertip): Oils/Sweets.
 
 Photo: {{media url=photoDataUri}}
 
-Return the food item name and its detailed nutritional composition, including the value for 'Agua' and as many of the other following nutrients as possible. Ensure 'Agua' is returned with '%' as its unit (e.g. "Agua: 85 %").
-- Agua
-- Energia (Kcal)
-- Proteina (g)
-- Grasa Total (g)
-- Carbohidratos (g)
-- Fibra Diet. total (g)
-- Ceniza (g)
-- Calcio (mg)
-- Fosforo (mg)
-- Hierro (mg)
-- Tiamina (mg)
-- Riboflavina (mg)
-- Niacina (mg)
-- Vit. C (mg)
-- Vit. A Equiv. Retinol (mcg)
-- Ác. grasos mono-insat. (g)
-- Ác. grasos poli-insat. (g)
-- Ác. Grasos saturados (g)
-- Colesterol (mg)
-- Potasio (mg)
-- Sodio (mg)
-- Zinc (mg)
-- Magnesio (mg)
-- Vit. B6 (mg)
-- Vit. B12 (mcg)
-- Ac. Fólico (mcg)
-- Folato Equiv. FD (mcg)
-`,
+Nutrient format: "Nutrient: Amount Unit, Nutrient: Amount Unit".
+If unknown, nutritionalInformation should be "Alimento no registrado".`,
 });
 
 const analyzeFoodImageAndDisplayNutritionFlow = ai.defineFlow(
