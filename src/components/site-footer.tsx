@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Logo } from './icons';
 import { useLanguage } from '@/context/language-context';
@@ -21,10 +22,10 @@ export function SiteFooter() {
                         <h4 className="font-semibold mb-2 text-foreground">Explorar</h4>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/" className="hover:text-primary transition-colors">{t('Navigation.scan')}</Link></li>
+                            <li><Link href="/add" className="hover:text-primary transition-colors">{t('Navigation.addManually')}</Link></li>
                             <li><Link href="/portions" className="hover:text-primary transition-colors">{t('Navigation.portions')}</Link></li>
                             <li><Link href="/bmi" className="hover:text-primary transition-colors">{t('Navigation.bmi')}</Link></li>
-                            <li><Link href="/about" className="hover:text-primary transition-colors">Sobre NutriM&M</Link></li>
-                            <li><Link href="/contact" className="hover:text-primary transition-colors">Contacto</Link></li>
+                            <li><Link href="/history" className="hover:text-primary transition-colors">{t('Navigation.history')}</Link></li>
                         </ul>
                     </div>
 

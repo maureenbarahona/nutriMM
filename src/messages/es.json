@@ -6,7 +6,7 @@
   },
   "Navigation": {
     "scan": "Escanear",
-    "portions": "Porciones",
+    "portions": "Cuenta tus Calorías",
     "history": "Historial",
     "addManually": "Manual",
     "bmi": "Tu Estado Nutricional"
@@ -18,15 +18,15 @@
     "cardSubtitle": "Tu viaje hacia una alimentación consciente comienza aquí."
   },
   "PortionsPage": {
-    "title": "Estimado de Porciones",
-    "subtitle": "Estimación avanzada de masa potenciada por IA basada en volumen visual y referencias anatómicas. Analiza tu plato completo.",
+    "title": "Cuenta tus Calorías",
+    "subtitle": "Estimación avanzada de masa potenciada por IA basada en volumen visual y referencias anatómicas. Analiza tu plato completo para conocer el total calórico.",
     "methodTitle": "IA Avanzada NutriM&M",
     "methodDescription": "Esta herramienta calcula el peso total y calorías absolutas basadas en el volumen visual y referencias de la mano."
   },
   "PortionEstimator": {
-    "analyzeButton": "Estimar Porción Completa",
+    "analyzeButton": "Calcular Calorías del Plato",
     "analyzingButton": "Calculando masa del plato...",
-    "success": "¡Porción estimada con éxito!"
+    "success": "¡Calorías calculadas con éxito!"
   },
   "PortionResultCard": {
     "estimatedWeight": "Peso Estimado",

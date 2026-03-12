@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,10 +15,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { href: '/', label: t('Navigation.scan'), icon: Home },
-    { href: '/portions', label: t('Navigation.portions'), icon: Scale },
-    { href: '/history', label: t('Navigation.history'), icon: History },
     { href: '/add', label: t('Navigation.addManually'), icon: PlusCircle },
+    { href: '/portions', label: t('Navigation.portions'), icon: Scale },
     { href: '/bmi', label: t('Navigation.bmi'), icon: Calculator },
+    { href: '/history', label: t('Navigation.history'), icon: History },
   ];
 
   return (

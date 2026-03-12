@@ -6,7 +6,7 @@
   },
   "Navigation": {
     "scan": "Scan",
-    "portions": "Portions",
+    "portions": "Count Calories",
     "history": "History",
     "addManually": "Manual",
     "bmi": "Nutritional Status"
@@ -18,15 +18,15 @@
     "cardSubtitle": "Your journey to mindful eating starts here."
   },
   "PortionsPage": {
-    "title": "Portion Estimation",
-    "subtitle": "Advanced AI-powered estimation based on visual volume and anatomical references. Analyze your entire plate at once.",
+    "title": "Count Your Calories",
+    "subtitle": "Advanced AI-powered estimation based on visual volume and anatomical references. Analyze your entire plate for total calorie count.",
     "methodTitle": "Advanced NutriM&M AI",
     "methodDescription": "This tool calculates total weight and absolute calories based on the visual volume and hand references."
   },
   "PortionEstimator": {
-    "analyzeButton": "Estimate Entire Plate",
+    "analyzeButton": "Calculate Plate Calories",
     "analyzingButton": "Calculating plate mass...",
-    "success": "Portion estimated successfully!"
+    "success": "Calories calculated successfully!"
   },
   "PortionResultCard": {
     "estimatedWeight": "Estimated Weight",
@@ -47,8 +47,8 @@
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrients",
-    "micronutrients": "Micronutrients",
+    "macronutrients": "Macronutrientes",
+    "micronutrients": "Micronutrientes",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",
@@ -119,7 +119,7 @@
     "label": "Language"
   },
   "BMIPage": {
-    "title": "Check your nutritional status",
+    "title": "Know your nutritional status",
     "subtitle": "Full analysis of BMI and daily calorie requirements.",
     "ageWarning": "Note: This tool provides professional estimates for all ages.",
     "referenceTitle": "BMI Classification"

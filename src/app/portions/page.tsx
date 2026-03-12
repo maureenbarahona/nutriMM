@@ -1,7 +1,8 @@
+
 'use client';
 import { PortionEstimatorForm } from "@/components/portion-estimator-form";
 import { useLanguage } from "@/context/language-context";
-import { Scale, Info, Sparkles } from "lucide-react";
+import { Scale, Info, Sparkles, Flame } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function PortionsPage() {
@@ -11,7 +12,7 @@ export default function PortionsPage() {
             <div className="max-w-3xl mx-auto space-y-8">
                 <div className="text-center space-y-2">
                     <div className="inline-flex p-3 bg-primary/10 rounded-full text-primary mb-4">
-                        <Scale className="h-10 w-10" />
+                        <Flame className="h-10 w-10" />
                     </div>
                     <h1 className="font-headline text-4xl md:text-5xl font-bold text-primary">
                         {t('PortionsPage.title')}
