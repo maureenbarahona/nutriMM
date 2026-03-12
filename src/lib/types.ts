@@ -13,7 +13,6 @@ export type PortionReference = {
 export type FoodAnalysis = {
   foodItem: string;
   nutrients: Nutrient[];
-  handPortions?: PortionReference[];
 };
 
 export type PortionAnalysis = {
@@ -22,6 +21,7 @@ export type PortionAnalysis = {
   totalCalories: number;
   nutrients: Nutrient[];
   reasoning: string;
+  handPortions?: PortionReference[];
 };
 
 export type FoodLogItem = {

@@ -28,6 +28,11 @@ const EstimatePortionsOutputSchema = z.object({
     unit: z.string()
   })).describe('Absolute nutritional values for the entire portion (not per 100g).'),
   reasoning: z.string().describe('Brief reasoning for the portion estimation based on visual cues and anatomical references.'),
+  handPortions: z.array(z.object({
+    type: z.enum(['palma', 'puño', 'puñado', 'pulgar', 'punta']),
+    description: z.string().describe('Short label for the specific food item this portion refers to (e.g., "Arroz blanco")'),
+    count: z.number().describe('Number of portions (e.g., 1, 1.5, 0.5)')
+  })).optional().describe('Estimated portions based on the Hand Model (PMC8115205).')
 });
 export type EstimatePortionsOutput = z.infer<typeof EstimatePortionsOutputSchema>;
 
@@ -39,12 +44,19 @@ const prompt = ai.definePrompt({
   name: 'estimatePortionsFromImagePrompt',
   input: {schema: EstimatePortionsInputSchema},
   output: {schema: EstimatePortionsOutputSchema},
-  prompt: `You are an expert nutritional computer vision agent specialized in mass estimation.
+  prompt: `You are an expert nutritional computer vision agent specialized in mass and portion estimation.
 
 **Your goal:**
-Analyze the food image provided and estimate the total weight of the food on the plate in grams using a hybrid approach:
-1. **Visual Volume (Nutrition5k Methodology):** Estimate mass based on the size of the plate, silverware, and depth of the food.
-2. **Anatomical Reference (Hand Model PMC8115205):** Use the user's hand if present in the photo as a scale (Palm = protein, Fist = carbs/veg, Handful = fruit, etc.).
+Analyze the food image provided and estimate the total weight of the food on the plate in grams and the visual portions using the **Hand Model (PMC8115205)**.
+
+**Task:**
+1. **Visual Volume:** Estimate total mass based on the size of the plate, silverware, and depth of the food.
+2. **Anatomical Reference (Hand Model):** Provide a breakdown of portions using the following references:
+   - 'palma' (palm): Protein (meat, fish).
+   - 'puño' (fist): Carbs (rice, pasta) or vegetables.
+   - 'puñado' (handful): Fruits or snacks.
+   - 'pulgar' (thumb): Fats/Cheeses.
+   - 'punta' (fingertip): Oils/Sweets.
 
 **Language:**
 Respond in the language specified by locale: "{{{locale}}}". Default to "es" if not provided.
@@ -56,8 +68,9 @@ The user is located at latitude: {{{latitude}}} and longitude: {{{longitude}}}. 
 
 **Requirements for Output:**
 - Provide Total Calories, Protein (g), Fat (g), Carbohydrates (g), Fiber (g), and Sodium (mg) for the ENTIRE estimated mass.
-- Explain the reasoning (e.g., "The portion size was estimated based on its visual volume compared to a standard 10-inch plate...").
+- Explain the reasoning.
 - Always include 'Agua' (Water) in the nutrients list with '%' as the unit.
+- Populate 'handPortions' with the specific references found in the image.
 
 Photo: {{media url=photoDataUri}}
 `,

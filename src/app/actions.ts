@@ -1,4 +1,3 @@
-
 'use server';
 
 import { analyzeFoodImageAndDisplayNutrition } from '@/ai/flows/analyze-food-image-and-display-nutrition';
@@ -81,7 +80,6 @@ export async function analyzeImageAction(
       data: {
         foodItem: result.foodItem,
         nutrients,
-        handPortions: result.handPortions,
       },
     };
   } catch (error) {
@@ -131,7 +129,8 @@ export async function estimatePortionsAction(
         amount: n.amount,
         unit: n.unit
       })),
-      reasoning: result.reasoning || ''
+      reasoning: result.reasoning || '',
+      handPortions: result.handPortions,
     };
 
     return {

@@ -12,7 +12,6 @@ import { useFoodLog } from '@/hooks/use-food-log';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import { NutrientTable } from './nutrient-table';
-import { Hand, Info } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 const logFoodSchema = z.object({
@@ -61,30 +60,6 @@ export function NutritionResultCard({ analysis }: { analysis: FoodAnalysis }) {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          {analysis.handPortions && analysis.handPortions.length > 0 && (
-            <div className="bg-secondary/30 p-4 rounded-xl space-y-3">
-              <h4 className="font-bold text-sm flex items-center gap-2 text-primary">
-                <Hand className="h-4 w-4" />
-                {t('NutritionResultCard.handEstimationTitle')}
-              </h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {analysis.handPortions.map((portion, idx) => (
-                  <div key={idx} className="bg-background p-2 rounded-lg border border-border/50 text-center">
-                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                      {t(`PortionTypes.${portion.type}`)}
-                    </p>
-                    <p className="text-lg font-bold text-primary">x{portion.count}</p>
-                    <p className="text-[10px] italic leading-tight text-foreground/60">{portion.description}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-start gap-2 text-[10px] text-muted-foreground">
-                <Info className="h-3 w-3 mt-0.5 shrink-0" />
-                <p>{t('NutritionResultCard.handMethodNote')}</p>
-              </div>
-            </div>
-          )}
-
           <NutrientTable nutrients={analysis.nutrients} />
         </CardContent>
         <CardFooter className="bg-muted/30 pt-6">
