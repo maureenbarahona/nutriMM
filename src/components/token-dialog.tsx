@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useToken } from '@/context/token-context';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
-import { KeyRound, CheckCircle2 } from 'lucide-react';
+import { KeyRound, CheckCircle2, LogOut } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -58,6 +58,11 @@ export function TokenDialog({ children }: { children: React.ReactNode }) {
     setOpen(false);
   };
 
+  const handleReset = () => {
+    localStorage.removeItem('nutrimm-auth');
+    window.location.reload();
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -98,10 +103,14 @@ export function TokenDialog({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         ) : (
-          <div className="py-8">
+          <div className="py-8 space-y-4">
             <Button className="w-full h-14 bg-green-600 hover:bg-green-700 text-white font-black text-lg cursor-default" disabled>
                 <CheckCircle2 className="mr-3 h-6 w-6" />
                 {t('TokenDialog.successTitle').toUpperCase()}
+            </Button>
+            <Button variant="ghost" onClick={handleReset} className="w-full text-muted-foreground text-xs flex items-center justify-center gap-2">
+                <LogOut className="h-3 w-3" />
+                {locale === 'es' ? 'Restablecer acceso para pruebas' : 'Reset access for testing'}
             </Button>
           </div>
         )}
