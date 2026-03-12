@@ -1,3 +1,4 @@
+
 {
   "NutriMM": {
     "title": "NutriM&M",
@@ -10,6 +11,15 @@
     "addManually": "Manual",
     "bmi": "Tu Estado Nutricional",
     "token": "Token"
+  },
+  "LandingPage": {
+    "preTitle": "\"Que tu alimento sea tu medicina y tu medicina tu alimento.\" - Hipócrates",
+    "title": "Nutrición Inteligente, Accesible para Todos.",
+    "subtitle": "Nutri M&M es una plataforma impulsada por Inteligencia Artificial que traduce tu comida en datos reales y geolocalizados para tu bienestar.",
+    "cta": "Acceder a Nutri M&M",
+    "creatorTitle": "La Ciencia de los Alimentos se encuentra con el Poder de la Nube.",
+    "creatorText1": "Hola, soy Maureen Barahona. Como Google Developer Expert en Infraestructura Cloud y especialista en IA, he pasado años construyendo soluciones tecnológicas complejas. Ahora, como estudiante de Nutrición Humana, estoy fusionando mis dos pasiones para cumplir un sueño: hacer que la ciencia nutricional sea accesible para todos.",
+    "creatorText2": "Nutri M&M es un proyecto vivo. A medida que avance en mi carrera, actualizaré continuamente la aplicación con nuevas funcionalidades impulsadas por IA para ayudarte a entender exactamente lo que comes, paso a paso."
   },
   "HomePage": {
     "title": "Nutrición al detalle: de los macros a los micros.",
@@ -29,7 +39,7 @@
     "success": "¡Calorías calculadas con éxito!",
     "editDialogTitle": "Modificar ingredientes del plato",
     "editDialogDescription": "Si la IA no identificó correctamente los ingredientes, descríbelos aquí para un recálculo preciso basado en la porción de la imagen.",
-    "recalculateButton": "Recalculate",
+    "recalculateButton": "Recalcular",
     "cancelButton": "Cancelar"
   },
   "PortionResultCard": {

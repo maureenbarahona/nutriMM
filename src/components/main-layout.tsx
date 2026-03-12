@@ -1,7 +1,8 @@
+
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, History, PlusCircle, Scale, Calculator, KeyRound } from 'lucide-react';
+import { Home, History, PlusCircle, Scale, Calculator, KeyRound, Camera } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from './icons';
 import { useLanguage } from '@/context/language-context';
@@ -22,7 +23,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   }, []);
 
   const navItems = [
-    { href: '/', label: t('Navigation.scan'), icon: Home, hidden: false },
+    { href: '/scan', label: t('Navigation.scan'), icon: Camera, hidden: false },
     { href: '/add', label: t('Navigation.addManually'), icon: PlusCircle, hidden: false },
     { href: '/portions', label: t('Navigation.portions'), icon: Scale, hidden: !isAuthorized },
     { href: '/bmi', label: t('Navigation.bmi'), icon: Calculator, hidden: !isAuthorized },

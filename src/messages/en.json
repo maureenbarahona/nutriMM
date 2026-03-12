@@ -1,3 +1,4 @@
+
 {
   "NutriMM": {
     "title": "NutriM&M",
@@ -10,6 +11,15 @@
     "addManually": "Manual",
     "bmi": "Your Nutritional Status",
     "token": "Token"
+  },
+  "LandingPage": {
+    "preTitle": "\"Let food be thy medicine and medicine be thy food.\" - Hippocrates",
+    "title": "Smart Nutrition, Accessible for Everyone.",
+    "subtitle": "Nutri M&M is an AI-powered platform that translates your food into real, geolocated data for your well-being.",
+    "cta": "Access Nutri M&M",
+    "creatorTitle": "Food Science meets the Power of the Cloud.",
+    "creatorText1": "Hi, I'm Maureen Barahona. As a Google Developer Expert in Cloud Infrastructure and an AI specialist, I've spent years building complex tech solutions. Now, as a Human Nutrition student, I'm merging my two passions to fulfill a dream: making nutritional science accessible to everyone.",
+    "creatorText2": "Nutri M&M is a living project. As I progress in my career, I will continuously update the app with new AI-driven features to help you understand exactly what you eat, step by step."
   },
   "HomePage": {
     "title": "Nutrition in detail: from macros to micros.",
@@ -52,8 +62,8 @@
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrients",
-    "micronutrients": "Micronutrients",
+    "macronutrients": "Macronutrientes",
+    "micronutrients": "Micronutrientes",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",
