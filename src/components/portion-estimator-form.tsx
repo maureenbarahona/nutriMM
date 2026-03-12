@@ -21,7 +21,6 @@ const initialState: AnalysisState = {
 export function PortionEstimatorForm() {
   const [state, formAction, isPending] = useActionState(estimatePortionsAction, initialState);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const { toast } = useToast();
@@ -51,17 +50,11 @@ export function PortionEstimatorForm() {
         description: t(state.message, state.messageValues),
       });
     }
-    if (state.status === 'success' && state.data) {
-      toast({
-        title: t('PortionEstimator.success'),
-        description: `${state.data.foodItem} analyzed.`,
-      });
-    }
   }, [state, toast, t]);
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);
-    setSelectedFile(file);
+    setPreviewUrl(null); // Clear previous while processing
     try {
       const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
       setPreviewUrl(dataUri);
@@ -76,6 +69,8 @@ export function PortionEstimatorForm() {
       setIsProcessing(false);
     }
   };
+
+  const showSubmit = previewUrl && !isPending && !isProcessing;
 
   return (
     <div className="space-y-8">
@@ -97,23 +92,20 @@ export function PortionEstimatorForm() {
               )}
             </div>
 
-            {previewUrl && <input type="hidden" name="image" value={previewUrl} />}
+            {/* Hidden inputs always present when submission is possible */}
+            <input type="hidden" name="image" value={previewUrl || ''} />
             <input type="hidden" name="locale" value={locale} />
-            {location && (
-              <>
-                <input type="hidden" name="latitude" value={location.latitude} />
-                <input type="hidden" name="longitude" value={location.longitude} />
-              </>
-            )}
+            <input type="hidden" name="latitude" value={location?.latitude?.toString() || ''} />
+            <input type="hidden" name="longitude" value={location?.longitude?.toString() || ''} />
             
             {isProcessing && (
               <Button disabled className="w-full h-12 bg-muted text-muted-foreground">
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Procesando imagen...
+                {locale === 'es' ? 'Procesando imagen...' : 'Processing image...'}
               </Button>
             )}
 
-            {previewUrl && !isPending && !isProcessing && (
+            {showSubmit && (
               <Button type="submit" className="w-full bg-primary hover:bg-primary/90 font-bold tracking-wider uppercase h-12">
                 <Scale className="mr-2 h-5 w-5" />
                 {t('PortionEstimator.analyzeButton')}
@@ -121,12 +113,12 @@ export function PortionEstimatorForm() {
             )}
 
             {isPending && (
-              <div className="space-y-4 animate-pulse">
+              <div className="space-y-4">
                 <Button disabled className="w-full h-12">
                   <Sparkles className="mr-2 h-5 w-5 animate-spin" />
                   {t('PortionEstimator.analyzingButton')}
                 </Button>
-                <div className="space-y-2">
+                <div className="space-y-2 animate-pulse">
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="h-4 w-3/4" />
                 </div>

@@ -17,11 +17,9 @@ export type AnalysisState = {
 };
 
 const analyzeImageSchema = z.object({
-  image: z.string().refine((val) => val.startsWith('data:image/'), {
-    message: 'Image must be a data URI',
-  }),
-  latitude: z.coerce.number().optional(),
-  longitude: z.coerce.number().optional(),
+  image: z.string().min(1, "Image is required"),
+  latitude: z.coerce.number().optional().nullable(),
+  longitude: z.coerce.number().optional().nullable(),
   locale: z.string().optional(),
 });
 
@@ -30,8 +28,13 @@ export async function analyzeImageAction(
   formData: FormData
 ): Promise<AnalysisState> {
   try {
+    const rawImage = formData.get('image');
+    if (!rawImage || typeof rawImage !== 'string' || !rawImage.startsWith('data:image/')) {
+      return { status: 'error', message: "Actions.imageRequired" };
+    }
+
     const validated = analyzeImageSchema.safeParse({
-      image: formData.get('image'),
+      image: rawImage,
       latitude: formData.get('latitude'),
       longitude: formData.get('longitude'),
       locale: formData.get('locale'),
@@ -43,8 +46,8 @@ export async function analyzeImageAction(
 
     const result = await analyzeFoodImageAndDisplayNutrition({
       photoDataUri: validated.data.image,
-      latitude: validated.data.latitude,
-      longitude: validated.data.longitude,
+      latitude: validated.data.latitude || undefined,
+      longitude: validated.data.longitude || undefined,
       locale: validated.data.locale,
     });
 
@@ -89,12 +92,10 @@ export async function analyzeImageAction(
 }
 
 const estimatePortionsSchema = z.object({
-  image: z.string().refine((val) => val.startsWith('data:image/'), {
-    message: 'Image must be a data URI',
-  }),
-  overrideFoodItem: z.string().optional(),
-  latitude: z.coerce.number().optional(),
-  longitude: z.coerce.number().optional(),
+  image: z.string().min(1, "Image is required"),
+  overrideFoodItem: z.string().optional().nullable(),
+  latitude: z.coerce.number().optional().nullable(),
+  longitude: z.coerce.number().optional().nullable(),
   locale: z.string().optional(),
 });
 
@@ -103,8 +104,13 @@ export async function estimatePortionsAction(
   formData: FormData
 ): Promise<AnalysisState> {
   try {
+    const rawImage = formData.get('image');
+    if (!rawImage || typeof rawImage !== 'string' || !rawImage.startsWith('data:image/')) {
+      return { status: 'error', message: "Actions.imageRequired" };
+    }
+
     const validated = estimatePortionsSchema.safeParse({
-      image: formData.get('image'),
+      image: rawImage,
       overrideFoodItem: formData.get('overrideFoodItem'),
       latitude: formData.get('latitude'),
       longitude: formData.get('longitude'),
@@ -117,9 +123,9 @@ export async function estimatePortionsAction(
 
     const result = await estimatePortionsFromImage({
       photoDataUri: validated.data.image,
-      overrideFoodItem: validated.data.overrideFoodItem,
-      latitude: validated.data.latitude,
-      longitude: validated.data.longitude,
+      overrideFoodItem: validated.data.overrideFoodItem || undefined,
+      latitude: validated.data.latitude || undefined,
+      longitude: validated.data.longitude || undefined,
       locale: validated.data.locale,
     });
 

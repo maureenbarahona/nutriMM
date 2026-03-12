@@ -59,14 +59,11 @@ function FormContent({
   return (
     <>
       <FileUploader onFileSelect={onFileSelect} previewUrl={previewUrl} disabled={pending || isProcessing} />
-      {previewUrl && <input type="hidden" name="image" value={previewUrl} />}
+      
+      <input type="hidden" name="image" value={previewUrl || ''} />
       <input type="hidden" name="locale" value={locale} />
-      {location && (
-        <>
-            <input type="hidden" name="latitude" value={location.latitude} />
-            <input type="hidden" name="longitude" value={location.longitude} />
-        </>
-      )}
+      <input type="hidden" name="latitude" value={location?.latitude?.toString() || ''} />
+      <input type="hidden" name="longitude" value={location?.longitude?.toString() || ''} />
 
       {isProcessing && (
         <div className="flex justify-end">
@@ -136,18 +133,11 @@ export function ScanForm() {
         description: t(state.message, state.messageValues),
       });
     }
-    if (state.status === 'success' && state.message && state.data) {
-      toast({
-        title: t(state.message),
-        description: `${state.data.foodItem} analyzed.`,
-      });
-    }
   }, [state, toast, t]);
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);
-    // Reset state when a new file is selected
-    formRef.current?.reset();
+    setPreviewUrl(null);
     try {
       const dataUri = await fileToDataUri(file, { maxSizeMB: 0.7 });
       setPreviewUrl(dataUri);
