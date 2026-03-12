@@ -41,7 +41,7 @@ export default function LandingPage() {
 
             <div className="relative animate-in fade-in slide-in-from-right-8 duration-700">
               {maureenImage && (
-                <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white group">
+                <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white group bg-muted">
                   <Image
                     src={maureenImage.imageUrl}
                     alt={maureenImage.description}
@@ -49,11 +49,12 @@ export default function LandingPage() {
                     priority
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     data-ai-hint={maureenImage.imageHint}
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
                   <div className="absolute bottom-8 left-8 right-8">
                     <div className="p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
-                      <p className="text-white font-medium italic">"Fusionando tecnología y nutrición por un mundo más saludable."</p>
+                      <p className="text-white font-medium italic text-sm md:text-base">"Fusionando tecnología y nutrición por un mundo más saludable."</p>
                     </div>
                   </div>
                 </div>
@@ -115,17 +116,17 @@ export default function LandingPage() {
           <h3 className="text-3xl font-bold font-headline tracking-tight">¿Qué puedes hacer hoy?</h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { icon: Sparkles, title: t('Navigation.scan'), desc: "Análisis instantáneo de alimentos por fotografía." },
-              { icon: Activity, title: t('Navigation.bmi'), desc: "Estado nutricional y requerimientos calóricos personalizados." },
-              { icon: ArrowRight, title: t('Navigation.history'), desc: "Seguimiento diario de tu progreso e ingesta." }
+              { icon: Sparkles, title: t('Navigation.scan'), desc: "Análisis instantáneo de alimentos por fotografía.", href: "/scan" },
+              { icon: Activity, title: t('Navigation.bmi'), desc: "Estado nutricional y requerimientos calóricos personalizados.", href: "/bmi" },
+              { icon: ArrowRight, title: t('Navigation.history'), desc: "Seguimiento diario de tu progreso e ingesta.", href: "/history" }
             ].map((feature, i) => (
-              <div key={i} className="group p-8 bg-background border rounded-[2rem] hover:border-primary/50 hover:shadow-xl transition-all duration-300">
+              <Link key={i} href={feature.href} className="group p-8 bg-background border rounded-[2rem] hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                 <div className="inline-flex p-4 bg-primary/10 rounded-2xl text-primary mb-6 group-hover:scale-110 transition-transform">
                   <feature.icon className="h-8 w-8" />
                 </div>
                 <h4 className="text-xl font-bold mb-3">{feature.title}</h4>
                 <p className="text-muted-foreground">{feature.desc}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
