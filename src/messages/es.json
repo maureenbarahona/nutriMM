@@ -6,10 +6,10 @@
   },
   "Navigation": {
     "scan": "Escanear",
-    "portions": "Cuenta tus Calorías",
+    "portions": "Calorías",
     "history": "Historial",
     "addManually": "Manual",
-    "bmi": "Tu Estado Nutricional",
+    "bmi": "Estado",
     "token": "Token"
   },
   "LandingPage": {

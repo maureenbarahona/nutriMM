@@ -74,7 +74,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <SiteFooter />
       <footer className="sticky bottom-0 z-40 w-full border-t bg-background/95 md:hidden">
         <nav className={cn(
-          "container mx-auto grid items-center justify-items-center gap-1 px-2 py-2",
+          "container mx-auto grid items-center justify-items-center gap-0.5 px-1 py-2",
           visibleItems.length + 1 === 6 ? "grid-cols-6" : visibleItems.length + 1 === 5 ? "grid-cols-5" : "grid-cols-4"
         )}>
           {mounted && visibleItems.map((item) => {
@@ -84,19 +84,19 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center gap-1 rounded-md p-1 text-[10px] font-medium transition-colors text-center',
+                  'flex flex-col items-center gap-1 rounded-md p-1 text-[9px] sm:text-[10px] font-medium transition-colors text-center w-full min-w-0',
                   isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
                 )}
               >
-                <item.icon className="h-5 w-5" />
-                <span className="truncate w-full px-1">{item.label}</span>
+                <item.icon className="h-5 w-5 shrink-0" />
+                <span className="truncate w-full px-0.5 leading-tight">{item.label}</span>
               </Link>
             );
           })}
           <TokenDialog>
-             <button className="flex flex-col items-center gap-1 rounded-md p-1 text-[10px] font-medium text-muted-foreground hover:text-foreground text-center">
-               <KeyRound className="h-5 w-5" />
-               <span>{t('Navigation.token')}</span>
+             <button className="flex flex-col items-center gap-1 rounded-md p-1 text-[9px] sm:text-[10px] font-medium text-muted-foreground hover:text-foreground text-center w-full min-w-0">
+               <KeyRound className="h-5 w-5 shrink-0" />
+               <span className="truncate w-full px-0.5 leading-tight">{t('Navigation.token')}</span>
              </button>
           </TokenDialog>
         </nav>

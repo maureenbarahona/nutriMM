@@ -6,10 +6,10 @@
   },
   "Navigation": {
     "scan": "Scan",
-    "portions": "Count Your Calories",
+    "portions": "Calories",
     "history": "History",
     "addManually": "Manual",
-    "bmi": "Your Nutritional Status",
+    "bmi": "Status",
     "token": "Token"
   },
   "LandingPage": {
@@ -62,8 +62,8 @@
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrientes",
-    "micronutrients": "Micronutrientes",
+    "macronutrients": "Macronutrients",
+    "micronutrients": "Micronutrients",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",
