@@ -183,54 +183,61 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
           </Card>
         </div>
 
-        {/* GI Traffic Light (Semáforo) Section - Positioned above Hand Model */}
+        {/* Traffic Light Semáforo section - Positioned BEFORE hand portions as requested */}
         {result.glycemicIndex && (
           <div className="space-y-4">
-            <h4 className="font-bold text-lg flex items-center gap-2 text-primary/80 uppercase tracking-wider">
-               <Activity className="h-5 w-5" />
-               {t('PortionResultCard.gi_title')}
-            </h4>
-            <div className={cn(
-              "relative overflow-hidden p-6 rounded-[2rem] border-2 transition-all flex flex-col md:flex-row items-center gap-8 shadow-sm",
-              result.glycemicIndex.category === 'low' ? "bg-green-50/50 border-green-200" :
-              result.glycemicIndex.category === 'medium' ? "bg-yellow-50/50 border-yellow-200" : "bg-red-50/50 border-red-200"
-            )}>
-              {/* Visual Traffic Light (Semáforo) */}
-              <div className="bg-zinc-900 p-3 rounded-2xl shadow-xl flex md:flex-col gap-3 shrink-0">
-                <div className={cn(
-                  "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
-                  result.glycemicIndex.category === 'high' ? "bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-pulse" : "bg-red-950/40"
-                )} />
-                <div className={cn(
-                  "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
-                  result.glycemicIndex.category === 'medium' ? "bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-pulse" : "bg-yellow-950/40"
-                )} />
-                <div className={cn(
-                  "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
-                  result.glycemicIndex.category === 'low' ? "bg-green-500 shadow-[0_0_20px_rgba(34,197,94,0.6)] animate-pulse" : "bg-green-950/40"
-                )} />
-              </div>
-
-              <div className="space-y-3 text-center md:text-left">
-                <div className="flex items-baseline gap-2 justify-center md:justify-start">
-                  <span className="text-4xl font-black text-foreground">{result.glycemicIndex.value.toFixed(0)}</span>
-                  <Badge className={cn(
-                    "text-white font-bold px-3 py-1 text-sm uppercase",
-                    result.glycemicIndex.category === 'low' ? "bg-green-600" :
-                    result.glycemicIndex.category === 'medium' ? "bg-yellow-600" : "bg-red-600"
-                  )}>
-                    {t(`PortionResultCard.gi_${result.glycemicIndex.category}`)}
-                  </Badge>
-                </div>
-                <p className="text-base text-foreground/80 leading-relaxed italic max-w-lg font-medium">
-                  "{result.glycemicIndex.description}"
-                </p>
-                <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
-                  <Database className="h-3 w-3" />
-                  Referencia: Glycemic-index.net
-                </div>
-              </div>
+            <div className="flex items-center gap-2">
+              <Activity className="h-5 w-5 text-primary" />
+              <h4 className="font-bold text-lg text-primary/80 uppercase tracking-wider">
+                 {t('PortionResultCard.gi_title')}
+              </h4>
             </div>
+            
+            <Card className={cn(
+                "overflow-hidden border-2 transition-all shadow-sm rounded-3xl",
+                result.glycemicIndex.category === 'low' ? "bg-green-50/30 border-green-200" :
+                result.glycemicIndex.category === 'medium' ? "bg-yellow-50/30 border-yellow-200" : "bg-red-50/30 border-red-200"
+            )}>
+                <CardContent className="p-6 flex flex-col md:flex-row items-center gap-8">
+                    {/* Visual Traffic Light (Semáforo) */}
+                    <div className="bg-neutral-900 p-3 rounded-2xl shadow-xl flex md:flex-col gap-3 shrink-0">
+                        <div className={cn(
+                            "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
+                            result.glycemicIndex.category === 'high' ? "bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.6)]" : "bg-red-950/30"
+                        )} />
+                        <div className={cn(
+                            "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
+                            result.glycemicIndex.category === 'medium' ? "bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.6)]" : "bg-yellow-950/30"
+                        )} />
+                        <div className={cn(
+                            "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
+                            result.glycemicIndex.category === 'low' ? "bg-green-500 shadow-[0_0_20px_rgba(34,197,94,0.6)]" : "bg-green-950/30"
+                        )} />
+                    </div>
+
+                    <div className="space-y-3 text-center md:text-left flex-1">
+                        <div className="flex items-baseline gap-3 justify-center md:justify-start">
+                            <span className="text-5xl font-black text-foreground">
+                                {result.glycemicIndex.value.toFixed(0)}
+                            </span>
+                            <Badge className={cn(
+                                "text-white font-bold px-4 py-1 text-sm uppercase rounded-lg",
+                                result.glycemicIndex.category === 'low' ? "bg-green-600" :
+                                result.glycemicIndex.category === 'medium' ? "bg-yellow-600" : "bg-red-600"
+                            )}>
+                                {t(`PortionResultCard.gi_${result.glycemicIndex.category}`)}
+                            </Badge>
+                        </div>
+                        <p className="text-base text-foreground/80 leading-relaxed font-medium italic">
+                            "{result.glycemicIndex.description}"
+                        </p>
+                        <div className="flex items-center gap-2 justify-center md:justify-start text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                            <Info className="h-3 w-3" />
+                            {t('PortionResultCard.gi_source_note')}
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
           </div>
         )}
 

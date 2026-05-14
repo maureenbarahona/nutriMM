@@ -49,7 +49,8 @@
     "gi_title": "Glycemic Index",
     "gi_low": "Low",
     "gi_medium": "Medium",
-    "gi_high": "High"
+    "gi_high": "High",
+    "gi_source_note": "Standards: glycemic-index.net"
   },
   "ScanForm": {
     "analyzeButton": "Analyze Image",
@@ -65,8 +66,8 @@
     "description": "Nutritional information per 100g (approx.)",
     "quantityLabel": "Quantity (grams)",
     "logFoodButton": "Log Food",
-    "macronutrients": "Macronutrients",
-    "micronutrients": "Micronutrients",
+    "macronutrients": "Macronutrientes",
+    "micronutrients": "Micronutrientes",
     "water": "Water",
     "nutrient": "Nutrient",
     "amountPer100g": "Amount (per 100g)",

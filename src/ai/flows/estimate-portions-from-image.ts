@@ -39,7 +39,7 @@ const EstimatePortionsOutputSchema = z.object({
     value: z.number().describe('Estimated Glycemic Index value.'),
     category: z.enum(['low', 'medium', 'high']).describe('The category: low (<=55), medium (56-69), high (>=70).'),
     description: z.string().describe('Short explanation of the impact on blood glucose.')
-  }).optional(),
+  }).describe('Estimation of the Glycemic Index based on glycemic-index.net standards.'),
   dataSource: z.string().describe('The name of the official food composition table used.')
 });
 export type EstimatePortionsOutput = z.infer<typeof EstimatePortionsOutputSchema>;
@@ -72,7 +72,7 @@ The user identified this as: "{{{overrideFoodItem}}}". Use this description as t
 2. Segment and estimate volume of each component.
 3. Calculate mass using standard densities.
 4. Validate with Hand Model (PMC8115205).
-5. **GI Analysis:** Estimate the average Glycemic Index for the entire meal shown. Consider the mix of proteins, fats and fibers which can lower the overall GI.
+5. **GI Analysis:** Estimate the average Glycemic Index for the entire meal shown. Consider the mix of proteins, fats and fibers which can lower the overall GI. You MUST provide the GI value, category and a short explanation.
 
 **Requirements:**
 - Exhaustive Nutrient Analysis (Absolute totals).

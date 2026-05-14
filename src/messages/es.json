@@ -49,7 +49,8 @@
     "gi_title": "Índice Glucémico",
     "gi_low": "Bajo",
     "gi_medium": "Medio",
-    "gi_high": "Alto"
+    "gi_high": "Alto",
+    "gi_source_note": "Estándares: glycemic-index.net"
   },
   "ScanForm": {
     "analyzeButton": "Analizar Imagen",
