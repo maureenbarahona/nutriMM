@@ -141,6 +141,7 @@ export async function estimatePortionsAction(
       reasoning: result.reasoning || '',
       handPortions: result.handPortions,
       dataSource: result.dataSource,
+      glycemicIndex: result.glycemicIndex, // CRITICAL: This was missing!
     };
 
     return {
