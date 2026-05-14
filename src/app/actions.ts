@@ -6,7 +6,7 @@ import { summarizeDailyNutrientIntake } from '@/ai/flows/summarize-daily-nutrien
 import { estimatePortionsFromImage } from '@/ai/flows/estimate-portions-from-image';
 import { calculateBMIIndications } from '@/ai/flows/calculate-bmi-indications';
 import { parseNutritionString } from '@/lib/utils';
-import type { FoodLogItem, Nutrient, PortionAnalysis } from '@/lib/types';
+import type { FoodLogItem, Nutrient, PortionAnalysis, FoodAnalysis } from '@/lib/types';
 import { z } from 'zod';
 
 export type AnalysisState = {
@@ -141,7 +141,7 @@ export async function estimatePortionsAction(
       reasoning: result.reasoning || '',
       handPortions: result.handPortions,
       dataSource: result.dataSource,
-      glycemicIndex: result.glycemicIndex, // CRITICAL: This was missing!
+      glycemicIndex: result.glycemicIndex,
     };
 
     return {
@@ -168,40 +168,25 @@ export async function analyzeTextAction(foodName: string, location: { latitude: 
             locale
         });
 
-        if (!result.foodItem || !result.nutritionalInformation) {
+        if (!result.foodItem || !result.nutrients) {
             return {
                 status: 'error',
                 message: "Actions.textAnalysisError",
             };
         }
 
-        if (result.nutritionalInformation.includes("no registrado") || result.nutritionalInformation.includes("not registered")) {
-          return {
-            status: 'error',
-            message: "Actions.foodNotFound",
-            messageValues: { foodItem: result.foodItem },
-          };
-        }
-
-        const nutrients = parseNutritionString(result.nutritionalInformation);
-
-        if (nutrients.length === 0) {
-            return {
-                status: 'error',
-                message: "Actions.extractionError",
-                messageValues: { foodItem: result.foodItem },
-                data: { foodItem: result.foodItem, nutrients: [] }
-            };
-        }
+        const sanitizedData: FoodAnalysis = {
+            foodItem: result.foodItem,
+            nutrients: result.nutrients,
+            glycemicIndex: result.glycemicIndex,
+            dataSource: result.dataSource
+        };
 
         return {
             status: 'success',
             message: "Actions.textAnalysisSuccess",
             messageValues: { foodName },
-            data: {
-                foodItem: result.foodItem,
-                nutrients,
-            },
+            data: sanitizedData,
         };
     } catch (error) {
         console.error('Analyze Text Error:', error);

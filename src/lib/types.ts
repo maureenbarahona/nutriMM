@@ -20,6 +20,7 @@ export type FoodAnalysis = {
   foodItem: string;
   nutrients: Nutrient[];
   dataSource?: string;
+  glycemicIndex?: GlycemicIndexInfo;
 };
 
 export type PortionAnalysis = {
