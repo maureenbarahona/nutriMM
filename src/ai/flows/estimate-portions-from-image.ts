@@ -1,6 +1,6 @@
 'use server';
 /**
- * @fileOverview Specialized flow for estimating food portions using INCAP as source for Central America.
+ * @fileOverview Specialized flow for estimating food portions using INCAP and precise Glycemic Index.
  */
 
 import {ai} from '@/ai/genkit';
@@ -54,32 +54,28 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert nutritional computer vision agent specialized in mass, portion and Glycemic Index (GI) estimation.
 
 **CRITICAL DATA SOURCE RULE:**
-For Central America (Honduras, Guatemala, El Salvador, Nicaragua, Costa Rica) and Panama, YOU MUST ALWAYS USE THE **Tabla de Composición de Alimentos del INCAP**. DO NOT hallucinate national databases. If the user is in this region, the dataSource MUST be "Tabla de Composición de Alimentos del INCAP".
+For Central America and Panama, ALWAYS use the **Tabla de Composición de Alimentos del INCAP**.
 
-**Goal:**
-Estimate the total weight and nutritional values for the entire portion. Additionally, perform a Glycemic Index (GI) analysis based on the information from glycemic-index.net.
-
-**GI Standards (Reference: glycemic-index.net):**
-- Low GI: 55 or less (slow absorption, stable energy).
-- Medium GI: 56 to 69.
-- High GI: 70 or more (rapid absorption, glucose spikes).
+**GLYCEMIC INDEX (GI) ANALYSIS (Reference: glycemic-index.net):**
+1. **GI vs GL:** Focus strictly on the **Glycemic Index (GI)** value. Do NOT use Glycemic Load (GL) categories as GI. 
+2. **Contextual GI:** Estimate the average GI for the meal. Be aware that preparation significantly alters GI. (e.g., Cooked carrot = High GI 85; Raw carrot = Low GI 35).
+3. **GI Categories:** 
+   - Low GI: 55 or less (slow absorption).
+   - Medium GI: 56 to 69.
+   - High GI: 70 or more (rapid glucose spikes).
 
 {{#if overrideFoodItem}}
-**IMPORTANT CORRECTION:** 
-The user identified this as: "{{{overrideFoodItem}}}". Use this description as the primary truth for all calculations.
+**USER IDENTIFIED AS:** "{{{overrideFoodItem}}}". Use this as the primary ground truth.
 {{/if}}
 
-**Estimation Logic:**
-1. Establish physical scale using standard plates/silverware.
-2. Segment and estimate volume of each component.
-3. Calculate mass using standard densities.
-4. Validate with Hand Model (PMC8115205).
-5. **GI Analysis:** Estimate the average Glycemic Index for the entire meal shown. Consider the mix of proteins, fats and fibers which can lower the overall GI. You MUST provide the GI value, category and a short explanation.
+**Task:**
+1. Estimate physical scale and total weight (grams).
+2. Calculate absolute nutrients for the entire portion using INCAP.
+3. Apply Hand Model (PMC8115205).
+4. Provide a scientifically sound GI value and category.
 
-**Requirements:**
-- Exhaustive Nutrient Analysis (Absolute totals).
-- GI Estimation (value, category, and description).
-- Respond in the language specified by locale: "{{{locale}}}". Default to "es".
+**Language:**
+Respond in locale: "{{{locale}}}". Default to "es".
 
 Photo: {{media url=photoDataUri}}`,
 });

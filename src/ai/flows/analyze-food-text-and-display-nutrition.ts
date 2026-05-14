@@ -1,6 +1,6 @@
 'use server';
 /**
- * @fileOverview Analyzes a food name using INCAP standards for Central America.
+ * @fileOverview Analyzes a food name using INCAP standards for Central America and precise Glycemic Index (GI).
  */
 
 import {ai} from '@/ai/genkit';
@@ -38,29 +38,30 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodTextAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodTextAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodTextAndDisplayNutritionOutputSchema},
-  prompt: `You are an expert nutritionist specialized in regional food composition tables (specifically INCAP for Central America) and Glycemic Index (GI).
+  prompt: `You are an expert nutritionist specialized in regional food composition tables (INCAP for Central America) and the Glycemic Index (GI) based on glycemic-index.net.
 
 **CRITICAL DATA SOURCE RULE:**
-For Central America (Honduras, Guatemala, El Salvador, Nicaragua, Costa Rica) and Panama, YOU MUST ALWAYS USE THE **Tabla de Composición de Alimentos del INCAP**. DO NOT hallucinate or create national databases. If the user is in this region, the dataSource MUST be "Tabla de Composición de Alimentos del INCAP".
+For Central America and Panama, ALWAYS use the **Tabla de Composición de Alimentos del INCAP**. dataSource must be exactly "Tabla de Composición de Alimentos del INCAP".
+
+**GLYCEMIC INDEX (GI) RULES:**
+1. **Source:** Reference standards from **glycemic-index.net**.
+2. **GI vs GL:** You MUST calculate the **Glycemic Index (GI)**, NOT the Glycemic Load (GL). Do not confuse them. 
+3. **Preparation Impact:** Consider the preparation method (raw vs. cooked). Example: Cooked carrots have a High GI (~85) even if they have a low GL.
+4. **Standards:**
+   - Low GI: 55 or less.
+   - Medium GI: 56 to 69.
+   - High GI: 70 or more.
 
 **Task:**
-Find the nutritional content of the food item per 100g and calculate its Glycemic Index.
-
-**Nutritional Requirements:**
-1. **Exhaustive Analysis:** Return a full profile including: Energia (kcal), Proteína (g), Grasa Total (g), Carbohidratos Totales (g), Fibra Dietética (g), Ceniza (g), Calcio (mg), Hierro (mg), Zinc (mg), Vitamina A (μg RAE), Vitamina C (mg), Tiamina (mg), Riboflavina (mg), Niacina (mg), Vitamina B6 (mg), Folato (μg DFE), Vitamina B12 (μg), Colesterol (mg), Ácidos Grasos Saturados (g), Sodio (mg), Potasio (mg), Fósforo (mg), and ALWAYS include Agua (%).
-
-**GI Standards (Reference: glycemic-index.net):**
-- Low GI: 55 or less.
-- Medium GI: 56 to 69.
-- High GI: 70 or more.
+Identify the food item per 100g. Provide an exhaustive profile (Energia, Proteína, Grasa, Carbohidratos, Fibra, Agua%, etc.) and a scientifically accurate GI.
 
 **Context:**
 {{#if latitude}}
-The user is at latitude: {{{latitude}}}, longitude: {{{longitude}}}. This coordinate is in Central America, use INCAP regional data.
+The user is at latitude: {{{latitude}}}, longitude: {{{longitude}}} (Central America region).
 {{/if}}
 
 **Language:**
-Respond strictly in the language specified by locale: "{{{locale}}}". Default to "es".
+Respond in locale: "{{{locale}}}". Default to "es".
 
 Food Name: {{{foodName}}}
 `,
