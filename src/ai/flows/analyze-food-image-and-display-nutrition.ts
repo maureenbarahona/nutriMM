@@ -1,6 +1,6 @@
 'use server';
 /**
- * @fileOverview Analyzes a food image and displays its nutritional information.
+ * @fileOverview Analyzes a food image and displays its nutritional information using INCAP as reference.
  */
 
 import {ai} from '@/ai/genkit';
@@ -20,6 +20,7 @@ const AnalyzeFoodImageAndDisplayNutritionInputSchema = z.object({
 const AnalyzeFoodImageAndDisplayNutritionOutputSchema = z.object({
   foodItem: z.string().describe('The identified food item.'),
   nutritionalInformation: z.string().describe('The nutritional information of the food item.'),
+  dataSource: z.string().describe('The source database used (e.g., "Tabla de Composición de Alimentos del INCAP").'),
 });
 
 export type AnalyzeFoodImageAndDisplayNutritionInput = z.infer<typeof AnalyzeFoodImageAndDisplayNutritionInputSchema>;
@@ -33,7 +34,10 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodImageAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodImageAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodImageAndDisplayNutritionOutputSchema},
-  prompt: `You are an expert nutritionist specialized in food composition tables (like INCAP).
+  prompt: `You are an expert nutritionist specialized in regional food composition tables.
+
+**CRITICAL DATA SOURCE RULE:**
+For Central America (Honduras, Guatemala, El Salvador, Nicaragua, Costa Rica) and Panama, YOU MUST ALWAYS USE THE **Tabla de Composición de Alimentos del INCAP** (Instituto de Nutrición de Centroamérica y Panamá). DO NOT hallucinate or create national databases like "BDCAH" or similar. If the user is in this region, the dataSource MUST be "Tabla de Composición de Alimentos del INCAP".
 
 **Task:**
 1. Identify the food item accurately.
@@ -42,7 +46,7 @@ const prompt = ai.definePrompt({
 
 **Context:**
 {{#if latitude}}
-The user is at latitude: {{{latitude}}}, longitude: {{{longitude}}}. Use regional databases (e.g., INCAP for Central America) for endemic foods.
+The user is at latitude: {{{latitude}}}, longitude: {{{longitude}}}. This coordinate is in Central America, use INCAP data.
 {{/if}}
 
 **Language:**

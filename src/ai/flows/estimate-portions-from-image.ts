@@ -1,7 +1,6 @@
 'use server';
 /**
- * @fileOverview Specialized flow for estimating food portions and absolute nutritional values from images.
- * Includes Glycemic Index (GI) estimation based on international standards.
+ * @fileOverview Specialized flow for estimating food portions using INCAP as source for Central America.
  */
 
 import {ai} from '@/ai/genkit';
@@ -53,6 +52,9 @@ const prompt = ai.definePrompt({
   input: {schema: EstimatePortionsInputSchema},
   output: {schema: EstimatePortionsOutputSchema},
   prompt: `You are an expert nutritional computer vision agent specialized in mass, portion and Glycemic Index (GI) estimation.
+
+**CRITICAL DATA SOURCE RULE:**
+For Central America (Honduras, Guatemala, El Salvador, Nicaragua, Costa Rica) and Panama, YOU MUST ALWAYS USE THE **Tabla de Composición de Alimentos del INCAP**. DO NOT hallucinate national databases. If the user is in this region, the dataSource MUST be "Tabla de Composición de Alimentos del INCAP".
 
 **Goal:**
 Estimate the total weight and nutritional values for the entire portion. Additionally, perform a Glycemic Index (GI) analysis based on the information from glycemic-index.net.

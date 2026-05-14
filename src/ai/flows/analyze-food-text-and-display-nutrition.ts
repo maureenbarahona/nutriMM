@@ -1,6 +1,6 @@
 'use server';
 /**
- * @fileOverview Analyzes a food name and displays its nutritional information and Glycemic Index.
+ * @fileOverview Analyzes a food name using INCAP standards for Central America.
  */
 
 import {ai} from '@/ai/genkit';
@@ -38,7 +38,10 @@ const prompt = ai.definePrompt({
   name: 'analyzeFoodTextAndDisplayNutritionPrompt',
   input: {schema: AnalyzeFoodTextAndDisplayNutritionInputSchema},
   output: {schema: AnalyzeFoodTextAndDisplayNutritionOutputSchema},
-  prompt: `You are an expert nutritionist specialized in regional food composition tables (INCAP, etc.) and Glycemic Index (GI).
+  prompt: `You are an expert nutritionist specialized in regional food composition tables (specifically INCAP for Central America) and Glycemic Index (GI).
+
+**CRITICAL DATA SOURCE RULE:**
+For Central America (Honduras, Guatemala, El Salvador, Nicaragua, Costa Rica) and Panama, YOU MUST ALWAYS USE THE **Tabla de Composición de Alimentos del INCAP**. DO NOT hallucinate or create national databases. If the user is in this region, the dataSource MUST be "Tabla de Composición de Alimentos del INCAP".
 
 **Task:**
 Find the nutritional content of the food item per 100g and calculate its Glycemic Index.
@@ -53,7 +56,7 @@ Find the nutritional content of the food item per 100g and calculate its Glycemi
 
 **Context:**
 {{#if latitude}}
-The user is at latitude: {{{latitude}}}, longitude: {{{longitude}}}. Use local data for regional foods.
+The user is at latitude: {{{latitude}}}, longitude: {{{longitude}}}. This coordinate is in Central America, use INCAP regional data.
 {{/if}}
 
 **Language:**
