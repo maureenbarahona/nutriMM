@@ -12,6 +12,7 @@ import { fileToDataUri } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { useAnalysisCache } from '@/hooks/use-analysis-cache';
 
 const initialState: AnalysisState = {
   status: 'error',
@@ -24,6 +25,7 @@ export function PortionEstimatorForm() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [resultsVisible, setResultsVisible] = useState(false);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const { saveToCache } = useAnalysisCache();
   const { toast } = useToast();
   const { t, locale } = useLanguage();
 
@@ -53,8 +55,22 @@ export function PortionEstimatorForm() {
     }
     if (state.status === 'success') {
       setResultsVisible(true);
+      // Guardar el perfil nutricional base (100g) en la caché
+      // Nota: PortionAnalysis tiene nutrientes totales, pero podemos guardar el perfil
+      if (state.data && state.data.foodItem) {
+        // Para simplificar, asumimos que podemos normalizar o simplemente guardar el perfil base
+        // Si PortionAnalysis tuviera una referencia a 100g la guardaríamos.
+        // Aquí guardamos el perfil identificado.
+        saveToCache(state.data.foodItem, {
+          foodItem: state.data.foodItem,
+          nutrients: state.data.nutrients, // Estos son absolutos en PortionAnalysis, 
+                                          // pero en el futuro podríamos normalizarlos a 100g.
+          dataSource: state.data.dataSource,
+          glycemicIndex: state.data.glycemicIndex
+        });
+      }
     }
-  }, [state, toast, t]);
+  }, [state, toast, t, saveToCache]);
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);

@@ -11,9 +11,10 @@ import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
 import { useState, useEffect } from 'react';
 import { analyzeTextAction } from '@/app/actions';
-import { Brain, Sparkles } from 'lucide-react';
+import { Brain, Sparkles, Database } from 'lucide-react';
 import type { FoodAnalysis } from '@/lib/types';
 import { NutritionResultCard } from './nutrition-result-card';
+import { useAnalysisCache } from '@/hooks/use-analysis-cache';
 
 const manualEntrySchema = z.object({
   name: z.string().min(2, 'Food name must be at least 2 characters.'),
@@ -24,6 +25,7 @@ type ManualEntryValues = z.infer<typeof manualEntrySchema>;
 export function ManualEntryForm() {
   const { t, locale } = useLanguage();
   const { toast } = useToast();
+  const { getFromCache, saveToCache } = useAnalysisCache();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysis | null>(null);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -52,8 +54,22 @@ export function ManualEntryForm() {
   });
 
   async function onSubmit(values: ManualEntryValues) {
-    const foodName = values.name;
+    const foodName = values.name.trim();
     
+    // 1. Intentar obtener de la caché local
+    const cached = getFromCache(foodName);
+    if (cached) {
+      setAnalysisResult(cached);
+      toast({
+        title: locale === 'es' ? "Datos recuperados" : "Data retrieved",
+        description: locale === 'es' 
+          ? `Usando información guardada localmente para: ${foodName}` 
+          : `Using locally saved information for: ${foodName}`,
+      });
+      return;
+    }
+
+    // 2. Si no está en caché, analizar con IA
     setIsAnalyzing(true);
     setAnalysisResult(null);
     const result = await analyzeTextAction(foodName, location, locale);
@@ -67,6 +83,8 @@ export function ManualEntryForm() {
       });
     } else if (result.data) {
         setAnalysisResult(result.data);
+        // 3. Guardar en caché para futuras consultas
+        saveToCache(foodName, result.data);
     }
   };
 
@@ -107,6 +125,14 @@ export function ManualEntryForm() {
 
       {analysisResult && (
         <div className="max-w-2xl mx-auto mt-8">
+            {analysisResult.isFromCache && (
+              <div className="mb-4 flex justify-center">
+                <div className="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 border border-primary/20 animate-pulse">
+                  <Database className="h-3 w-3" />
+                  {locale === 'es' ? 'RESULTADO CARGADO DESDE CACHÉ LOCAL' : 'RESULT LOADED FROM LOCAL CACHE'}
+                </div>
+              </div>
+            )}
             <NutritionResultCard analysis={analysisResult} />
         </div>
       )}

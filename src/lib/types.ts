@@ -21,6 +21,7 @@ export type FoodAnalysis = {
   nutrients: Nutrient[];
   dataSource?: string;
   glycemicIndex?: GlycemicIndexInfo;
+  isFromCache?: boolean;
 };
 
 export type PortionAnalysis = {
@@ -32,6 +33,7 @@ export type PortionAnalysis = {
   handPortions?: PortionReference[];
   dataSource?: string;
   glycemicIndex?: GlycemicIndexInfo;
+  isFromCache?: boolean;
 };
 
 export type FoodLogItem = {

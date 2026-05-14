@@ -14,6 +14,7 @@ import { fileToDataUri } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from './ui/alert';
 import { useLanguage } from '@/context/language-context';
+import { useAnalysisCache } from '@/hooks/use-analysis-cache';
 
 const initialState: AnalysisState = {
   status: 'error',
@@ -106,6 +107,7 @@ export function ScanForm() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [resultsVisible, setResultsVisible] = useState(false);
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const { saveToCache } = useAnalysisCache();
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   const { t, locale } = useLanguage();
@@ -136,8 +138,12 @@ export function ScanForm() {
     }
     if (state.status === 'success') {
       setResultsVisible(true);
+      // Guardar el resultado en caché para futuras búsquedas de texto
+      if (state.data && state.data.foodItem) {
+        saveToCache(state.data.foodItem, state.data);
+      }
     }
-  }, [state, toast, t]);
+  }, [state, toast, t, saveToCache]);
 
   const handleFileSelect = async (file: File) => {
     setIsProcessing(true);
