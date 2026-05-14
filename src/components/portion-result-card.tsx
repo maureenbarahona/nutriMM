@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Badge } from '@/components/ui/badge';
 import { NutrientTable } from './nutrient-table';
 import { useLanguage } from '@/context/language-context';
-import { Flame, Scale, Info, Utensils, Database, Sparkles, Hand, Pencil, Loader2, Activity } from 'lucide-react';
+import { Flame, Scale, Info, Utensils, Database, Hand, Pencil, Loader2, Activity } from 'lucide-react';
 import type { PortionAnalysis } from '@/lib/types';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -93,12 +93,6 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
     }
   };
 
-  const giColors = {
-    low: 'bg-green-500',
-    medium: 'bg-yellow-500',
-    high: 'bg-red-500'
-  };
-
   return (
     <Card className={cn(
       "w-full animate-in fade-in-50 slide-in-from-bottom-5 duration-500 overflow-hidden border-2 transition-all",
@@ -170,112 +164,130 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
       </CardHeader>
       
       <CardContent className="pt-6 space-y-8">
-        {/* Main Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {/* Main Stats Summary */}
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
           <Card className="bg-secondary/30 border-none shadow-none">
             <CardContent className="p-4 flex flex-col items-center justify-center text-center">
               <Flame className="h-8 w-8 text-orange-500 mb-2" />
-              <p className="text-2xl font-bold">{result.totalCalories.toFixed(0)}</p>
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">Total Kcal</p>
+              <p className="text-3xl font-black">{result.totalCalories.toFixed(0)}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Total Kcal</p>
             </CardContent>
           </Card>
           
           <Card className="bg-secondary/30 border-none shadow-none">
             <CardContent className="p-4 flex flex-col items-center justify-center text-center">
               <Scale className="h-8 w-8 text-blue-500 mb-2" />
-              <p className="text-2xl font-bold">{result.estimatedWeightGrams}g</p>
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">{t('PortionResultCard.estimatedWeight')}</p>
+              <p className="text-3xl font-black">{result.estimatedWeightGrams}g</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">{t('PortionResultCard.estimatedWeight')}</p>
             </CardContent>
           </Card>
-
-          {/* Glycemic Index Traffic Light */}
-          {result.glycemicIndex && (
-            <Card className="bg-secondary/30 border-none shadow-none col-span-2 md:col-span-1">
-              <CardContent className="p-4 flex flex-col items-center justify-center text-center">
-                <div className="flex gap-1 mb-2">
-                  <div className={cn("w-3 h-3 rounded-full border border-black/10", result.glycemicIndex.category === 'high' ? giColors.high : 'bg-gray-200')} />
-                  <div className={cn("w-3 h-3 rounded-full border border-black/10", result.glycemicIndex.category === 'medium' ? giColors.medium : 'bg-gray-200')} />
-                  <div className={cn("w-3 h-3 rounded-full border border-black/10", result.glycemicIndex.category === 'low' ? giColors.low : 'bg-gray-200')} />
-                </div>
-                <p className="text-2xl font-bold">{result.glycemicIndex.value.toFixed(0)}</p>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">IG ({t(`PortionResultCard.gi_${result.glycemicIndex.category}`)})</p>
-              </CardContent>
-            </Card>
-          )}
         </div>
 
-        {/* GI Details Section */}
+        {/* GI Traffic Light (Semáforo) Section - Positioned above Hand Model */}
         {result.glycemicIndex && (
-          <div className={cn(
-            "p-4 rounded-xl border flex items-start gap-4",
-            result.glycemicIndex.category === 'low' ? "bg-green-50 border-green-200" :
-            result.glycemicIndex.category === 'medium' ? "bg-yellow-50 border-yellow-200" : "bg-red-50 border-red-200"
-          )}>
-            <Activity className={cn("h-6 w-6 shrink-0 mt-1", 
-              result.glycemicIndex.category === 'low' ? "text-green-600" :
-              result.glycemicIndex.category === 'medium' ? "text-yellow-600" : "text-red-600"
-            )} />
-            <div>
-              <h4 className="font-bold text-sm uppercase tracking-wider mb-1">
-                {t('PortionResultCard.gi_title')}: {t(`PortionResultCard.gi_${result.glycemicIndex.category}`)}
-              </h4>
-              <p className="text-sm text-foreground/80 leading-relaxed italic">
-                "{result.glycemicIndex.description}"
-              </p>
+          <div className="space-y-4">
+            <h4 className="font-bold text-lg flex items-center gap-2 text-primary/80 uppercase tracking-wider">
+               <Activity className="h-5 w-5" />
+               {t('PortionResultCard.gi_title')}
+            </h4>
+            <div className={cn(
+              "relative overflow-hidden p-6 rounded-[2rem] border-2 transition-all flex flex-col md:flex-row items-center gap-8 shadow-sm",
+              result.glycemicIndex.category === 'low' ? "bg-green-50/50 border-green-200" :
+              result.glycemicIndex.category === 'medium' ? "bg-yellow-50/50 border-yellow-200" : "bg-red-50/50 border-red-200"
+            )}>
+              {/* Visual Traffic Light (Semáforo) */}
+              <div className="bg-zinc-900 p-3 rounded-2xl shadow-xl flex md:flex-col gap-3 shrink-0">
+                <div className={cn(
+                  "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
+                  result.glycemicIndex.category === 'high' ? "bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-pulse" : "bg-red-950/40"
+                )} />
+                <div className={cn(
+                  "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
+                  result.glycemicIndex.category === 'medium' ? "bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.6)] animate-pulse" : "bg-yellow-950/40"
+                )} />
+                <div className={cn(
+                  "w-10 h-10 rounded-full border-2 border-white/10 transition-all duration-500",
+                  result.glycemicIndex.category === 'low' ? "bg-green-500 shadow-[0_0_20px_rgba(34,197,94,0.6)] animate-pulse" : "bg-green-950/40"
+                )} />
+              </div>
+
+              <div className="space-y-3 text-center md:text-left">
+                <div className="flex items-baseline gap-2 justify-center md:justify-start">
+                  <span className="text-4xl font-black text-foreground">{result.glycemicIndex.value.toFixed(0)}</span>
+                  <Badge className={cn(
+                    "text-white font-bold px-3 py-1 text-sm uppercase",
+                    result.glycemicIndex.category === 'low' ? "bg-green-600" :
+                    result.glycemicIndex.category === 'medium' ? "bg-yellow-600" : "bg-red-600"
+                  )}>
+                    {t(`PortionResultCard.gi_${result.glycemicIndex.category}`)}
+                  </Badge>
+                </div>
+                <p className="text-base text-foreground/80 leading-relaxed italic max-w-lg font-medium">
+                  "{result.glycemicIndex.description}"
+                </p>
+                <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                  <Database className="h-3 w-3" />
+                  Referencia: Glycemic-index.net
+                </div>
+              </div>
             </div>
           </div>
         )}
 
         {/* Hand Model Section */}
         {result.handPortions && result.handPortions.length > 0 && (
-          <div className="bg-secondary/20 p-6 rounded-2xl border border-primary/10 space-y-4">
+          <div className="bg-secondary/20 p-6 rounded-[2.5rem] border border-primary/10 space-y-6">
             <div className="flex items-center gap-2 text-primary">
-              <Hand className="h-5 w-5" />
-              <h4 className="font-bold text-lg">{t('NutritionResultCard.handEstimationTitle')}</h4>
+              <Hand className="h-6 w-6" />
+              <h4 className="font-bold text-xl">{t('NutritionResultCard.handEstimationTitle')}</h4>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {result.handPortions.map((portion, idx) => (
-                <div key={idx} className="bg-white/80 p-4 rounded-xl border border-border shadow-sm flex flex-col items-center text-center gap-1">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                <div key={idx} className="bg-white p-5 rounded-2xl border border-border shadow-sm flex flex-col items-center text-center gap-2 hover:shadow-md transition-shadow">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted px-2 py-0.5 rounded">
                     {t(`PortionTypes.${portion.type}`)}
                   </span>
-                  <span className="text-3xl font-black text-primary">x{portion.count}</span>
-                  <span className="text-xs italic text-foreground/70 leading-tight">
+                  <span className="text-4xl font-black text-primary">x{portion.count}</span>
+                  <span className="text-sm italic text-foreground/70 leading-tight font-medium">
                     {portion.description}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="flex items-start gap-2 pt-2 text-[10px] text-muted-foreground leading-relaxed">
-              <Info className="h-3 w-3 mt-0.5 shrink-0" />
+            <div className="flex items-start gap-3 pt-4 text-[11px] text-muted-foreground leading-relaxed border-t border-primary/5">
+              <Info className="h-4 w-4 mt-0.5 shrink-0 text-primary/40" />
               <p>{t('NutritionResultCard.handMethodNote')}</p>
             </div>
           </div>
         )}
 
-        <div className="bg-muted/50 p-4 rounded-lg flex gap-3">
-          <Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-          <p className="text-sm italic text-foreground/80 leading-relaxed">
-            "{result.reasoning}"
-          </p>
-        </div>
+        {/* Reasoning and Nutrient Table */}
+        <div className="space-y-6">
+          <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10 flex gap-4">
+            <Info className="h-6 w-6 text-primary shrink-0 mt-0.5" />
+            <p className="text-base italic text-foreground/80 leading-relaxed">
+              "{result.reasoning}"
+            </p>
+          </div>
 
-        <div className="space-y-4">
-          <h4 className="font-bold text-lg flex items-center gap-2">
-            {t('NutritionResultCard.nutrient')}
-          </h4>
-          <NutrientTable 
-            nutrients={result.nutrients} 
-            amountHeader={t('PortionResultCard.amountTotal')}
-          />
+          <div className="space-y-4">
+            <h4 className="font-bold text-xl flex items-center gap-2 text-primary/90">
+              <Utensils className="h-5 w-5" />
+              {t('NutritionResultCard.nutrient')}
+            </h4>
+            <NutrientTable 
+              nutrients={result.nutrients} 
+              amountHeader={t('PortionResultCard.amountTotal')}
+            />
+          </div>
         </div>
       </CardContent>
 
-      <CardFooter className="bg-muted/30 border-t p-6">
-        <Button onClick={handleLog} disabled={isRecalculating} className="w-full h-12 text-lg bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
-          {t('NutritionResultCard.logFoodButton')}
+      <CardFooter className="bg-muted/30 border-t p-8">
+        <Button onClick={handleLog} disabled={isRecalculating} className="w-full h-16 text-xl bg-accent hover:bg-accent/90 text-accent-foreground font-black rounded-2xl shadow-lg transition-all hover:scale-[1.01]">
+          {t('NutritionResultCard.logFoodButton').toUpperCase()}
         </Button>
       </CardFooter>
     </Card>
