@@ -1,7 +1,7 @@
 'use server';
 /**
  * @fileOverview Specialized flow for estimating food portions and absolute nutritional values from images.
- * Uses Nutrition5k logic and PMC8115205 (Hand Model) for consistent mass estimation.
+ * Includes Glycemic Index (GI) estimation based on international standards.
  */
 
 import {ai} from '@/ai/genkit';
@@ -28,14 +28,19 @@ const EstimatePortionsOutputSchema = z.object({
     name: z.string(),
     amount: z.number(),
     unit: z.string()
-  })).describe('Absolute nutritional values for the entire portion (not per 100g).'),
-  reasoning: z.string().describe('Brief reasoning for the portion estimation based on visual cues and anatomical references.'),
+  })).describe('Absolute nutritional values for the entire portion.'),
+  reasoning: z.string().describe('Brief reasoning for the portion estimation.'),
   handPortions: z.array(z.object({
     type: z.enum(['palma', 'puño', 'puñado', 'pulgar', 'punta']),
-    description: z.string().describe('Short label for the specific food item this portion refers to (e.g., "Arroz blanco")'),
-    count: z.number().describe('Number of portions (e.g., 1, 1.5, 0.5)')
+    description: z.string().describe('Short label for the specific food item'),
+    count: z.number().describe('Number of portions')
   })).optional().describe('Estimated portions based on the Hand Model (PMC8115205).'),
-  dataSource: z.string().describe('The name of the official food composition table used (e.g., "Tabla de Composición de Alimentos del INCAP").')
+  glycemicIndex: z.object({
+    value: z.number().describe('Estimated Glycemic Index value.'),
+    category: z.enum(['low', 'medium', 'high']).describe('The category: low (<=55), medium (56-69), high (>=70).'),
+    description: z.string().describe('Short explanation of the impact on blood glucose.')
+  }).optional(),
+  dataSource: z.string().describe('The name of the official food composition table used.')
 });
 export type EstimatePortionsOutput = z.infer<typeof EstimatePortionsOutputSchema>;
 
@@ -47,44 +52,34 @@ const prompt = ai.definePrompt({
   name: 'estimatePortionsFromImagePrompt',
   input: {schema: EstimatePortionsInputSchema},
   output: {schema: EstimatePortionsOutputSchema},
-  prompt: `You are an expert nutritional computer vision agent specialized in mass and portion estimation.
+  prompt: `You are an expert nutritional computer vision agent specialized in mass, portion and Glycemic Index (GI) estimation.
 
 **Goal:**
-Estimate the total weight in grams and calculate the ABSOLUTE nutritional values for the ENTIRE portion shown in the image.
+Estimate the total weight and nutritional values for the entire portion. Additionally, perform a Glycemic Index (GI) analysis based on the information from glycemic-index.net.
+
+**GI Standards (Reference: glycemic-index.net):**
+- Low GI: 55 or less (slow absorption, stable energy).
+- Medium GI: 56 to 69.
+- High GI: 70 or more (rapid absorption, glucose spikes).
 
 {{#if overrideFoodItem}}
 **IMPORTANT CORRECTION:** 
-The user has manually corrected the identification of this food to: "{{{overrideFoodItem}}}". 
-You MUST use this description as the absolute source of truth for your calculations, overriding what you visually identify if there is a conflict. Recalculate all nutritional values based on this specific description.
+The user identified this as: "{{{overrideFoodItem}}}". Use this description as the primary truth for all calculations.
 {{/if}}
 
-**Step-by-Step Consistent Estimation Logic:**
-1. **Calibration:** Use the plate (assume standard 26cm diameter if not obvious) and silverware to establish a physical scale.
-2. **Segmentation:** Identify each individual food component on the plate.
-3. **Volume Estimation:** Estimate the surface area and depth (height) of each component.
-4. **Mass Calculation:** Apply standard food densities to the estimated volume to get grams per component.
-5. **Hand Model Validation (PMC8115205):** Use anatomical references to double-check:
-   - 'palma' (palm): ~100-150g of protein.
-   - 'puño' (fist): ~1 cup (~150-200g) of starches/veggies.
-   - 'puñado' (handful): ~30-50g of snacks/fruits.
-   - 'pulgar' (thumb): ~15-30g of fats/cheeses.
+**Estimation Logic:**
+1. Establish physical scale using standard plates/silverware.
+2. Segment and estimate volume of each component.
+3. Calculate mass using standard densities.
+4. Validate with Hand Model (PMC8115205).
+5. **GI Analysis:** Estimate the average Glycemic Index for the entire meal shown. Consider the mix of proteins, fats and fibers which can lower the overall GI.
 
 **Requirements:**
-- **Exhaustive Nutrient Analysis:** You MUST return absolute totals for the WHOLE portion for: Energia (kcal), Proteína (g), Grasa Total (g), Carbohidratos Totales (g), Fibra Dietética (g), Ceniza (g), Calcio (mg), Hierro (mg), Zinc (mg), Vitamina A (μg RAE), Vitamina C (mg), Tiamina (mg), Riboflavina (mg), Niacina (mg), Vitamina B6 (mg), Folato (μg DFE), Vitamina B12 (μg), Colesterol (mg), Ácidos Grasos Saturados (g), Sodio (mg), Potasio (mg), Fósforo (mg), and ALWAYS include Agua (%).
-- **Consistency:** Ensure estimations are conservative and grounded in the physical scale provided by the plate. Avoid radical deviations for similar visual volumes.
+- Exhaustive Nutrient Analysis (Absolute totals).
+- GI Estimation (value, category, and description).
+- Respond in the language specified by locale: "{{{locale}}}". Default to "es".
 
-**Language:**
-Respond in the language specified by locale: "{{{locale}}}". Default to "es".
-
-**Context:**
-{{#if latitude}}
-User location: lat {{{latitude}}}, lon {{{longitude}}}. Use regional food composition tables (e.g., INCAP for Central America and Panama, USDA for USA, etc.) for all nutritional data calculations.
-{{/if}}
-
-**DataSource:** Identify the specific food composition table used based on the location and provide its full name in the "dataSource" field. If in Central America or Panama, use "Tabla de Composición de Alimentos del INCAP".
-
-Photo: {{media url=photoDataUri}}
-`,
+Photo: {{media url=photoDataUri}}`,
 });
 
 const estimatePortionsFromImageFlow = ai.defineFlow(

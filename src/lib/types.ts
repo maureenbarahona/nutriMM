@@ -10,6 +10,12 @@ export type PortionReference = {
   count: number;
 };
 
+export type GlycemicIndexInfo = {
+  value: number;
+  category: 'low' | 'medium' | 'high';
+  description: string;
+};
+
 export type FoodAnalysis = {
   foodItem: string;
   nutrients: Nutrient[];
@@ -24,6 +30,7 @@ export type PortionAnalysis = {
   reasoning: string;
   handPortions?: PortionReference[];
   dataSource?: string;
+  glycemicIndex?: GlycemicIndexInfo;
 };
 
 export type FoodLogItem = {

@@ -1,4 +1,3 @@
-
 {
   "NutriMM": {
     "title": "NutriM&M",
@@ -29,14 +28,14 @@
   },
   "PortionsPage": {
     "title": "Count Your Calories",
-    "subtitle": "Advanced AI-powered estimation based on visual volume and anatomical references. Analyze your entire plate for total calorie count.",
+    "subtitle": "Advanced AI-powered estimation based on visual volume and anatomical references. Analyze your entire plate for total calorie count and Glycemic Index impact.",
     "methodTitle": "Advanced NutriM&M AI",
-    "methodDescription": "This tool calculates total weight and absolute calories based on the visual volume and hand references."
+    "methodDescription": "This tool calculates total weight, calories, and Glycemic Index (GI) based on glycemic-index.net standards."
   },
   "PortionEstimator": {
     "analyzeButton": "Calculate Plate Calories",
     "analyzingButton": "Calculating plate mass...",
-    "success": "Calories calculated successfully!",
+    "success": "Calories and GI calculated successfully!",
     "editDialogTitle": "Edit plate ingredients",
     "editDialogDescription": "If the AI didn't identify the ingredients correctly, describe them here for an accurate recalculation based on the image portion.",
     "recalculateButton": "Recalculate",
@@ -46,7 +45,11 @@
     "estimatedWeight": "Estimated Weight",
     "absoluteValuesNote": "Total values for the estimated portion (macros and micros).",
     "compositionTableBadge": "Regional Food Composition Table",
-    "amountTotal": "Total Amount"
+    "amountTotal": "Total Amount",
+    "gi_title": "Glycemic Index",
+    "gi_low": "Low",
+    "gi_medium": "Medium",
+    "gi_high": "High"
   },
   "ScanForm": {
     "analyzeButton": "Analyze Image",

@@ -1,4 +1,3 @@
-
 {
   "NutriMM": {
     "title": "NutriM&M",
@@ -29,14 +28,14 @@
   },
   "PortionsPage": {
     "title": "Cuenta tus Calorías",
-    "subtitle": "Estimación avanzada de masa potenciada por IA basada en volumen visual y referencias anatómicas. Analiza tu plato completo para conocer el total calórico.",
+    "subtitle": "Estimación avanzada de masa potenciada por IA basada en volumen visual y referencias anatómicas. Analiza tu plato completo para conocer el total calórico e impacto glucémico.",
     "methodTitle": "IA Avanzada NutriM&M",
-    "methodDescription": "Esta herramienta calcula el peso total y calorías absolutas basadas en el volumen visual y referencias de la mano."
+    "methodDescription": "Esta herramienta calcula el peso total, calorías e índice glucémico (IG) basado en estándares de glycemic-index.net."
   },
   "PortionEstimator": {
     "analyzeButton": "CALCULAR CALORÍAS DEL PLATO",
     "analyzingButton": "CALCULANDO MASA DEL PLATO...",
-    "success": "¡Calorías calculadas con éxito!",
+    "success": "¡Calorías e IG calculados con éxito!",
     "editDialogTitle": "Modificar ingredientes del plato",
     "editDialogDescription": "Si la IA no identificó correctamente los ingredientes, descríbelos aquí para un recálculo preciso basado en la porción de la imagen.",
     "recalculateButton": "Recalcular",
@@ -46,7 +45,11 @@
     "estimatedWeight": "Peso Estimado",
     "absoluteValuesNote": "Valores totales para la porción estimada (macros y micros).",
     "compositionTableBadge": "Tabla de Composición Regional",
-    "amountTotal": "Cantidad Total"
+    "amountTotal": "Cantidad Total",
+    "gi_title": "Índice Glucémico",
+    "gi_low": "Bajo",
+    "gi_medium": "Medio",
+    "gi_high": "Alto"
   },
   "ScanForm": {
     "analyzeButton": "Analizar Imagen",

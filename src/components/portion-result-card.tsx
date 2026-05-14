@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Badge } from '@/components/ui/badge';
 import { NutrientTable } from './nutrient-table';
 import { useLanguage } from '@/context/language-context';
-import { Flame, Scale, Info, Utensils, Database, Sparkles, Hand, Pencil, Check, X, Loader2 } from 'lucide-react';
+import { Flame, Scale, Info, Utensils, Database, Sparkles, Hand, Pencil, Loader2, Activity } from 'lucide-react';
 import type { PortionAnalysis } from '@/lib/types';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -55,7 +55,7 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
     if (!originalImage || !editedName.trim()) return;
 
     setIsRecalculating(true);
-    setIsDialogOpen(false); // Close dialog while calculating
+    setIsDialogOpen(false);
 
     const formData = new FormData();
     formData.append('image', originalImage);
@@ -91,6 +91,12 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
     } finally {
       setIsRecalculating(false);
     }
+  };
+
+  const giColors = {
+    low: 'bg-green-500',
+    medium: 'bg-yellow-500',
+    high: 'bg-red-500'
   };
 
   return (
@@ -159,16 +165,13 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
               <Database className="h-3 w-3 text-primary shrink-0" />
               <span className="text-left">{result.dataSource || t('PortionResultCard.compositionTableBadge')}</span>
             </Badge>
-            <Badge variant="outline" className="px-3 py-1 text-sm font-semibold bg-white flex items-center gap-1.5">
-              <Sparkles className="h-3 w-3 text-primary" />
-              IA NutriM&M
-            </Badge>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent className="pt-6 space-y-6">
-        <div className="grid grid-cols-2 gap-4">
+      <CardContent className="pt-6 space-y-8">
+        {/* Main Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <Card className="bg-secondary/30 border-none shadow-none">
             <CardContent className="p-4 flex flex-col items-center justify-center text-center">
               <Flame className="h-8 w-8 text-orange-500 mb-2" />
@@ -184,7 +187,44 @@ export function PortionResultCard({ result: initialResult, originalImage, locati
               <p className="text-xs text-muted-foreground uppercase tracking-wider">{t('PortionResultCard.estimatedWeight')}</p>
             </CardContent>
           </Card>
+
+          {/* Glycemic Index Traffic Light */}
+          {result.glycemicIndex && (
+            <Card className="bg-secondary/30 border-none shadow-none col-span-2 md:col-span-1">
+              <CardContent className="p-4 flex flex-col items-center justify-center text-center">
+                <div className="flex gap-1 mb-2">
+                  <div className={cn("w-3 h-3 rounded-full border border-black/10", result.glycemicIndex.category === 'high' ? giColors.high : 'bg-gray-200')} />
+                  <div className={cn("w-3 h-3 rounded-full border border-black/10", result.glycemicIndex.category === 'medium' ? giColors.medium : 'bg-gray-200')} />
+                  <div className={cn("w-3 h-3 rounded-full border border-black/10", result.glycemicIndex.category === 'low' ? giColors.low : 'bg-gray-200')} />
+                </div>
+                <p className="text-2xl font-bold">{result.glycemicIndex.value.toFixed(0)}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wider">IG ({t(`PortionResultCard.gi_${result.glycemicIndex.category}`)})</p>
+              </CardContent>
+            </Card>
+          )}
         </div>
+
+        {/* GI Details Section */}
+        {result.glycemicIndex && (
+          <div className={cn(
+            "p-4 rounded-xl border flex items-start gap-4",
+            result.glycemicIndex.category === 'low' ? "bg-green-50 border-green-200" :
+            result.glycemicIndex.category === 'medium' ? "bg-yellow-50 border-yellow-200" : "bg-red-50 border-red-200"
+          )}>
+            <Activity className={cn("h-6 w-6 shrink-0 mt-1", 
+              result.glycemicIndex.category === 'low' ? "text-green-600" :
+              result.glycemicIndex.category === 'medium' ? "text-yellow-600" : "text-red-600"
+            )} />
+            <div>
+              <h4 className="font-bold text-sm uppercase tracking-wider mb-1">
+                {t('PortionResultCard.gi_title')}: {t(`PortionResultCard.gi_${result.glycemicIndex.category}`)}
+              </h4>
+              <p className="text-sm text-foreground/80 leading-relaxed italic">
+                "{result.glycemicIndex.description}"
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Hand Model Section */}
         {result.handPortions && result.handPortions.length > 0 && (
