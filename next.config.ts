@@ -36,11 +36,11 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '10mb',
     },
-    allowedDevOrigins: [
-      '6000-firebase-studio-1769530943475.cluster-hlmk2l2htragyudeyf6f3tzsi6.cloudworkstations.dev',
-      '*.cloudworkstations.dev'
-    ],
   },
+  allowedDevOrigins: [
+    '6000-firebase-studio-1769530943475.cluster-hlmk2l2htragyudeyf6f3tzsi6.cloudworkstations.dev',
+    '*.cloudworkstations.dev'
+  ],
 };
 
 export default nextConfig;
